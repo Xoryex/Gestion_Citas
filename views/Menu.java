@@ -27,7 +27,7 @@ public class Menu{
                   i=(usuarios.ValidationUser(usuarioAct)?"1":"0");
                break;
             case "2":
-                  new Mantenimiento(tcl);
+                  new MenuMantenimiento(tcl);
                break;
             case "3":
                

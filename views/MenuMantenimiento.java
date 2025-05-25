@@ -2,9 +2,9 @@ package views;
 
 import java.util.Scanner;
 
-public class Mantenimiento {
+public class MenuMantenimiento {
 
-    public Mantenimiento(Scanner tcl) {
+    public MenuMantenimiento(Scanner tcl) {
         String opcion;
         do {
             System.out.println("=== Menú de Mantenimiento ===");
