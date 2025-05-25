@@ -10,7 +10,7 @@ public class MenuDoctor {
             System.out.println("1. Agregar doctor");
             System.out.println("2. Editar doctor");
             System.out.println("3. Eliminar doctor");
-            System.out.println("4. Salir");
+            System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
             opcion = tcl.nextLine();
 
@@ -27,12 +27,12 @@ public class MenuDoctor {
                     // Código para eliminar doctor
                     
                     break;
-                case "4":
+                case "0":
                     System.out.println("Saliendo del menú Doctor.");
                     break;
                 default:
                     System.out.println("Opción no válida. Intente de nuevo.");
             }
-        } while (!opcion.equals("4"));
+        } while (!opcion.equals("0"));
     }
 }
