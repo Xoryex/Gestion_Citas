@@ -1,8 +1,7 @@
 package src.views;
 import java.util.Scanner;
 
-import src.database.Bd;
-
+import src.utils.Link;
 //import src.utils.Clean;
 import src.views.admin.Menu;
 
@@ -10,7 +9,7 @@ import src.views.admin.Menu;
 public class Login {
    public String user, pass;
    
-   public Login(Scanner tcl,Bd bd){
+   public Login(Scanner tcl,Link link){
 
          System.out.println("===========LOGIN===========");
          System.out.print("   Usuario: ");
@@ -20,8 +19,8 @@ public class Login {
          System.out.println("===========================");
          
 
-         if(bd.usuarios.ValidationUser(user,pass)){
-            new Menu(tcl,bd,user);
+         if(link.usuarios.ValidationUser(user,pass)){
+            new Menu(tcl,link,user);
          }
  
          }

@@ -2,11 +2,11 @@ package src.views.admin;
 
 import java.util.Scanner;
 
-import src.database.Bd;
+import src.utils.Link;
 
 public class MenuPaciente {
 
-    public MenuPaciente(Scanner tcl, Bd bd) {
+    public MenuPaciente(Scanner tcl, Link link) {
         String opcion;
         do {
             System.out.println("=== Menú Paciente ===");
@@ -20,19 +20,19 @@ public class MenuPaciente {
 
             switch (opcion) {
                 case "1":
-                    bd.pacientes.agregarPaciente(tcl);
+                    link.pacientes.agregarPaciente(tcl);
                     
                     break;
                 case "2":
-                    bd.pacientes.editarPaciente(tcl);
+                    link.pacientes.editarPaciente(tcl);
                     
                     break;
                 case "3":
-                    bd.pacientes.borrarPaciente(tcl);
+                    link.pacientes.borrarPaciente(tcl);
                     
                     break;
                 case "4":
-                    bd.pacientes.imprimirPacientes();
+                    link.pacientes.imprimirPacientes();
                     break;
                 case "0":
                     System.out.println("Saliendo del menú Paciente.");

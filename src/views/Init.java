@@ -2,13 +2,12 @@ package src.views;
 
 import java.util.Scanner;
 
-import src.database.Bd;
-
+import src.utils.Link;
 
 
 public class Init{
       
-   public Init(Scanner tcl,Bd bd){
+   public Init(Scanner tcl,Link link){
       String opcion;
       do{
          
@@ -23,10 +22,10 @@ public class Init{
          
          switch(opcion){
             case "1":
-               new Login(tcl,bd);
+               new Login(tcl,link);
                break;
             case "2":
-               new MenuRegister(tcl,bd);
+               new MenuRegister(tcl,link);
                break;
             case "0":
                System.out.println("Bye :)");

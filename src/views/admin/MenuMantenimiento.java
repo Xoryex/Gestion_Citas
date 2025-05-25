@@ -2,12 +2,13 @@ package src.views.admin;
 
 import java.util.Scanner;
 
-import src.database.Bd;
+import src.utils.Link;
+
 
 
 public class MenuMantenimiento {
 
-    public MenuMantenimiento(Scanner tcl,Bd bd) {
+    public MenuMantenimiento(Scanner tcl,Link link) {
         String opcion;
         do {
             System.out.println("=== Menú de Mantenimiento ===");
@@ -23,7 +24,7 @@ public class MenuMantenimiento {
 
             switch (opcion) {
                 case "1":
-                    new MenuPaciente(tcl, bd);
+                    new MenuPaciente(tcl, link);
                     break;
                 case "2":
                     // Aquí puedes llamar a otro método para el menú de edición
@@ -38,7 +39,7 @@ public class MenuMantenimiento {
                     // Código para la opción 5
                     break;
                 case "6":
-                    new MenuEspecialidades(tcl,bd);
+                    new MenuEspecialidades(tcl,link);
                     break;
                 case "0":
                     System.out.println("Saliendo del menú de mantenimiento.");
