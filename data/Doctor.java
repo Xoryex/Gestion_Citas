@@ -9,25 +9,4 @@ public class Doctor {
         this.codEspecialidad = codEspecialidad;
         this.dni = dni;
     }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public String getCodEspecialidad() {
-        return codEspecialidad;
-    }
-
-    public String getDNI() { // <--- Añadido
-        return dni;
-    }
-
-    @Override
-    public String toString() {
-        return "Doctor: " + nombre + " " + apellido + " | DNI: " + dni + " | Especialidad: " + codEspecialidad;
-    }
 }
