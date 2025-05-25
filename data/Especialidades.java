@@ -1,33 +1,33 @@
 package data;
 
-import java.util.HashMap;
+import java.util.TreeMap;
 
 public class Especialidades {
-    public static HashMap<String, String> Especialidades = new HashMap<>();
+    public static TreeMap<String, String> especialidades = new TreeMap<>();
 
     public Especialidades() {
         
-        Especialidades.put("1", "Cardiología");
-        Especialidades.put("2", "Cirugía General");
-        Especialidades.put("3", "Dermatología");
-        Especialidades.put("4", "Endocrinología");
-        Especialidades.put("5", "Gastroenterología");
-        Especialidades.put("6", "Ginecología y Obstetricia");
-        Especialidades.put("7", "Medicina General");
-        Especialidades.put("8", "Medicina Interna");
-        Especialidades.put("9", "Neurología");
-        Especialidades.put("10", "Odontología General y Especialidades");
-        Especialidades.put("11", "Oftalmología");
-        Especialidades.put("12", "Otorrinolaringología");
-        Especialidades.put("13", "Pediatría");
-        Especialidades.put("14", "Psicología o Psiquiatría");
-        Especialidades.put("15", "Traumatología y Ortopedia");
-        Especialidades.put("16", "Urología");
+        especialidades.put("1", "Cardiología");
+        especialidades.put("2", "Cirugía General");
+        especialidades.put("3", "Dermatología");
+        especialidades.put("4", "Endocrinología");
+        especialidades.put("5", "Gastroenterología");
+        especialidades.put("6", "Ginecología y Obstetricia");
+        especialidades.put("7", "Medicina General");
+        especialidades.put("8", "Medicina Interna");
+        especialidades.put("9", "Neurología");
+        especialidades.put("10", "Odontología General y Especialidades");
+        especialidades.put("11", "Oftalmología");
+        especialidades.put("12", "Otorrinolaringología");
+        especialidades.put("13", "Pediatría");
+        especialidades.put("14", "Psicología o Psiquiatría");
+        especialidades.put("15", "Traumatología y Ortopedia");
+        especialidades.put("16", "Urología");
     }
 
     public void imprimirEspecialidades() {
-        for (String key : Especialidades.keySet()) {
-            System.out.println(Especialidades.get(key));
+        for (String key : especialidades.keySet()) {
+            System.out.println(especialidades.get(key));
         }
     }
 }
