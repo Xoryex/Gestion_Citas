@@ -1,9 +1,9 @@
 package views;
 import java.util.Scanner;
 
-public class MenuDoctor {
+public class MenuDoctores {
 
-    public MenuDoctor(Scanner tcl) {
+    public MenuDoctores(Scanner tcl) {
         String opcion;
         do {
             System.out.println("=== Menú Doctor ===");
