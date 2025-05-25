@@ -17,7 +17,9 @@ public class MenuAdmin{
          System.out.println("======MENU======");
          System.out.println("1. Perfil");
          System.out.println("2. Mantenimiendo");
-         System.out.println("3. Transacciones");
+         System.out.println("3. Citas Medicas");
+         System.out.println("4. Consultas");
+         System.out.println("5. Reportes");
          System.out.println("0. Exit");
          System.out.println("================");
          

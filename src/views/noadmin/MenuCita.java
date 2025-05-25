@@ -1,4 +1,4 @@
-package noadmin;
+package src.views.noadmin;
 
 import java.util.Scanner;
 
