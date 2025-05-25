@@ -8,10 +8,12 @@ import src.data.Doctores;
 import src.data.Especialidades;
 import src.data.Users;
 import src.views.MenuPerfil; 
+import src.data.Pacientes;
+
 
 public class Menu{
    
-   public Menu(Scanner tcl,Users usuarios,Doctores doctores,Especialidades especialidades,Consultorios consultorios,String usuarioAct){
+   public Menu(Scanner tcl,Users usuarios,Doctores doctores,Especialidades especialidades,Consultorios consultorios,String usuarioAct, Pacientes pacientes){
          String opcion;
       do{
 
@@ -30,7 +32,7 @@ public class Menu{
                   opcion=(usuarios.ValidationUser(usuarioAct)?"1":"0");
                break;
             case "2":
-                  new MenuMantenimiento(tcl,usuarios,doctores,especialidades,consultorios);
+                  new MenuMantenimiento(tcl,usuarios,doctores,especialidades,consultorios, pacientes);
                break;
             case "3":
                
