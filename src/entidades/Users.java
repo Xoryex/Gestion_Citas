@@ -9,21 +9,22 @@
          listausuarios.put("admin",new User("EQUIPO_GESTION_CITAS", "admin", true));
       }
       
-   
-
-      public String CambiarNombre(Scanner tcl,String usuarioAct){
-         String contraseña,nuevonombre;
+      public String CambiarUsuario(Scanner tcl,String usuarioAct){
          
          System.out.println("Ingresar nuevo nombre");
-         nuevonombre=tcl.nextLine();
+         String nuevousuario=tcl.nextLine();
          System.out.println("Ingresar contraseña actual");
-         contraseña=tcl.nextLine();
+         String contraseña=tcl.nextLine();
          
-         if(listausuarios.get(usuarioAct).equals(contraseña)){
-            Eliminar(usuarioAct);
-            Crear(nuevonombre, contraseña);
-            System.out.println("Nombre [Anterior: "+usuarioAct +" :: Actual: "+nuevonombre+"]");
-            return nuevonombre;
+         if(listausuarios.get(usuarioAct).GetContraseña().equals(contraseña)){
+            String nombre = listausuarios.get(usuarioAct).GetNombre();
+            boolean admin = listausuarios.get(usuarioAct).GetAdmin();
+
+            listausuarios.remove(usuarioAct);
+
+            Crear(nuevousuario,nombre, contraseña,admin);
+            System.out.println("Nombre [Anterior: "+usuarioAct +" :: Actual: "+nuevousuario+"]");
+            return nuevousuario;
          }else{
             System.out.println("No se puede cambiar el nombre");
             return usuarioAct;
@@ -32,16 +33,43 @@
          
       }
       
-      public void Eliminar(String usuario){
-         listausuarios.remove(usuario);
-         System.out.println("usuario fue eliminado con exito");
+      public int Contar(boolean quien){
+         int n=0;
+         for(User user : listausuarios.values()){
+            
+            if(user.GetAdmin()&&quien){
+               n ++;
+            }else if(!user.GetAdmin() &&!quien){
+               n ++;
+            }
+            
+         }
+         return n ;
       }
+
+      public void Eliminar(String usuario){
+
+         if(listausuarios.get(usuario).GetAdmin()){
+            if (Contar(true)==1) {
+               System.out.println("no se puede realizar la accion");
+            }else if (Contar(false)>0){
+                  listausuarios.remove(usuario);
+                  System.out.println("usuario fue eliminado con exito");
+            }
+         }else if(!listausuarios.get(usuario).GetAdmin()){
+            listausuarios.remove(usuario);
+            System.out.println("usuario fue eliminado con exito");
+         }
+
+            }
+         
       
-      public boolean Crear (String usuario,String contraseña){
+      
+      public boolean Crear (String usuario,String nombre, String contraseña,boolean admin ){
          if(listausuarios.containsKey(usuario)){
             return false;
          }else{
-            listausuarios.put(usuario,contraseña);
+            listausuarios.put(usuario,new User(nombre,contraseña,admin));
             return true;
          }
          }
@@ -89,7 +117,7 @@
 
       }
       
-         public void MostrarDatos(String user){
+      public void MostrarDatos(String user){
          System.out.println("Usuario: "+user+listausuarios.get(user).GetDate());
       }
       
