@@ -6,7 +6,7 @@ import utils.Clean;
 public class Perfil{
       
    public Perfil(Scanner tcl, Users usuarios, String usuarioAct){
-      String i;
+      String opcion;
       do{
 
          System.out.println("=====PERFIL=====");
@@ -16,9 +16,9 @@ public class Perfil{
          System.out.println("3. Eliminar perfil");
          System.out.println("0. Salir");
          System.out.println("================");
-         i =tcl.nextLine();
+         opcion =tcl.nextLine();
          
-         switch(i){
+         switch(opcion){
             case "1":
                   usuarioAct=usuarios.ChangeNameUser(tcl,usuarioAct);
                break;
@@ -27,12 +27,12 @@ public class Perfil{
                break;
             case "3":
                   usuarios.DropUser(usuarioAct);
-                  i="0";
+                  opcion="0";
                break;
             default:
                System.out.println("Opcion no valida");
          }
 
-         }while(!i.equals("0"));
+         }while(!opcion.equals("0"));
    }
 }
