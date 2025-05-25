@@ -6,6 +6,8 @@ import java.util.Scanner;
 import src.database.Bd;
 import src.views.MenuPerfil; 
 
+
+
 public class Menu{
    
    public Menu(Scanner tcl,Bd bd,String usuarioAct){

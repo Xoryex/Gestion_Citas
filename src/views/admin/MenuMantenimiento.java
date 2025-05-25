@@ -23,7 +23,7 @@ public class MenuMantenimiento {
 
             switch (opcion) {
                 case "1":
-                    // Aquí puedes agregar el código para mostrar las tablas
+                    new MenuPaciente(tcl, pacientes);
                     break;
                 case "2":
                     // Aquí puedes llamar a otro método para el menú de edición
