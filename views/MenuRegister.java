@@ -3,9 +3,9 @@ import java.util.Scanner;
 import data.Users; 
 import utils.Clean;
 
-public class Register {
+public class MenuRegister {
    
-   public Register(Scanner tcl,Users usuarios){
+   public MenuRegister(Scanner tcl,Users usuarios){
          Clean.cmd();
          System.out.println("===========Register===========");
          System.out.print("   Usuario: ");

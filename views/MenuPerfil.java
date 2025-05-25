@@ -3,9 +3,9 @@ import java.util.Scanner;
 import data.Users;
 import utils.Clean;
 
-public class PerfilNoAdmin{
+public class MenuPerfil{
       
-   public PerfilNoAdmin(Scanner tcl, Users usuarios, String usuarioAct){
+   public MenuPerfil(Scanner tcl, Users usuarios, String usuarioAct){
       String opcion;
       do{
 

@@ -3,8 +3,7 @@ import data.Consultorios;
 import data.Doctores;
 import data.Especialidades;
 import data.Users;
-import views.MenuMantenimiento;
-import views.PerfilNoAdmin;
+import views.MenuPerfil;
 
 import java.util.Scanner; 
 
@@ -25,7 +24,7 @@ public class Menu{
          
          switch(i){
             case "1":
-                  new PerfilNoAdmin(tcl,usuarios,usuarioAct);
+                  new MenuPerfil(tcl,usuarios,usuarioAct);
                   i=(usuarios.ValidationUser(usuarioAct)?"1":"0");
                break;
             case "2":

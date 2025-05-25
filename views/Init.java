@@ -28,7 +28,7 @@ public class Init{
                new Login(tcl,usuarios,doctores,especialidades,consultorios);
                break;
             case "2":
-               new Register(tcl,usuarios);
+               new MenuRegister(tcl,usuarios);
                break;
             case "0":
                System.out.println("Bye :)");

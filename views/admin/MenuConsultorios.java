@@ -1,4 +1,4 @@
-package views;
+package views.admin;
 
 import java.util.Scanner;
 
