@@ -39,7 +39,7 @@ public class MenuMantenimiento {
                     // Código para la opción 6
                     break;
                 case "7":
-                    
+                    new MenuEspecialidad(tcl);
                     break;
                 case "0":
                     System.out.println("Saliendo del menú de mantenimiento.");

@@ -1,10 +1,12 @@
 package views;
 
 import java.util.Scanner;
+import data.Especialidades;
 
 public class MenuEspecialidad {
 
     public MenuEspecialidad(Scanner tcl) {
+        Especialidades especialidades = new Especialidades();
         String opcion;
         do {
             System.out.println("=== Menú Especialidad ===");
@@ -17,16 +19,13 @@ public class MenuEspecialidad {
 
             switch (opcion) {
                 case "1":
-                    // Código para agregar especialidad
-                    
+                    especialidades.agregarEspecialidad(tcl);
                     break;
                 case "2":
-                    // Código para editar especialidad
-                    
+                    especialidades.editarEspecialidad(tcl);
                     break;
                 case "3":
-                    // Código para eliminar especialidad
-                    
+                    especialidades.eliminarEspecialidad(tcl);
                     break;
                 case "0":
                     System.out.println("Saliendo del menú Especialidad.");
