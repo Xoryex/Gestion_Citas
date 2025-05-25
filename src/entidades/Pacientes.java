@@ -1,12 +1,12 @@
 package src.entidades;
 
-import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.Scanner;
 
 
 public class Pacientes {
     // Colección: clave = DNI, valor = nombre del paciente
-    private static HashMap<String, String> listapacientes = new TreeMap<>();
+    private static TreeMap<String, String> listapacientes = new TreeMap<>();
 
     // Agregar paciente
     public void agregarPaciente(Scanner tcl) {
