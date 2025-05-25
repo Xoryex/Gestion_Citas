@@ -1,4 +1,4 @@
-package data;
+package src.data;
 
 import java.util.Scanner;
 import java.util.TreeMap;

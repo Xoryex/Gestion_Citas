@@ -1,4 +1,4 @@
-package data;
+package src.data;
 
 public class User {
     private String pass;

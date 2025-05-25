@@ -1,4 +1,4 @@
-package utils;
+package src.utils;
 
 public class Clean{
    public static void cmd() {

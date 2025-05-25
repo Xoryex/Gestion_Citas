@@ -1,35 +1,35 @@
-package views.noadmin;
+package src.views.admin;
 
 import java.util.Scanner;
 
-public class MenuCita {
+public class MenuPaciente {
 
-    public MenuCita(Scanner tcl) {
+    public MenuPaciente(Scanner tcl) {
         String opcion;
         do {
-            System.out.println("=== Menú Cita ===");
-            System.out.println("1. Agregar cita");
-            System.out.println("2. Editar cita");
-            System.out.println("3. Eliminar cita");
+            System.out.println("=== Menú Paciente ===");
+            System.out.println("1. Agregar paciente");
+            System.out.println("2. Editar paciente");
+            System.out.println("3. Eliminar paciente");
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
             opcion = tcl.nextLine();
 
             switch (opcion) {
                 case "1":
-                    // Código para agregar cita
+                    // Código para agregar paciente
                     
                     break;
                 case "2":
-                    // Código para editar cita
+                    // Código para editar paciente
                     
                     break;
                 case "3":
-                    // Código para eliminar cita
+                    // Código para eliminar paciente
                     
                     break;
                 case "0":
-                    System.out.println("Saliendo del menú Cita.");
+                    System.out.println("Saliendo del menú Paciente.");
                     break;
                 default:
                     System.out.println("Opción no válida. Intente de nuevo.");

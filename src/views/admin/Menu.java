@@ -1,11 +1,13 @@
-package views.admin;
-import data.Consultorios; 
-import data.Doctores;
-import data.Especialidades;
-import data.Users;
-import views.MenuPerfil;
+package src.views.admin;
 
-import java.util.Scanner; 
+
+import java.util.Scanner;
+
+import src.data.Consultorios;
+import src.data.Doctores;
+import src.data.Especialidades;
+import src.data.Users;
+import src.views.MenuPerfil; 
 
 public class Menu{
    
@@ -20,12 +22,12 @@ public class Menu{
          System.out.println("0. Exit");
          System.out.println("================");
          
-         i =tcl.nextLine();
+         opcion =tcl.nextLine();
          
-         switch(i){
+         switch(opcion){
             case "1":
                   new MenuPerfil(tcl,usuarios,usuarioAct);
-                  i=(usuarios.ValidationUser(usuarioAct)?"1":"0");
+                  opcion=(usuarios.ValidationUser(usuarioAct)?"1":"0");
                break;
             case "2":
                   new MenuMantenimiento(tcl,usuarios,doctores,especialidades,consultorios);
@@ -37,7 +39,7 @@ public class Menu{
                System.out.println("Opcion no valida");
          }
 
-         }while(!i.equals("0"));
+         }while(!opcion.equals("0"));
    }
 
 }

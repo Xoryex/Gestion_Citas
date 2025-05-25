@@ -1,12 +1,12 @@
-package views;
+package src.views;
 import java.util.Scanner;
 
-import data.Consultorios;
-import data.Doctores;
-import data.Especialidades;
-import data.Users;
-import utils.Clean;
-import views.admin.Menu;
+import src.data.Consultorios;
+import src.data.Doctores;
+import src.data.Especialidades;
+import src.data.Users;
+//import src.utils.Clean;
+import src.views.admin.Menu;
 
 public class Login {
    public String user, pass;

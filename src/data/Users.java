@@ -1,4 +1,4 @@
-   package data;
+   package src.data;
    import java.util.HashMap;
    import java.util.Scanner;
    

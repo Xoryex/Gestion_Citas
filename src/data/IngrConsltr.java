@@ -1,4 +1,4 @@
-package data;
+package src.data;
 import java.util.Scanner;
 
 public class IngrConsltr extends Consultorio{

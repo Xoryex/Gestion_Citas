@@ -1,7 +1,8 @@
-package views;
+package src.views;
+
 import java.util.Scanner;
-import data.Users;
-import utils.Clean;
+import src.data.Users;
+//import src.utils.Clean;
 
 public class MenuPerfil{
       

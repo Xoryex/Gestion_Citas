@@ -1,11 +1,11 @@
-package views;
-import java.util.Scanner;
-import data.Users;
-import data.Consultorios;
-import data.Doctores;
-import data.Especialidades;
+package src.views;
 
-import utils.Clean;
+import java.util.Scanner;
+import src.data.Users;
+//import src.utils.Clean;
+import src.data.Consultorios;
+import src.data.Doctores;
+import src.data.Especialidades;
 
 
 public class Init{

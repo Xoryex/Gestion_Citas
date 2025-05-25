@@ -1,11 +1,11 @@
-package views.admin;
+package src.views.admin;
 
 import java.util.Scanner;
 
-import data.Consultorios;
-import data.Doctores;
-import data.Especialidades;
-import data.Users;
+import src.data.Consultorios;
+import src.data.Doctores;
+import src.data.Especialidades;
+import src.data.Users;
 
 public class MenuMantenimiento {
 

@@ -1,6 +1,6 @@
-package views.admin;
+package src.views.admin;
 
-import data.Especialidades;
+import src.data.Especialidades;
 import java.util.Scanner;
 
 public class MenuEspecialidades {

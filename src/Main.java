@@ -1,11 +1,12 @@
+package src;
 import java.util.Scanner;
 
-import data.Consultorios;
-import data.Doctores;
-import data.Especialidades;
-import data.Users;
+import src.data.Consultorios;
+import src.data.Doctores;
+import src.data.Especialidades;
+import src.data.Users;
 
-import views.Init;
+import src.views.Init;
 
 class Main {
    public static void main(String[] args) {
