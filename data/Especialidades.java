@@ -7,22 +7,22 @@ public class Especialidades {
 
     public Especialidades() {
         
-        Especialidades.put("1", "Medicina General");
-        Especialidades.put("2", "Pediatría");
-        Especialidades.put("3", "Ginecología y Obstetricia");
-        Especialidades.put("4", "Medicina Interna");
-        Especialidades.put("5", "Traumatología y Ortopedia");
-        Especialidades.put("6", "Cirugía General");
-        Especialidades.put("7", "Dermatología");
-        Especialidades.put("8", "Odontología General y Especialidades");
-        Especialidades.put("9", "Cardiología");
-        Especialidades.put("10", "Oftalmología");
-        Especialidades.put("11", "Otorrinolaringología");
-        Especialidades.put("12", "Neurología");
-        Especialidades.put("13", "Urología");
+        Especialidades.put("1", "Cardiología");
+        Especialidades.put("2", "Cirugía General");
+        Especialidades.put("3", "Dermatología");
+        Especialidades.put("4", "Endocrinología");
+        Especialidades.put("5", "Gastroenterología");
+        Especialidades.put("6", "Ginecología y Obstetricia");
+        Especialidades.put("7", "Medicina General");
+        Especialidades.put("8", "Medicina Interna");
+        Especialidades.put("9", "Neurología");
+        Especialidades.put("10", "Odontología General y Especialidades");
+        Especialidades.put("11", "Oftalmología");
+        Especialidades.put("12", "Otorrinolaringología");
+        Especialidades.put("13", "Pediatría");
         Especialidades.put("14", "Psicología o Psiquiatría");
-        Especialidades.put("15", "Gastroenterología");
-        Especialidades.put("16", "Endocrinología");
+        Especialidades.put("15", "Traumatología y Ortopedia");
+        Especialidades.put("16", "Urología");
     }
 
     public void imprimirEspecialidades() {
