@@ -1,10 +1,8 @@
 package views;
-import java.util.Scanner;
-import data.Users;
-import data.Especialidades;
 import data.Consultorios; 
 import data.Doctores;
-import utils.Clean;
+import data.Users;
+import java.util.Scanner; 
 
 public class Menu{
    private Consultorios consultorios = new Consultorios();
@@ -29,7 +27,7 @@ public class Menu{
                   i=(usuarios.ValidationUser(usuarioAct)?"1":"0");
                break;
             case "2":
-                  
+                  new Mantenimiento(tcl);
                break;
             case "3":
                
