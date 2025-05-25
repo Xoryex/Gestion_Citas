@@ -1,17 +1,15 @@
 package src.views;
 import java.util.Scanner;
 
-import src.data.Consultorios;
-import src.data.Doctores;
-import src.data.Especialidades;
-import src.data.Users;
+import src.database.Bd;
+
 //import src.utils.Clean;
 import src.views.admin.Menu;
 
 public class Login {
    public String user, pass;
    
-   public Login(Scanner tcl,Users usuarios,Doctores doctores,Especialidades especialidades,Consultorios consultorios){
+   public Login(Scanner tcl,Bd bd){
 
          System.out.println("===========LOGIN===========");
          System.out.print("   Usuario: ");
@@ -20,8 +18,9 @@ public class Login {
          pass=tcl.nextLine();
          System.out.println("===========================");
          
-         if(usuarios.ValidationUser(user,pass)){
-            new Menu(tcl,usuarios,doctores,especialidades,consultorios,user);
+
+         if(bd.usuarios.ValidationUser(user,pass)){
+            new Menu(tcl,bd,user);
          }
  
          }

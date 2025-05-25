@@ -1,11 +1,12 @@
 package src.views.admin;
 
-import src.data.Especialidades;
 import java.util.Scanner;
+
+import src.database.Bd;
 
 public class MenuEspecialidades {
 
-    public MenuEspecialidades(Scanner tcl,Especialidades especialidades) {
+    public MenuEspecialidades(Scanner tcl,Bd bd) {
         String opcion;
         do {
             System.out.println("=== Menú Especialidad ===");
@@ -19,16 +20,16 @@ public class MenuEspecialidades {
 
             switch (opcion) {
                 case "1":
-                    especialidades.AgregarEspecialidad(tcl);
+                    bd.especialidades.AgregarEspecialidad(tcl);
                     break;
                 case "2":
-                    especialidades.editarEspecialidad(tcl);
+                    bd.especialidades.editarEspecialidad(tcl);
                     break;
                 case "3":
-                    especialidades.eliminarEspecialidad(tcl);
+                    bd.especialidades.eliminarEspecialidad(tcl);
                     break;
                 case "4":
-                    especialidades.imprimirEspecialidades();
+                    bd.especialidades.imprimirEspecialidades();
                     break;
                 case "0":
                     System.out.println("Saliendo del menú Especialidad.");

@@ -1,16 +1,14 @@
 package src.views;
 
 import java.util.Scanner;
-import src.data.Users;
-//import src.utils.Clean;
-import src.data.Consultorios;
-import src.data.Doctores;
-import src.data.Especialidades;
+
+import src.database.Bd;
+
 
 
 public class Init{
       
-   public Init(Scanner tcl,Users usuarios,Doctores doctores,Especialidades especialidades,Consultorios consultorios){
+   public Init(Scanner tcl,Bd bd){
       String opcion;
       do{
          
@@ -25,10 +23,10 @@ public class Init{
          
          switch(opcion){
             case "1":
-               new Login(tcl,usuarios,doctores,especialidades,consultorios);
+               new Login(tcl,bd);
                break;
             case "2":
-               new MenuRegister(tcl,usuarios);
+               new MenuRegister(tcl,bd);
                break;
             case "0":
                System.out.println("Bye :)");

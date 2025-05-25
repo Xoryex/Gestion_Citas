@@ -1,6 +1,7 @@
 package src.views;
 import java.util.Scanner;
-import src.data.Users;
+
+import src.entidades.Users;
 import src.utils.Clean;
 
 public class MenuRegister {

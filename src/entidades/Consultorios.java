@@ -1,4 +1,4 @@
-package src.data;
+package src.entidades;
 
 public class Consultorios {
     

@@ -1,17 +1,18 @@
 package src.views;
 
 import java.util.Scanner;
-import src.data.Users;
-//import src.utils.Clean;
+
+import src.database.Bd;
+
 
 public class MenuPerfil{
       
-   public MenuPerfil(Scanner tcl, Users usuarios, String usuarioAct){
+   public MenuPerfil(Scanner tcl, Bd bd, String usuarioAct){
       String opcion;
       do{
 
          System.out.println("=====PERFIL=====");
-         usuarios.ShowDate(usuarioAct);
+         bd.usuarios.ShowDate(usuarioAct);
          System.out.println("1. Cambiar nombre");
          System.out.println("2. Cambiar contraseña");
          System.out.println("3. Eliminar perfil");
@@ -21,13 +22,13 @@ public class MenuPerfil{
          
          switch(opcion){
             case "1":
-                  usuarioAct=usuarios.ChangeNameUser(tcl,usuarioAct);
+                  usuarioAct=bd.usuarios.ChangeNameUser(tcl,usuarioAct);
                break;
             case "2":
-                  usuarios.ChangePassUser(tcl, usuarioAct);
+                  bd.usuarios.ChangePassUser(tcl, usuarioAct);
                break;
             case "3":
-                  usuarios.DropUser(usuarioAct);
+                  bd.usuarios.DropUser(usuarioAct);
                   opcion="0";
                break;
             default:

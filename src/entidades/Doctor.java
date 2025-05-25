@@ -1,4 +1,4 @@
-package src.data;
+package src.entidades;
 
 public class Doctor {
     private String nombre, apellido, codEspecialidad, dni;

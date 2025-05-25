@@ -3,15 +3,12 @@ package src.views.admin;
 
 import java.util.Scanner;
 
-import src.data.Consultorios;
-import src.data.Doctores;
-import src.data.Especialidades;
-import src.data.Users;
+import src.database.Bd;
 import src.views.MenuPerfil; 
 
 public class Menu{
    
-   public Menu(Scanner tcl,Users usuarios,Doctores doctores,Especialidades especialidades,Consultorios consultorios,String usuarioAct){
+   public Menu(Scanner tcl,Bd bd,String usuarioAct){
          String opcion;
       do{
 
@@ -26,11 +23,11 @@ public class Menu{
          
          switch(opcion){
             case "1":
-                  new MenuPerfil(tcl,usuarios,usuarioAct);
-                  opcion=(usuarios.ValidationUser(usuarioAct)?"1":"0");
+                  new MenuPerfil(tcl,bd,usuarioAct);
+                  opcion=(bd.usuarios.ValidationUser(usuarioAct)?"1":"0");
                break;
             case "2":
-                  new MenuMantenimiento(tcl,usuarios,doctores,especialidades,consultorios);
+                  new MenuMantenimiento(tcl,bd);
                break;
             case "3":
                

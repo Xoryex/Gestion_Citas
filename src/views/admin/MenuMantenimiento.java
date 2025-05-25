@@ -2,14 +2,12 @@ package src.views.admin;
 
 import java.util.Scanner;
 
-import src.data.Consultorios;
-import src.data.Doctores;
-import src.data.Especialidades;
-import src.data.Users;
+import src.database.Bd;
+
 
 public class MenuMantenimiento {
 
-    public MenuMantenimiento(Scanner tcl,Users usuarios,Doctores doctores,Especialidades especialidades,Consultorios consultorios) {
+    public MenuMantenimiento(Scanner tcl,Bd bd) {
         String opcion;
         do {
             System.out.println("=== Menú de Mantenimiento ===");
@@ -40,7 +38,7 @@ public class MenuMantenimiento {
                     // Código para la opción 5
                     break;
                 case "6":
-                    new MenuEspecialidades(tcl,especialidades);
+                    new MenuEspecialidades(tcl,bd);
                     break;
                 case "0":
                     System.out.println("Saliendo del menú de mantenimiento.");
