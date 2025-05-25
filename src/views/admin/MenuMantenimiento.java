@@ -1,7 +1,6 @@
 package src.views.admin;
 
 import java.util.Scanner;
-
 import src.database.Bd;
 
 
@@ -26,13 +25,13 @@ public class MenuMantenimiento {
                     new MenuPaciente(tcl, bd);
                     break;
                 case "2":
-                    // Aquí puedes llamar a otro método para el menú de edición
+                    //equside bro
                     break;
                 case "3":
                     // Aquí puedes llamar a otro método para el menú de edición
                     break;
                 case "4":
-                    // Código para la opción 4
+                    new MenuConsultorios(tcl, bd);
                     break;
                 case "5":
                     // Código para la opción 5
