@@ -1,8 +1,11 @@
-package views;
+package views.admin;
 import data.Consultorios; 
 import data.Doctores;
 import data.Especialidades;
 import data.Users;
+import views.MenuMantenimiento;
+import views.PerfilNoAdmin;
+
 import java.util.Scanner; 
 
 public class Menu{
