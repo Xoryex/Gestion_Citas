@@ -8,4 +8,7 @@ public class User {
         this.pass=pass;
         this.admin=admin;
     }
+
+    public void Admin
+
 }
