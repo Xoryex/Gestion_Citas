@@ -46,6 +46,7 @@
          if(nuevacontraseña.equals(nuevacontraseña1)){
 
             if(listausuarios.get(usuario).GetContraseña().equals(contraseñaactual)){
+               
                listausuarios.get(usuario).SetContraseña(nuevacontraseña);
                System.out.println("Nombre [Anterior: "+contraseñaactual +" :: Actual: "+nuevacontraseña+"]");
             

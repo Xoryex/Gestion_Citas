@@ -1,8 +1,7 @@
 package src.entidades;
 
-import java.util.TreeMap;
 import java.util.Scanner;
-
+import java.util.TreeMap;
 
 public class Pacientes {
     // Colección: clave = DNI, valor = nombre del paciente
