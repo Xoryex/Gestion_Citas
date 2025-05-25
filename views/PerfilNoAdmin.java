@@ -3,9 +3,9 @@ import java.util.Scanner;
 import data.Users;
 import utils.Clean;
 
-public class Perfil{
+public class PerfilNoAdmin{
       
-   public Perfil(Scanner tcl, Users usuarios, String usuarioAct){
+   public PerfilNoAdmin(Scanner tcl, Users usuarios, String usuarioAct){
       String opcion;
       do{
 

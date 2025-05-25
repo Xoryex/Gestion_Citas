@@ -1,15 +1,17 @@
 package views;
 import java.util.Scanner;
 import data.Users;
+import data.Consultorios;
+import data.Doctores;
+import data.Especialidades;
+
 import utils.Clean;
 
 
 public class Init{
-      private Scanner tcl= new Scanner(System.in);
-      private Users usuarios=new Users();
       
-   public Init(){
-      String i;
+   public Init(Scanner tcl,Users usuarios,Doctores doctores,Especialidades especialidades,Consultorios consultorios){
+      String opcion;
       do{
          
          System.out.println("=====INICIO=====");
@@ -17,13 +19,13 @@ public class Init{
          System.out.println("2. Registrar");
          System.out.println("0. Salir");
          System.out.println("================");
-         i =tcl.nextLine();
+         opcion =tcl.nextLine();
          
          
          
-         switch(i){
+         switch(opcion){
             case "1":
-               new Login(tcl,usuarios);
+               new Login(tcl,usuarios,doctores,especialidades,consultorios);
                break;
             case "2":
                new Register(tcl,usuarios);
@@ -34,7 +36,7 @@ public class Init{
             default:
                System.out.println("Opcion no valida");
          }
-         Clean.cmd(); 
-         }while(!i.equals("0"));
+        
+         }while(!opcion.equals("0"));
    }
 }
