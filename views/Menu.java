@@ -1,14 +1,13 @@
 package views;
 import data.Consultorios; 
 import data.Doctores;
+import data.Especialidades;
 import data.Users;
 import java.util.Scanner; 
 
 public class Menu{
-   private Consultorios consultorios = new Consultorios();
-   private Doctores doctores = new Doctores();
    
-   public Menu(Scanner tcl,Users usuarios,String usuarioAct){
+   public Menu(Scanner tcl,Users usuarios,Doctores doctores,Especialidades especialidades,Consultorios consultorios,String usuarioAct){
          String i;
       do{
 
@@ -23,7 +22,7 @@ public class Menu{
          
          switch(i){
             case "1":
-                  new Perfil(tcl,usuarios,usuarioAct);
+                  new PerfilNoAdmin(tcl,usuarios,usuarioAct);
                   i=(usuarios.ValidationUser(usuarioAct)?"1":"0");
                break;
             case "2":
