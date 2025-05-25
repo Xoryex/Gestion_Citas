@@ -25,11 +25,16 @@ public class Especialidades {
         especialidades.put("16", "Urología");
     }
 
-    public void imprimirEspecialidades() {
-        for (String key : especialidades.keySet()) {
-            System.out.println(key + ". " + especialidades.get(key));
-        }
+public void imprimirEspecialidades() {
+    System.out.println("=== Lista de Especialidades (orden alfabético) ===");
+    if (especialidades.isEmpty()) {
+        System.out.println("No hay especialidades registradas.");
+    } else {
+        especialidades.entrySet().stream()
+            .sorted((e1, e2) -> e1.getValue().compareToIgnoreCase(e2.getValue()))
+            .forEach(entry -> System.out.println(entry.getKey() + ". " + entry.getValue()));
     }
+}
 
     public void AgregarEspecialidad(Scanner tcl) {
         System.out.print("Ingrese el código de la nueva especialidad: ");
