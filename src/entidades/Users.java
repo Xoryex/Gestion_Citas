@@ -46,8 +46,7 @@
          if(nuevacontraseña.equals(nuevacontraseña1)){
 
             if(listausuarios.get(usuario).GetContraseña().equals(contraseñaactual)){
-               Eliminar(usuario);(usuario);
-               Crear(usuario,nuevacontraseña);
+               listausuarios.get(usuario).SetContraseña(nuevacontraseña);
                System.out.println("Nombre [Anterior: "+contraseñaactual +" :: Actual: "+nuevacontraseña+"]");
             
             }else{
