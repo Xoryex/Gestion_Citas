@@ -6,14 +6,15 @@ import java.util.Scanner;
 import src.data.Consultorios;
 import src.data.Doctores;
 import src.data.Especialidades;
+import src.data.Pacientes;
 import src.data.Users;
 import src.views.MenuPerfil; 
-import src.data.Pacientes;
+
 
 
 public class Menu{
    
-   public Menu(Scanner tcl,Users usuarios,Doctores doctores,Especialidades especialidades,Consultorios consultorios,String usuarioAct, Pacientes pacientes){
+   public Menu(Scanner tcl,Users usuarios,Doctores doctores,Especialidades especialidades,Consultorios consultorios,Pacientes pacientes,String usuarioAct){
          String opcion;
       do{
 

@@ -7,11 +7,12 @@ import src.data.Especialidades;
 import src.data.Users;
 //import src.utils.Clean;
 import src.views.admin.Menu;
+import src.data.Pacientes;
 
 public class Login {
    public String user, pass;
    
-   public Login(Scanner tcl,Users usuarios,Doctores doctores,Especialidades especialidades,Consultorios consultorios){
+   public Login(Scanner tcl,Users usuarios,Doctores doctores,Especialidades especialidades,Consultorios consultorios, Pacientes pacientes){
 
          System.out.println("===========LOGIN===========");
          System.out.print("   Usuario: ");
@@ -21,7 +22,7 @@ public class Login {
          System.out.println("===========================");
          
          if(usuarios.ValidationUser(user,pass)){
-            new Menu(tcl,usuarios,doctores,especialidades,consultorios,user);
+            new Menu(tcl,usuarios,doctores,especialidades,consultorios,pacientes,user);
          }
  
          }
