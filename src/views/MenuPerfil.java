@@ -12,18 +12,20 @@ public class MenuPerfil{
       do{
 
          System.out.println("=====PERFIL=====");
-         link.usuarios.MostrarDatos(usuarioAct);
+         
          System.out.println("1. Cambiar Nombre");
          System.out.println("2. Cambiar usuario");
          System.out.println("3. Cambiar contraseña");
-         System.out.println("4. Eliminar perfil");
+         System.out.println("4. Mostrar datos de perfil");
+         System.out.println("5. Eliminar perfil");
          System.out.println("0. Salir");
          System.out.println("================");
+         System.out.print("Seleccionar opcion");
          opcion =tcl.nextLine();
          
          switch(opcion){
             case "1":
-                  //usuarioAct=link.usuarios.CambiarNombre(tcl,usuarioAct);
+                  link.usuarios.CambiarNombre(tcl,usuarioAct);
                break;
             case "2":
                   usuarioAct=link.usuarios.CambiarUsuario(tcl,usuarioAct);
@@ -32,9 +34,12 @@ public class MenuPerfil{
                   link.usuarios.CambiarContraseña(tcl, usuarioAct);
                break;
             case "4":
+                  link.usuarios.MostrarDatos(usuarioAct);
+               break;
+            case "5":
                   link.usuarios.Eliminar(usuarioAct);
                   opcion="0";
-               break;
+               break;   
             default:
                System.out.println("Opcion no valida");
          }

@@ -33,61 +33,6 @@
          
       }
       
-      public int Contar(boolean quien){
-         int n=0;
-         for(User user : listausuarios.values()){
-            
-            if(user.GetAdmin()&&quien){
-               n ++;
-            }else if(!user.GetAdmin() &&!quien){
-               n ++;
-            }
-            
-         }
-         return n ;
-      }
-
-      public void Eliminar(String usuario){
-
-         if(listausuarios.get(usuario).GetAdmin()){
-            if (Contar(true)==1) {
-               System.out.println("no se puede realizar la accion");
-            }else if (Contar(false)>0){
-                  listausuarios.remove(usuario);
-                  System.out.println("usuario fue eliminado con exito");
-            }
-         }else if(!listausuarios.get(usuario).GetAdmin()){
-            listausuarios.remove(usuario);
-            System.out.println("usuario fue eliminado con exito");
-         }
-
-            }
-         
-      
-      
-      public boolean Crear (String usuario,String nombre, String contraseña,boolean admin ){
-         if(listausuarios.containsKey(usuario)){
-            return false;
-         }else{
-            listausuarios.put(usuario,new User(nombre,contraseña,admin));
-            return true;
-         }
-         }
-         
-      public String ValidarCredenciales (String user,String pass){
-         if(ValidarCredenciales(user) && listausuarios.get(user).GetContraseña().equals(pass)&&listausuarios.get(user).GetAdmin()){
-            return "1"; 
-         }else if(ValidarCredenciales(user) && listausuarios.get(user).GetContraseña().equals(pass)&&!listausuarios.get(user).GetAdmin()){
-            return "2";
-         }else{
-            return "0";
-         }  
-      
-      }
-      public boolean ValidarCredenciales (String usuario){
-         return listausuarios.containsKey(usuario);  
-      }
-
       public void CambiarContraseña (Scanner tcl,String usuario){
          String nuevacontraseña,nuevacontraseña1,contraseñaactual;
          
@@ -112,9 +57,79 @@
             System.out.println("contraseñas nuevas diferentes");
             
          }
-         
+      }
+
+      public void CambiarNombre(Scanner tcl, String usuario){
+         String nuevonombre,contraseñaactual;
          
 
+         System.out.println("Ingresar nuevo Nombre");
+         nuevonombre=tcl.nextLine();
+
+         System.out.println("Ingresar contraseña actual");
+         contraseñaactual=tcl.nextLine();  
+
+         if(listausuarios.get(usuario).GetContraseña().equals(contraseñaactual)){
+            listausuarios.get(usuario).SetNombre(nuevonombre);
+            System.out.println("nombre del usuario cambiado");
+         }else{
+            System.out.println("contraseña incorrecta");
+         }
+      }
+
+
+      public void Eliminar(String usuario){
+
+         if(listausuarios.get(usuario).GetAdmin()){
+            if (Contar(true)==1) {
+               System.out.println("no se puede realizar la accion");
+            }else if (Contar(false)>0){
+                  listausuarios.remove(usuario);
+                  System.out.println("usuario fue eliminado con exito");
+            }
+         }else if(!listausuarios.get(usuario).GetAdmin()){
+            listausuarios.remove(usuario);
+            System.out.println("usuario fue eliminado con exito");
+         }
+
+            }
+         
+      public boolean Crear (String usuario,String nombre, String contraseña,boolean admin ){
+         if(listausuarios.containsKey(usuario)){
+            return false;
+         }else{
+            listausuarios.put(usuario,new User(nombre,contraseña,admin));
+            return true;
+         }
+         }
+         
+      public String ValidarCredenciales (String user,String pass){
+         if(ValidarCredenciales(user) && listausuarios.get(user).GetContraseña().equals(pass)&&listausuarios.get(user).GetAdmin()){
+            return "1"; 
+         }else if(ValidarCredenciales(user) && listausuarios.get(user).GetContraseña().equals(pass)&&!listausuarios.get(user).GetAdmin()){
+            return "2";
+         }else{
+            return "0";
+         }  
+      
+      }
+
+      public boolean ValidarCredenciales (String usuario){
+         return listausuarios.containsKey(usuario);  
+      }
+
+      public int Contar(boolean quien){
+         int n=0;
+         for(User user : listausuarios.values()){
+            
+            if(user.GetAdmin()&&quien){
+               n ++;
+            }else if(!user.GetAdmin() &&!quien){
+               n ++;
+            }
+            
+         }
+         return n ;
       }
       
       public void MostrarDatos(String user){
