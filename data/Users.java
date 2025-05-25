@@ -1,6 +1,6 @@
    package data;
-   import java.util.Scanner;
    import java.util.HashMap;
+   import java.util.Scanner;
    
    public class Users{
       private final HashMap<String,String> users=new HashMap<>();
