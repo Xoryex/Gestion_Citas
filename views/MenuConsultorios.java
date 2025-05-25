@@ -2,9 +2,9 @@ package views;
 
 import java.util.Scanner;
 
-public class MenuConsultorio {
+public class MenuConsultorios {
 
-    public MenuConsultorio(Scanner tcl) {
+    public MenuConsultorios(Scanner tcl) {
         String opcion;
         do {
             System.out.println("=== Menú Consultorio ===");

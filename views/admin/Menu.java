@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class Menu{
    
    public Menu(Scanner tcl,Users usuarios,Doctores doctores,Especialidades especialidades,Consultorios consultorios,String usuarioAct){
-         String i;
+         String opcion;
       do{
 
          System.out.println("======MENU======");
@@ -29,7 +29,7 @@ public class Menu{
                   i=(usuarios.ValidationUser(usuarioAct)?"1":"0");
                break;
             case "2":
-                  new MenuMantenimiento(tcl);
+                  new MenuMantenimiento(tcl,usuarios,doctores,especialidades,consultorios);
                break;
             case "3":
                

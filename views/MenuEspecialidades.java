@@ -3,10 +3,9 @@ package views;
 import java.util.Scanner;
 import data.Especialidades;
 
-public class MenuEspecialidad {
+public class MenuEspecialidades {
 
-    public MenuEspecialidad(Scanner tcl) {
-        Especialidades especialidades = new Especialidades();
+    public MenuEspecialidades(Scanner tcl,Especialidades especialidades) {
         String opcion;
         do {
             System.out.println("=== Menú Especialidad ===");
