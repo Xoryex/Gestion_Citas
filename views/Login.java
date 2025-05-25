@@ -1,12 +1,17 @@
 package views;
 import java.util.Scanner;
+
+import data.Consultorios;
+import data.Doctores;
+import data.Especialidades;
 import data.Users;
 import utils.Clean;
+import views.admin.Menu;
 
 public class Login {
    public String user, pass;
    
-   public Login(Scanner tcl,Users usuarios ){
+   public Login(Scanner tcl,Users usuarios,Doctores doctores,Especialidades especialidades,Consultorios consultorios){
 
          System.out.println("===========LOGIN===========");
          System.out.print("   Usuario: ");
@@ -16,7 +21,7 @@ public class Login {
          System.out.println("===========================");
          
          if(usuarios.ValidationUser(user,pass)){
-            new Menu(tcl,usuarios,user);
+            new Menu(tcl,usuarios,doctores,especialidades,consultorios,user);
          }
  
          }
