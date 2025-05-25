@@ -9,9 +9,9 @@ public class Consultorio {
     private String numCuarto;
     private String codigo;
 
-    public static final List<Consultorio> registros = new ArrayList<>();
-    public static final Map<String, Consultorio> mapaRegistros = new HashMap<>();
+    public static final TreeMap<String, Consultorio> mapaRegistros = new TreeMap<>();
 
+    // Registrar nuevo consultorio
     public void Registrar() {
         Scanner scanner = new Scanner(System.in);
 
@@ -30,21 +30,20 @@ public class Consultorio {
         }
 
         this.codigo = generarCodigo(this.nombre, this.piso, this.numCuarto);
-        registros.add(this);
         mapaRegistros.put(this.codigo, this);
 
         System.out.println("Consultorio registrado con código: " + this.codigo);
     }
 
-    // Verifica si ya existe un consultorio con los mismos datos
+    // Verificar existencia
     private boolean consultorioExiste(String nombre, String piso, String numCuarto) {
-        return registros.stream().anyMatch(c ->
+        return mapaRegistros.values().stream().anyMatch(c ->
             c.getNombre().equalsIgnoreCase(nombre) &&
             c.getPiso().equalsIgnoreCase(piso) &&
             c.getNumCuarto().equalsIgnoreCase(numCuarto));
     }
 
-    // Crea un código identificador basado en el nombre, piso y número de habitación
+    // Generar código
     public static String generarCodigo(String nombre, String piso, String numCuarto) {
         String abreviacion = nombre.replaceAll("(?i)[aeiou]", "").toUpperCase();
         return abreviacion + piso + numCuarto;
@@ -54,14 +53,16 @@ public class Consultorio {
         this.codigo = generarCodigo(this.nombre, this.piso, this.numCuarto);
     }
 
+    // Mostrar registros (ordenados por código)
     public static void mostrarRegistros() {
-        if (registros.isEmpty()) {
+        if (mapaRegistros.isEmpty()) {
             System.out.println("No hay registros.");
             return;
         }
 
-        System.out.println("\n--- Lista de Consultorios Registrados ---");
-        for (Consultorio r : registros) {
+        System.out.println("\n--- Lista de Consultorios Registrados (ordenados por código) ---");
+        for (Map.Entry<String, Consultorio> entry : mapaRegistros.entrySet()) {
+            Consultorio r = entry.getValue();
             System.out.println("Código: " + r.getCodigo()
                     + " | Nombre: " + r.getNombre()
                     + " | Piso: " + r.getPiso()
@@ -69,13 +70,13 @@ public class Consultorio {
         }
     }
 
-    // Permite editar los datos de un consultorio buscando por el inicio de su nombre
+    // Editar por código (búsqueda por inicio de nombre)
     public static void editarPorCodigo(Scanner scanner) {
         System.out.print("Ingrese el nombre del consultorio a buscar: ");
         String nombreBuscar = scanner.nextLine().trim().toLowerCase();
 
         List<Consultorio> encontrados = new ArrayList<>();
-        for (Consultorio r : registros) {
+        for (Consultorio r : mapaRegistros.values()) {
             if (r.getNombre().toLowerCase().startsWith(nombreBuscar)) {
                 encontrados.add(r);
             }
@@ -132,13 +133,13 @@ public class Consultorio {
         System.out.println("No se encontró un consultorio con ese código.");
     }
 
-    // Elimina un consultorio buscando por nombre y confirmando por código
+    // Eliminar por código (búsqueda por inicio de nombre)
     public static void eliminarPorCodigo(Scanner scanner) {
         System.out.print("Ingrese el nombre del consultorio a buscar para eliminar: ");
         String nombreBuscar = scanner.nextLine().trim().toLowerCase();
 
         List<Consultorio> encontrados = new ArrayList<>();
-        for (Consultorio r : registros) {
+        for (Consultorio r : mapaRegistros.values()) {
             if (r.getNombre().toLowerCase().startsWith(nombreBuscar)) {
                 encontrados.add(r);
             }
@@ -160,20 +161,14 @@ public class Consultorio {
         System.out.print("\nIngrese el código exacto del consultorio que desea eliminar: ");
         String codigoEliminar = scanner.nextLine().trim();
 
-        Iterator<Consultorio> iterator = registros.iterator();
-        while (iterator.hasNext()) {
-            Consultorio r = iterator.next();
-            if (r.getCodigo().equalsIgnoreCase(codigoEliminar)) {
-                iterator.remove();
-                mapaRegistros.remove(r.getCodigo());
-                System.out.println("Registro eliminado correctamente.");
-                return;
-            }
+        if (mapaRegistros.remove(codigoEliminar) != null) {
+            System.out.println("Registro eliminado correctamente.");
+        } else {
+            System.out.println("No se encontró un consultorio con ese código.");
         }
-
-        System.out.println("No se encontró un consultorio con ese código.");
     }
 
+    // Getters y Setters
     public String getNombre() { return nombre; }
     public String getPiso() { return piso; }
     public String getNumCuarto() { return numCuarto; }
