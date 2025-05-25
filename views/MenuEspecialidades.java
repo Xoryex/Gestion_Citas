@@ -1,7 +1,7 @@
 package views;
 
-import java.util.Scanner;
 import data.Especialidades;
+import java.util.Scanner;
 
 public class MenuEspecialidades {
 
@@ -12,19 +12,23 @@ public class MenuEspecialidades {
             System.out.println("1. Agregar especialidad");
             System.out.println("2. Editar especialidad");
             System.out.println("3. Eliminar especialidad");
+            System.out.println("4. Listar especialidades");
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
             opcion = tcl.nextLine();
 
             switch (opcion) {
                 case "1":
-                    especialidades.agregarEspecialidad(tcl);
+                    especialidades.AgregarEspecialidad(tcl);
                     break;
                 case "2":
                     especialidades.editarEspecialidad(tcl);
                     break;
                 case "3":
                     especialidades.eliminarEspecialidad(tcl);
+                    break;
+                case "4":
+                    especialidades.imprimirEspecialidades();
                     break;
                 case "0":
                     System.out.println("Saliendo del menú Especialidad.");
