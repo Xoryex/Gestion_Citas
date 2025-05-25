@@ -3,29 +3,29 @@
    import java.util.Scanner;
    
    public class Users{
-      private final HashMap<String,String> users=new HashMap<>();
+      private static HashMap<String,String> listausuarios=new HashMap<>();
       
       public Users(){
-         users.put("admin","admin");
+         listausuarios.put("admin","admin");
       }
       
       public void ShowDate(String user){
-         System.out.println("Usuario: "+user+" :: Contraseña: "+users.get(user));
+         System.out.println("Usuario: "+user+" :: Contraseña: "+listausuarios.get(user));
       }
       
       public String ChangeNameUser(Scanner tcl,String usuarioAct){
-         String pass,newname;
+         String contraseña,nuevonombre;
          
          System.out.println("Ingresar nuevo nombre");
-         newname=tcl.nextLine();
+         nuevonombre=tcl.nextLine();
          System.out.println("Ingresar contraseña actual");
-         pass=tcl.nextLine();
+         contraseña=tcl.nextLine();
          
-         if(users.get(usuarioAct).equals(pass)){
+         if(listausuarios.get(usuarioAct).equals(contraseña)){
             DropUser(usuarioAct);
-            CreateUser(newname,pass);
-            System.out.println("Nombre [Anterior: "+usuarioAct +" :: Actual: "+newname+"]");
-            return newname;
+            CreateUser(nuevonombre,contraseña);
+            System.out.println("Nombre [Anterior: "+usuarioAct +" :: Actual: "+nuevonombre+"]");
+            return nuevonombre;
          }else{
             System.out.println("No se puede cambiar el nombre");
             return usuarioAct;
@@ -35,21 +35,21 @@
       }
       
       public void DropUser(String user){
-         users.remove(user);
+         listausuarios.remove(user);
          System.out.println("usuario fue eliminado con exito");
       }
       
       public boolean CreateUser (String user,String pass){
-         if(users.containsKey(user)){
+         if(listausuarios.containsKey(user)){
             return false;
          }else{
-            users.put(user,pass);
+            listausuarios.put(user,pass);
             return true;
          }
          }
          
       public boolean ValidationUser (String user,String pass){
-         if(ValidationUser(user) && users.get(user).equals(pass)){
+         if(ValidationUser(user) && listausuarios.get(user).equals(pass)){
             System.out.println("WELCOME "+user);
          return true; 
          }else{
@@ -59,25 +59,25 @@
       
       }
        public boolean ValidationUser (String user){
-         return users.containsKey(user);  
+         return listausuarios.containsKey(user);  
       }
 
       public void ChangePassUser (Scanner tcl,String user){
-         String newpass,newpass1,actpass;
+         String nuevacontraseña,nuevacontraseña1,contraseñaactual;
          
          System.out.println("Ingresar nuevo contraseña");
-         newpass=tcl.nextLine();
+         nuevacontraseña=tcl.nextLine();
          System.out.println("Ingresar nueva contraseña para veficar");
-         newpass1=tcl.nextLine();
+         nuevacontraseña1=tcl.nextLine();
          System.out.println("Ingresar contraseña actual");
-         actpass=tcl.nextLine();
+         contraseñaactual=tcl.nextLine();
 
-         if(newpass.equals(newpass1)){
+         if(nuevacontraseña.equals(nuevacontraseña1)){
 
-            if(users.get(user).equals(actpass)){
+            if(listausuarios.get(user).equals(contraseñaactual)){
                DropUser(user);
-               CreateUser(user,newpass);
-               System.out.println("Nombre [Anterior: "+actpass +" :: Actual: "+newpass+"]");
+               CreateUser(user,nuevacontraseña);
+               System.out.println("Nombre [Anterior: "+contraseñaactual +" :: Actual: "+nuevacontraseña+"]");
             
             }else{
                System.out.println("la contraseña actual no es la correcta");

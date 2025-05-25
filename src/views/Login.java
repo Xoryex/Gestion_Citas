@@ -5,7 +5,7 @@ import src.database.Bd;
 
 //import src.utils.Clean;
 import src.views.admin.Menu;
-import src.data.Pacientes;
+
 
 public class Login {
    public String user, pass;

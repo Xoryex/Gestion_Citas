@@ -1,11 +1,12 @@
 package src.views.admin;
 
 import java.util.Scanner;
-import src.data.Pacientes;
+
+import src.database.Bd;
 
 public class MenuPaciente {
 
-    public MenuPaciente(Scanner tcl, Pacientes pacientes) {
+    public MenuPaciente(Scanner tcl, Bd bd) {
         String opcion;
         do {
             System.out.println("=== Menú Paciente ===");
@@ -19,19 +20,19 @@ public class MenuPaciente {
 
             switch (opcion) {
                 case "1":
-                    pacientes.agregarPaciente(tcl);
+                    bd.pacientes.agregarPaciente(tcl);
                     
                     break;
                 case "2":
-                    pacientes.editarPaciente(tcl);
+                    bd.pacientes.editarPaciente(tcl);
                     
                     break;
                 case "3":
-                    pacientes.borrarPaciente(tcl);
+                    bd.pacientes.borrarPaciente(tcl);
                     
                     break;
                 case "4":
-                    pacientes.imprimirPacientes();
+                    bd.pacientes.imprimirPacientes();
                     break;
                 case "0":
                     System.out.println("Saliendo del menú Paciente.");

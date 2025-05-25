@@ -2,12 +2,12 @@ package src.entidades;
 
 public class User {
 
-    private String nombre,pass;
-    private boolean admin;
+    public static String nombre,contraseña;
+    public static boolean admin;
 
-    public User(String nombre,String pass,boolean admin){
+    public User(String nombre,String contraseña,boolean admin){
         this.nombre=nombre;
-        this.pass=pass;
+        this.contraseña=contraseña;
         this.admin=admin;
     }
 

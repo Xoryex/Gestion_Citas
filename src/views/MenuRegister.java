@@ -1,12 +1,12 @@
 package src.views;
 import java.util.Scanner;
 
-import src.entidades.Users;
+import src.database.Bd;
 import src.utils.Clean;
 
 public class MenuRegister {
    
-   public MenuRegister(Scanner tcl,Users usuarios){
+   public MenuRegister(Scanner tcl,Bd bd){
          Clean.cmd();
          System.out.println("===========Register===========");
          System.out.print("   Usuario: ");
@@ -15,7 +15,7 @@ public class MenuRegister {
          String pass=tcl.nextLine();
          System.out.println("==============================");
          
-         if(usuarios.CreateUser(user,pass)){
+         if(bd.usuarios.CreateUser(user,pass)){
            System.out.println("Usuario registrado con exito"); 
          }else{
             System.out.println("Credenciales ocupadadas"); 
