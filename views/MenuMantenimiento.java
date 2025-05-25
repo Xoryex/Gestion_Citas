@@ -2,9 +2,9 @@ package views;
 
 import java.util.Scanner;
 
-public class Mantenimiento {
+public class MenuMantenimiento {
 
-    public Mantenimiento(Scanner tcl) {
+    public MenuMantenimiento(Scanner tcl) {
         String opcion;
         do {
             System.out.println("=== Menú de Mantenimiento ===");
@@ -15,6 +15,7 @@ public class Mantenimiento {
             System.out.println("5. Consultorio");
             System.out.println("6. Doctor");
             System.out.println("7. Especialidad");
+            System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
             opcion = tcl.nextLine();
 
@@ -38,11 +39,14 @@ public class Mantenimiento {
                     // Código para la opción 6
                     break;
                 case "7":
+                    
+                    break;
+                case "0":
                     System.out.println("Saliendo del menú de mantenimiento.");
                     break;
                 default:
                     System.out.println("Opción no válida. Intente de nuevo.");
             }
-        } while (!opcion.equals("7"));
+        } while (!opcion.equals("0"));
     }
 }
