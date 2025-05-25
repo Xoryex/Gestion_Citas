@@ -4,9 +4,9 @@ import java.util.Scanner;
 
 import src.utils.Link;
 
-public class MenuPaciente {
+public class MenuMantenimientoPacientes {
 
-    public MenuPaciente(Scanner tcl, Link link) {
+    public MenuMantenimientoPacientes(Scanner tcl, Link link) {
         String opcion;
         do {
             System.out.println("=== Menú Paciente ===");

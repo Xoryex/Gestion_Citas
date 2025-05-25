@@ -25,7 +25,7 @@ public class Init{
                new Login(tcl,link);
                break;
             case "2":
-               new MenuRegister(tcl,link);
+               new MenuRegistro(tcl,link);
                break;
             case "0":
                System.out.println("Bye :)");

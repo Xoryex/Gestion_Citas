@@ -1,9 +1,11 @@
 package src.entidades;
 
+import java.security.PublicKey;
+
 public class User {
 
-    public  String nombre,contraseña;
-    public  boolean admin;
+    private  String nombre,contraseña;
+    private  boolean admin;
 
     public User(String nombre,String contraseña,boolean admin){
         this.nombre=nombre;
@@ -11,8 +13,27 @@ public class User {
         this.admin=admin;
     }
 
-    public String GetNombre(){
-        
+    public String GetDate(){
+        return " :: Nombre: "+this.nombre+" :: Contraseña: "+this.contraseña+" :: Admin :"+this.admin;
     }
 
+    public String GetContraseña (){
+        return this.contraseña;
+    }
+    public String GetNombre (){
+        return this.nombre;
+    }
+    public boolean GetAdmin(){
+        return this.admin;
+    }
+
+    public void SetContraseña (String contraseña){
+        this.contraseña=contraseña;
+    }
+    public void SetNombre (String nombre){
+        this.nombre=nombre;
+    }
+    public void SetAdmin(boolean admin){
+        this.admin=admin;
+    }
 }

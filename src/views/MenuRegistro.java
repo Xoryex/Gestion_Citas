@@ -5,9 +5,9 @@ import src.utils.Link;
 
 import src.utils.Clean;
 
-public class MenuRegister {
+public class MenuRegistro {
    
-   public MenuRegister(Scanner tcl,Link link){
+   public MenuRegistro(Scanner tcl,Link link){
          Clean.cmd();
          System.out.println("===========Register===========");
          System.out.print("   Usuario: ");
@@ -16,7 +16,7 @@ public class MenuRegister {
          String pass=tcl.nextLine();
          System.out.println("==============================");
          
-         if(link.usuarios.CreateUser(user,pass)){
+         if(link.usuarios.Crear(user,pass)){
            System.out.println("Usuario registrado con exito"); 
          }else{
             System.out.println("Credenciales ocupadadas"); 

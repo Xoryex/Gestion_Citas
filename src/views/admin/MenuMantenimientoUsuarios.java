@@ -2,9 +2,9 @@ package src.views.admin;
 
 import java.util.Scanner;
 
-public class MenuRecepcionista {
+public class MenuMantenimientoUsuarios {
 
-    public MenuRecepcionista(Scanner tcl) {
+    public MenuMantenimientoUsuarios(Scanner tcl) {
         String opcion;
         do {
             System.out.println("=== Menú Recepcionista ===");

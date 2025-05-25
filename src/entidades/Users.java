@@ -3,17 +3,15 @@
    import java.util.Scanner;
    
    public class Users{
-      private static HashMap<String,String> listausuarios=new HashMap<>();
+      private static HashMap<String,User> listausuarios=new HashMap<>();
       
       public Users(){
-         listausuarios.put("admin","admin");
+         listausuarios.put("admin",new User("EQUIPO_GESTION_CITAS", "admin", true));
       }
       
-      public void ShowDate(String user){
-         System.out.println("Usuario: "+user+" :: Contraseña: "+listausuarios.get(user));
-      }
-      
-      public String ChangeNameUser(Scanner tcl,String usuarioAct){
+   
+
+      public String CambiarNombre(Scanner tcl,String usuarioAct){
          String contraseña,nuevonombre;
          
          System.out.println("Ingresar nuevo nombre");
@@ -22,8 +20,8 @@
          contraseña=tcl.nextLine();
          
          if(listausuarios.get(usuarioAct).equals(contraseña)){
-            DropUser(usuarioAct);
-            CreateUser(nuevonombre,contraseña);
+            Eliminar(usuarioAct);
+            Crear(nuevonombre, contraseña);
             System.out.println("Nombre [Anterior: "+usuarioAct +" :: Actual: "+nuevonombre+"]");
             return nuevonombre;
          }else{
@@ -34,35 +32,35 @@
          
       }
       
-      public void DropUser(String user){
-         listausuarios.remove(user);
+      public void Eliminar(String usuario){
+         listausuarios.remove(usuario);
          System.out.println("usuario fue eliminado con exito");
       }
       
-      public boolean CreateUser (String user,String pass){
-         if(listausuarios.containsKey(user)){
+      public boolean Crear (String usuario,String contraseña){
+         if(listausuarios.containsKey(usuario)){
             return false;
          }else{
-            listausuarios.put(user,pass);
+            listausuarios.put(usuario,contraseña);
             return true;
          }
          }
          
-      public boolean ValidationUser (String user,String pass){
-         if(ValidationUser(user) && listausuarios.get(user).equals(pass)){
-            System.out.println("WELCOME "+user);
-         return true; 
+      public String ValidarCredenciales (String user,String pass){
+         if(ValidarCredenciales(user) && listausuarios.get(user).GetContraseña().equals(pass)&&listausuarios.get(user).GetAdmin()){
+            return "1"; 
+         }else if(ValidarCredenciales(user) && listausuarios.get(user).GetContraseña().equals(pass)&&!listausuarios.get(user).GetAdmin()){
+            return "2";
          }else{
-            System.out.println("Credenciales invalidas");
-         return false;
+            return "0";
          }  
       
       }
-       public boolean ValidationUser (String user){
-         return listausuarios.containsKey(user);  
+      public boolean ValidarCredenciales (String usuario){
+         return listausuarios.containsKey(usuario);  
       }
 
-      public void ChangePassUser (Scanner tcl,String user){
+      public void CambiarContraseña (Scanner tcl,String usuario){
          String nuevacontraseña,nuevacontraseña1,contraseñaactual;
          
          System.out.println("Ingresar nuevo contraseña");
@@ -74,9 +72,9 @@
 
          if(nuevacontraseña.equals(nuevacontraseña1)){
 
-            if(listausuarios.get(user).equals(contraseñaactual)){
-               DropUser(user);
-               CreateUser(user,nuevacontraseña);
+            if(listausuarios.get(usuario).GetContraseña().equals(contraseñaactual)){
+               Eliminar(usuario);(usuario);
+               Crear(usuario,nuevacontraseña);
                System.out.println("Nombre [Anterior: "+contraseñaactual +" :: Actual: "+nuevacontraseña+"]");
             
             }else{
@@ -91,4 +89,12 @@
 
       }
       
+         public void MostrarDatos(String user){
+         System.out.println("Usuario: "+user+listausuarios.get(user).GetDate());
+      }
+      
+      public void Bienvenida(String user){
+         System.out.println("Welcome: "+listausuarios.get(user).GetNombre());
+      }
+
    }

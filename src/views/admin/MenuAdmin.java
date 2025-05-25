@@ -8,12 +8,12 @@ import src.views.MenuPerfil;
 
 
 
-public class Menu{
+public class MenuAdmin{
    
-   public Menu(Scanner tcl,Link link,String usuarioAct){
+   public MenuAdmin(Scanner tcl,Link link,String usuarioAct){
          String opcion;
       do{
-
+         link.usuarios.Bienvenida(usuarioAct);
          System.out.println("======MENU======");
          System.out.println("1. Perfil");
          System.out.println("2. Mantenimiendo");
@@ -26,7 +26,7 @@ public class Menu{
          switch(opcion){
             case "1":
                   new MenuPerfil(tcl,link,usuarioAct);
-                  opcion=(link.usuarios.ValidationUser(usuarioAct)?"1":"0");
+                  opcion=(link.usuarios.ValidarCredenciales(usuarioAct)?"1":"0");
                break;
             case "2":
                   new MenuMantenimiento(tcl,link);

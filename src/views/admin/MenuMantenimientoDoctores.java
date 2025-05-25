@@ -1,9 +1,9 @@
 package src.views.admin;
 import java.util.Scanner;
 
-public class MenuDoctores {
+public class MenuMantenimientoDoctores {
 
-    public MenuDoctores(Scanner tcl) {
+    public MenuMantenimientoDoctores(Scanner tcl) {
         String opcion;
         do {
             System.out.println("=== Menú Doctor ===");

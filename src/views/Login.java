@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 import src.utils.Link;
 //import src.utils.Clean;
-import src.views.admin.Menu;
+import src.views.admin.MenuAdmin;
 
 
 public class Login {
@@ -19,9 +19,17 @@ public class Login {
          System.out.println("===========================");
          
 
-         if(link.usuarios.ValidationUser(user,pass)){
-            new Menu(tcl,link,user);
-         }
+         switch(link.usuarios.ValidarCredenciales(user,pass)){
+            case "1":
+               new MenuAdmin(tcl,link,user);
+               break;
+            case "2":
+               //Menu de los q crean citas
+               break;
+            case "0":
+               System.out.println("Credenciales invalidas");
+            break;
+            }
  
          }
          

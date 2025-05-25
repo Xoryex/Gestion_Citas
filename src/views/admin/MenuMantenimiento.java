@@ -24,7 +24,7 @@ public class MenuMantenimiento {
 
             switch (opcion) {
                 case "1":
-                    new MenuPaciente(tcl, link);
+                    new MenuMantenimientoPacientes(tcl, link);
                     break;
                 case "2":
                     // Aquí puedes llamar a otro método para el menú de edición
@@ -39,7 +39,7 @@ public class MenuMantenimiento {
                     // Código para la opción 5
                     break;
                 case "6":
-                    new MenuEspecialidades(tcl,link);
+                    new MenuMantenimientoEspecialidades(tcl,link);
                     break;
                 case "0":
                     System.out.println("Saliendo del menú de mantenimiento.");

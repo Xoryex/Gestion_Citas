@@ -2,9 +2,9 @@ package src.views.admin;
 
 import java.util.Scanner;
 
-public class MenuHorarios {
+public class MenuMantenimientoHorarios {
 
-    public MenuHorarios(Scanner tcl) {
+    public MenuMantenimientoHorarios(Scanner tcl) {
         String opcion;
         do {
             System.out.println("=== Menú Horario ===");
