@@ -2,7 +2,7 @@ package src.utils;
 
 import src.entidades.Consultorio;
 import src.entidades.Doctores;
-import src.entidades.Especialidades;1
+import src.entidades.Especialidades;
 import src.entidades.Pacientes;
 import src.entidades.Users;
 
