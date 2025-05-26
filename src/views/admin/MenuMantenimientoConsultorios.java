@@ -2,10 +2,11 @@ package src.views.admin;
 
 import java.util.Scanner;
 import src.entidades.Consultorio;
+import src.utils.Link;
 
 public class MenuMantenimientoConsultorios {
 
-    public MenuMantenimientoConsultorios(Scanner tcl) {
+    public MenuMantenimientoConsultorios(Scanner tcl, Link link) {
         String opcion;
         do {
             System.out.println("=== Menú Consultorio ===");

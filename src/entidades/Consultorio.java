@@ -12,9 +12,8 @@ public class Consultorio {
     public static final TreeMap<String, Consultorio> mapaRegistros = new TreeMap<>();
 
     // Registrar nuevo consultorio
-    public void Registrar() {
-        Scanner scanner = new Scanner(System.in);
-
+    public void Registrar(Scanner tcl) {
+        
         System.out.print("Nombre: ");
         this.nombre = scanner.nextLine().trim();
 
