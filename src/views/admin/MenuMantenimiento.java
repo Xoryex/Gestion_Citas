@@ -1,7 +1,6 @@
 package src.views.admin;
 
 import java.util.Scanner;
-
 import src.utils.Link;
 
 
@@ -33,7 +32,7 @@ public class MenuMantenimiento {
                     // Aquí puedes llamar a otro método para el menú de edición
                     break;
                 case "4":
-                    // Código para la opción 4
+                    new MenuMantenimientoConsultorios(tcl, link);
                     break;
                 case "5":
                     // Código para la opción 5
