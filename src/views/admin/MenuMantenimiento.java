@@ -11,12 +11,12 @@ public class MenuMantenimiento {
         String opcion;
         do {
             System.out.println("=== Menú de Mantenimiento ===");
-            System.out.println("1. Pacientes");
+            System.out.println("1. Pacientes");//\
             System.out.println("2. Recepcionistas");
             System.out.println("3. Horarios");
-            System.out.println("4. Consultorios");
+            System.out.println("4. Consultorios"); //\
             System.out.println("5. Doctors");
-            System.out.println("6. Especialidades");
+            System.out.println("6. Especialidades");//\
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
             opcion = tcl.nextLine();
