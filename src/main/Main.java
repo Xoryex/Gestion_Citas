@@ -1,6 +1,5 @@
 package src.main;
 import java.util.Scanner;
-
 import src.utils.Link;
 import src.views.Init;
 
