@@ -29,7 +29,7 @@ public class MenuMantenimiento {
                     // Aquí puedes llamar a otro método para el menú de edición
                     break;
                 case "3":
-                    // Aquí puedes llamar a otro método para el menú de edición
+                    new MenuMantenimientoHorarios(tcl, link);
                     break;
                 case "4":
                     new MenuMantenimientoConsultorios(tcl, link);
