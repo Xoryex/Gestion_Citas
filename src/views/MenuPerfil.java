@@ -11,7 +11,7 @@ public class MenuPerfil{
       String opcion;
       do{
 
-         System.out.println("===========PERFIL===========");
+         System.out.println("=========== PERFIL ===========");
          System.out.println("1. Cambiar Dni");
          System.out.println("2. Cambiar Nombre");
          System.out.println("3. Cambiar Apellido");
@@ -20,7 +20,7 @@ public class MenuPerfil{
          System.out.println("6. Mostrar datos de perfil");
          System.out.println("7. Eliminar perfil");
          System.out.println("0. Salir");
-         System.out.println("============================");
+         System.out.println("==============================");
          System.out.print("Seleccionar opcion: ");
          opcion =tcl.nextLine();
          

@@ -16,8 +16,9 @@ public class MenuMantenimiento {
             System.out.println("3. Horarios");
             System.out.println("4. Consultorios"); //\
             System.out.println("5. Doctores");
-            System.out.println("6. Especialidades");//\
+            System.out.println("6. Especialidades");//\2
             System.out.println("0. Salir");
+            System.out.println("=============================");
             System.out.print("Seleccione una opción: ");
             opcion = tcl.nextLine();
 
@@ -26,7 +27,7 @@ public class MenuMantenimiento {
                     new MenuMantenimientoPacientes(tcl, link);
                     break;
                 case "2":
-                    // Aquí puedes llamar a otro método para el menú de edición
+                    new MenuMantenimientoRecepcionista(tcl, link);
                     break;
                 case "3":
                     new MenuMantenimientoHorarios(tcl, link);
