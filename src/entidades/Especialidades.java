@@ -2,12 +2,11 @@ package src.entidades;
 
 import java.util.Scanner;
 import java.util.TreeMap;
-
 import src.utils.Link;
 
 public class Especialidades {
     public static TreeMap<String, String> especialidades = new TreeMap<>();
-
+//
     public Especialidades() {
         agregarConClaveGenerada("Cardiología");
         agregarConClaveGenerada("Cirugía General");

@@ -22,6 +22,7 @@ public class Consultorios {
 
         if (listaConsultorios.containsKey(codigo)) {
         System.out.println("Ya existe un consultorio con esos datos.");
+        return;
     }
     
     listaConsultorios.put(codigo, new Consultorio(nombre, piso, numCuarto));

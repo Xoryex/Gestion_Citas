@@ -14,6 +14,7 @@ public class MenuMantenimientoConsultorios {
             System.out.println("3. Editar el Piso del consultorio");
             System.out.println("4. editar la habitacion del consultorio");
             System.out.println("5. Ver lista de consultorios");
+            System.out.println("6. Eliminar consultorios");
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
             opcion = tcl.nextLine().trim();
@@ -33,6 +34,9 @@ public class MenuMantenimientoConsultorios {
                     break;
                 case "5":
                     link.consultorios.ListaConsult();
+                    break;
+                case "6":
+                    link.consultorios.Eliminar(tcl);
                     break;
                 case "0":
                     System.out.println("Saliendo del menú Consultorio.");
