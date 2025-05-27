@@ -109,11 +109,11 @@ public class Consultorios {
             System.out.println("\n---CONSULTORIOS REGISTRADOS---");
             for (String codigo : listaConsultorios.keySet()) {
             Consultorio consultorio = listaConsultorios.get(codigo);
-            System.out.println("Código: " + codigo);
-            System.out.println("Nombre: " + consultorio.getNombre());
-            System.out.println("Piso: " + consultorio.getPiso());
-            System.out.println("Habitación: " + consultorio.getNumCuarto());
-            System.out.println("----------------------------------");
+            System.out.print("|Código: " + codigo);
+            System.out.print("|Nombre: " + consultorio.getNombre());
+            System.out.print("|Piso: " + consultorio.getPiso());
+            System.out.print("|Habitación: " + consultorio.getNumCuarto());
+            System.out.println();
             }
         }
     }
