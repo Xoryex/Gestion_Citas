@@ -16,12 +16,12 @@
          System.out.print("Ingresar nuevo dni: ");
          nuevodni=tcl.nextLine();
          nuevodni=nuevodni.replaceAll("[^0-9.]", "");
-         }while(nuevodni.equals("")||!(Integer.valueOf(nuevodni)==8));
+         }while(nuevodni.isEmpty()||!(nuevodni.length()==8));
 
          do{
          System.out.print("Ingresar contraseña actual: ");
          contraseña=tcl.nextLine();
-         }while(contraseña.equals(""));
+         }while(contraseña.isEmpty());
 
          if(listausuarios.get(usuario).GetContraseña().equals(contraseña)){
             listausuarios.get(usuario).SetDni(nuevodni);
@@ -38,11 +38,11 @@
          do{
          System.out.print("Ingresar nuevo usuario:");
          nuevousuario=tcl.nextLine();
-         }while(nuevousuario.equals(""));
+         }while(nuevousuario.isEmpty());
          do{
          System.out.print("Ingresar contraseña actual: ");
          contraseñaAct=tcl.nextLine();
-         }while(contraseñaAct.equals("")||!(contraseñaAct.length()>=8));
+         }while(contraseñaAct.isEmpty()||!(contraseñaAct.length()>=8));
          
          if(listausuarios.containsKey(nuevousuario)){
 
@@ -72,13 +72,19 @@
       
       public void CambiarContraseña (Scanner tcl,String usuario){
          String nuevacontraseña,nuevacontraseña1,contraseñaactual;
-         
-         System.out.println("Ingresar nuevo contraseña");
-         nuevacontraseña=tcl.nextLine();
-         System.out.println("Ingresar nueva contraseña para veficar");
-         nuevacontraseña1=tcl.nextLine();
-         System.out.println("Ingresar contraseña actual");
-         contraseñaactual=tcl.nextLine();
+         do {
+            System.out.println("Ingresar nuevo contraseña");
+            nuevacontraseña=tcl.nextLine();
+         } while (nuevacontraseña.isEmpty()||nuevacontraseña.length()<8);
+         do {
+            
+            System.out.println("Ingresar nueva contraseña para veficar");
+            nuevacontraseña1=tcl.nextLine();
+         } while (nuevacontraseña1.isEmpty()||nuevacontraseña1.length()<8);
+         do {
+            System.out.println("Ingresar contraseña actual");
+            contraseñaactual=tcl.nextLine();
+         } while (contraseñaactual.isEmpty()||contraseñaactual.length()<8);
 
          if(nuevacontraseña.equals(nuevacontraseña1)){
 
@@ -97,12 +103,15 @@
       }
 
       public void CambiarNombre(Scanner tcl, String usuario){
-         
-         System.out.print("Ingresar nuevo Nombre: ");
-         String nuevonombre=tcl.nextLine();
-
-         System.out.print("Ingresar contraseña actual: ");
-         String contraseñaactual=tcl.nextLine();  
+         String nuevonombre,contraseñaactual;
+         do {
+            System.out.print("Ingresar nuevo Nombre: ");
+            nuevonombre=tcl.nextLine();
+         } while (nuevonombre.isEmpty());
+         do {
+            System.out.print("Ingresar contraseña actual: ");
+            contraseñaactual=tcl.nextLine();  
+         } while (contraseñaactual.isEmpty()||contraseñaactual.length()<8);
 
          if(listausuarios.get(usuario).GetContraseña().equals(contraseñaactual)){
             listausuarios.get(usuario).SetNombre(nuevonombre);
@@ -156,33 +165,33 @@
          System.out.print("        Dni: ");
          dni=tcl.nextLine();
          dni=dni.replaceAll("[^0-9.]", "");
-         }while(dni.equals("")||!(Integer.valueOf(dni)==8));
+         }while(dni.isEmpty()||!(dni.length()==8));
 
          do{
          System.out.print("     Nombre: ");
          nombre=tcl.nextLine();
-         }while(nombre.equals(""));
+         }while(nombre.isEmpty());
 
          do{
          System.out.print("   Apellido: ");
          apellido=tcl.nextLine();
-         }while(apellido.equals(""));
+         }while(apellido.isEmpty());
 
          do{
          System.out.print("   Telefono: ");
          tlf=tcl.nextLine();
          tlf=tlf.replaceAll("[^0-9.]", "");
-         }while(tlf.equals("")||!(Integer.valueOf(tlf)==9));
+         }while(tlf.isEmpty()||!(tlf.length()==9));
 
          do {
          System.out.print("   Usuario: ");
          usuario=tcl.nextLine(); 
-         } while (usuario.equals(""));
+         } while (usuario.isEmpty());
 
          do {
          System.out.print("   Password: ");
          contraseña=tcl.nextLine(); 
-         } while (contraseña.equals("")||contraseña.length()<8);
+         } while (contraseña.isEmpty()||contraseña.length()<8);
 
          
          if(listausuarios.containsKey(usuario)){
@@ -219,11 +228,22 @@
       }
       
       public void MostrarDatos(String usuario){
-         System.out.println("[Dni: "+listausuarios.get(usuario).GetDni()
+         System.out.println("\n==================DATOS "+usuario+"====================="
+                           +"\n[Dni: "+listausuarios.get(usuario).GetDni()
                            +"\n|Nombre: "+listausuarios.get(usuario).GetNombre()
                            +"\n|Apellido: "+listausuarios.get(usuario).GetApellido()
                            +"\n|Telefono: "+listausuarios.get(usuario).GetTlf()
                            +"\n[Admin: "+listausuarios.get(usuario).GetAdmin());
+      }
+
+      public void MostrarDatosCompletos (String usuario){
+         System.out.println("\n[Dni: "+listausuarios.get(usuario).GetDni()
+                           +"|Nombre: "+listausuarios.get(usuario).GetNombre()
+                           +"|Apellido: "+listausuarios.get(usuario).GetApellido()
+                           +"|Telefono: "+listausuarios.get(usuario).GetTlf()
+                           +"|Usuario: "+usuario
+                           +"|Contraseña: "+listausuarios.get(usuario).GetContraseña()
+                           +"|Admin: "+listausuarios.get(usuario).GetAdmin()+"]");
       }
       
       public void Bienvenida(String usuario){
@@ -231,8 +251,20 @@
       }
 
       public void MostrarLista(Boolean quien){
+         boolean admin;
+         String listaDe = (quien)?"ADMINISTRADORES" :"RECEPCIONISTAS";
+         System.out.println("======================== "+listaDe+" ========================");
 
-         
+         for(String usuario : listausuarios.keySet()){
+            admin=listausuarios.get(usuario).GetAdmin();
+            
+            if(quien&&admin){
+               
+                        MostrarDatosCompletos(usuario);
+            }else if(!quien&&!admin){
+                        MostrarDatosCompletos(usuario);
+            }
+         }
 
       }
    }

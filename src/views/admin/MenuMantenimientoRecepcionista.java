@@ -10,10 +10,11 @@ public MenuMantenimientoRecepcionista(Scanner tcl, Link link) {
         do {
             System.out.println("=== Menú Recepcionista ===");
             System.out.println("1. Agregar Recepcionista");
-            System.out.println("2. Editar paciente");
-            System.out.println("3. Eliminar paciente");
-            System.out.println("4. Imprimir pacientes");
+            System.out.println("2. Editar Recepcionista");
+            System.out.println("3. Eliminar Recepcionista");
+            System.out.println("4. Mostrar Recepcionistas");
             System.out.println("0. Salir");
+            System.out.println("==========================");
             System.out.print("Seleccione una opción: ");
             opcion = tcl.nextLine();
 
@@ -28,7 +29,7 @@ public MenuMantenimientoRecepcionista(Scanner tcl, Link link) {
                     
                     break;
                 case "4":
-
+                    link.usuarios.MostrarLista(false);
                     break;
                 case "0":
                     System.out.println("Saliendo del menú Paciente.");

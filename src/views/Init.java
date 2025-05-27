@@ -16,6 +16,7 @@ public class Init{
          System.out.println("2. Registrar");
          System.out.println("0. Salir");
          System.out.println("================");
+         System.out.print("Seleccionar opcion: ");
          opcion =tcl.nextLine();
          
          
