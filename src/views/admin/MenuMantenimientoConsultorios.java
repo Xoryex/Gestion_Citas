@@ -1,11 +1,15 @@
 package src.views.admin;
 
 import java.util.Scanner;
+<<<<<<< HEAD
 import src.entidades.Consultorio;
+=======
+>>>>>>> 0939171aaa1b7b492a271fa0e2a108ca56ce3079
+import src.utils.Link;
 
 public class MenuMantenimientoConsultorios {
 
-    public MenuMantenimientoConsultorios(Scanner tcl) {
+    public MenuMantenimientoConsultorios(Scanner tcl, Link link) {
         String opcion;
         do {
             System.out.println("=== Menú Consultorio ===");
@@ -21,8 +25,8 @@ public class MenuMantenimientoConsultorios {
                 case "1":
                     System.out.println("\n-- Registrar consultorio --");
                     while (true) {
-                        Consultorio nuevo = new Consultorio();
-                        nuevo.Registrar();
+                        
+                        link.consultorios.Registrar();
 
                         System.out.print("¿Desea registrar otro consultorio? Enter para continuar, 0 para finalizar: ");
                         String respuesta = tcl.nextLine().trim();
@@ -31,15 +35,15 @@ public class MenuMantenimientoConsultorios {
                     break;
                 case "2":
                     System.out.println("\n-- Editar consultorio --");
-                    Consultorio.editarPorCodigo(tcl);
+                    link.consultorios.editarPorCodigo(tcl);
                     break;
                 case "3":
                     System.out.println("\n-- Eliminar consultorio --");
-                    Consultorio.eliminarPorCodigo(tcl);
+                    link.consultorios.eliminarPorCodigo(tcl);
                     break;
                 case "4":
                     System.out.println("\n-- Lista de consultorios registrados --");
-                    Consultorio.mostrarRegistros();
+                    link.consultorios.mostrarRegistros();
                     break;
                 case "0":
                     System.out.println("Saliendo del menú Consultorio.");

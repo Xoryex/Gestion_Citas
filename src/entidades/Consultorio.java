@@ -1,6 +1,7 @@
 package src.entidades;
 
 import java.util.*;
+import src.utils.Link;
 
 public class Consultorio {
 
@@ -12,17 +13,16 @@ public class Consultorio {
     public static final TreeMap<String, Consultorio> mapaRegistros = new TreeMap<>();
 
     // Registrar nuevo consultorio
-    public void Registrar() {
-        Scanner scanner = new Scanner(System.in);
-
+    public void Registrar(Scanner tcl, Link link) {
+        
         System.out.print("Nombre: ");
-        this.nombre = scanner.nextLine().trim();
+        this.nombre = tcl.nextLine().trim();
 
         System.out.print("Piso: ");
-        this.piso = scanner.nextLine().trim();
+        this.piso = tcl.nextLine().trim();
 
         System.out.print("Número de habitación: ");
-        this.numCuarto = scanner.nextLine().trim();
+        this.numCuarto = tcl.nextLine().trim();
 
         if (consultorioExiste(this.nombre, this.piso, this.numCuarto)) {
             System.out.println("Este consultorio ya existe");
@@ -71,9 +71,9 @@ public class Consultorio {
     }
 
     // Editar por código (búsqueda por inicio de nombre)
-    public static void editarPorCodigo(Scanner scanner) {
+    public static void editarPorCodigo(tcl tcl) {
         System.out.print("Ingrese el nombre del consultorio a buscar: ");
-        String nombreBuscar = scanner.nextLine().trim().toLowerCase();
+        String nombreBuscar = tcl.nextLine().trim().toLowerCase();
 
         List<Consultorio> encontrados = new ArrayList<>();
         for (Consultorio r : mapaRegistros.values()) {
@@ -96,20 +96,20 @@ public class Consultorio {
         );
 
         System.out.print("\nIngrese el código del consultorio que desea editar: ");
-        String codigoBuscar = scanner.nextLine().trim();
+        String codigoBuscar = tcl.nextLine().trim();
 
         for (Consultorio r : encontrados) {
             if (r.getCodigo().equalsIgnoreCase(codigoBuscar)) {
                 System.out.println("\nConsultorio encontrado. Ingrese los nuevos datos:");
 
                 System.out.print("Nuevo nombre: ");
-                String nuevoNombre = scanner.nextLine().trim();
+                String nuevoNombre = tcl.nextLine().trim();
 
                 System.out.print("Nuevo piso: ");
-                String nuevoPiso = scanner.nextLine().trim();
+                String nuevoPiso = tcl.nextLine().trim();
 
                 System.out.print("Nueva habitación: ");
-                String nuevaHabitacion = scanner.nextLine().trim();
+                String nuevaHabitacion = tcl.nextLine().trim();
 
                 if (r.consultorioExiste(nuevoNombre, nuevoPiso, nuevaHabitacion)) {
                     System.out.println("Ya existe otro consultorio con esos datos.");
@@ -134,9 +134,9 @@ public class Consultorio {
     }
 
     // Eliminar por código (búsqueda por inicio de nombre)
-    public static void eliminarPorCodigo(Scanner scanner) {
+    public static void eliminarPorCodigo(tcl tcl) {
         System.out.print("Ingrese el nombre del consultorio a buscar para eliminar: ");
-        String nombreBuscar = scanner.nextLine().trim().toLowerCase();
+        String nombreBuscar = tcl.nextLine().trim().toLowerCase();
 
         List<Consultorio> encontrados = new ArrayList<>();
         for (Consultorio r : mapaRegistros.values()) {
@@ -159,7 +159,7 @@ public class Consultorio {
         );
 
         System.out.print("\nIngrese el código exacto del consultorio que desea eliminar: ");
-        String codigoEliminar = scanner.nextLine().trim();
+        String codigoEliminar = tcl.nextLine().trim();
 
         if (mapaRegistros.remove(codigoEliminar) != null) {
             System.out.println("Registro eliminado correctamente.");
