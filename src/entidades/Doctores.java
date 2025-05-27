@@ -2,18 +2,13 @@ package src.entidades;
 
 import java.util.Scanner;
 import java.util.TreeMap;
-import java.util.regex.Pattern; // Para validación de correo más robusta
 
 public class Doctores {
     private static TreeMap<String, Doctor> listaDoctores = new TreeMap<>();
 
-    private static final Pattern EMAIL_PATTERN = Pattern.compile(
-            "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$"
-    );
-
     public Doctores() {
         if (!listaDoctores.containsKey("12345678A")) {
-             listaDoctores.put("12345678A", new Doctor("Juan", "Pérez", "Cardiología", "12345678A", "987654321", "juan.perez@example.com"));
+            listaDoctores.put("12345678A", new Doctor("Juan", "Pérez", "Cardiología", "12345678A", "987654321", "juan.perez@example.com"));
         }
     }
 
@@ -36,7 +31,7 @@ public class Doctores {
         do {
             System.out.print("Ingrese el nombre del doctor: ");
             nombre = scanner.nextLine().trim();
-             if (nombre.isEmpty()) System.out.println("El nombre no puede estar vacío.");
+            if (nombre.isEmpty()) System.out.println("El nombre no puede estar vacío.");
         } while (nombre.isEmpty());
 
         do {
@@ -54,21 +49,26 @@ public class Doctores {
         do {
             System.out.print("Ingrese el número de teléfono del doctor: ");
             telefono = scanner.nextLine().trim();
-            telefono = telefono.replaceAll("[^0-9]", ""); // Conservar solo números
+            telefono = telefono.replaceAll("[^0-9]", "");
             if (telefono.length() != 9) {
                 System.out.println("El número de teléfono debe contener 9 dígitos numéricos. Ej: 987654321");
             }
         } while (telefono.length() != 9);
 
+        boolean correoValido;
         do {
             System.out.print("Ingrese el correo electrónico del doctor: ");
             correo = scanner.nextLine().trim();
             if (correo.isEmpty()) {
-                 System.out.println("El correo no puede estar vacío.");
-            } else if (!EMAIL_PATTERN.matcher(correo).matches()) {
-                System.out.println("Formato de correo electrónico inválido. Ej: usuario@dominio.com");
+                System.out.println("El correo no puede estar vacío.");
+                correoValido = false;
+            } else if (!correo.contains("@") || !correo.contains(".") || correo.indexOf('@') > correo.lastIndexOf('.')) {
+                System.out.println("Formato de correo electrónico inválido. Debe contener '@' y '.' (ej: usuario@dominio.com) y el '@' debe ir antes del último '.'.");
+                correoValido = false;
+            } else {
+                correoValido = true;
             }
-        } while (correo.isEmpty() || !EMAIL_PATTERN.matcher(correo).matches());
+        } while (!correoValido);
 
         Doctor nuevoDoctor = new Doctor(nombre, apellido, codEspecialidad, dni, telefono, correo);
         listaDoctores.put(dni, nuevoDoctor);
@@ -90,94 +90,104 @@ public class Doctores {
     }
 
     public void editarnombre(Scanner scanner) {
-        System.out.print("Ingrese el DNI del doctor a editar: ");
+        System.out.print("Ingrese el DNI del doctor cuyo nombre desea editar: ");
         String dni = scanner.nextLine().trim().toUpperCase();
         if (listaDoctores.containsKey(dni)) {
+            Doctor doctorAEditar = listaDoctores.get(dni);
             String nuevoNombre;
             do {
-                System.out.print("Ingrese el nuevo nombre: ");
+                System.out.print("El nombre actual es: " + doctorAEditar.getnombre() + ". Ingrese el nuevo nombre: ");
                 nuevoNombre = scanner.nextLine().trim();
                 if (nuevoNombre.isEmpty()) System.out.println("El nombre no puede estar vacío.");
             } while (nuevoNombre.isEmpty());
-            listaDoctores.get(dni).setnombre(nuevoNombre);
-            System.out.println("Nombre actualizado correctamente.");
+            doctorAEditar.setnombre(nuevoNombre);
+            System.out.println("Nombre actualizado correctamente para el doctor con DNI " + dni + ".");
         } else {
-            System.out.println("No existe un doctor con ese DNI.");
+            System.out.println("No existe un doctor con el DNI " + dni + ".");
         }
     }
 
     public void editarapellido(Scanner scanner) {
-        System.out.print("Ingrese el DNI del doctor a editar: ");
+        System.out.print("Ingrese el DNI del doctor cuyo apellido desea editar: ");
         String dni = scanner.nextLine().trim().toUpperCase();
         if (listaDoctores.containsKey(dni)) {
+            Doctor doctorAEditar = listaDoctores.get(dni);
             String nuevoApellido;
             do {
-                System.out.print("Ingrese el nuevo apellido: ");
+                System.out.print("El apellido actual es: " + doctorAEditar.getapellido() + ". Ingrese el nuevo apellido: ");
                 nuevoApellido = scanner.nextLine().trim();
                 if (nuevoApellido.isEmpty()) System.out.println("El apellido no puede estar vacío.");
             } while (nuevoApellido.isEmpty());
-            listaDoctores.get(dni).setapellido(nuevoApellido);
-            System.out.println("Apellido actualizado correctamente.");
+            doctorAEditar.setapellido(nuevoApellido);
+            System.out.println("Apellido actualizado correctamente para el doctor con DNI " + dni + ".");
         } else {
-            System.out.println("No existe un doctor con ese DNI.");
+            System.out.println("No existe un doctor con el DNI " + dni + ".");
         }
     }
 
     public void editartlf(Scanner scanner) {
-        System.out.print("Ingrese el DNI del doctor a editar: ");
+        System.out.print("Ingrese el DNI del doctor cuyo teléfono desea editar: ");
         String dni = scanner.nextLine().trim().toUpperCase();
         if (listaDoctores.containsKey(dni)) {
+            Doctor doctorAEditar = listaDoctores.get(dni);
             String nuevoTelefono;
             do {
-                System.out.print("Ingrese el nuevo número de teléfono (9 dígitos): ");
+                System.out.print("El teléfono actual es: " + doctorAEditar.gettlf() + ". Ingrese el nuevo número de teléfono: ");
                 nuevoTelefono = scanner.nextLine().trim();
                 nuevoTelefono = nuevoTelefono.replaceAll("[^0-9]", "");
                 if (nuevoTelefono.length() != 9) {
-                     System.out.println("El teléfono debe tener 9 dígitos numéricos.");
+                    System.out.println("El teléfono debe tener 9 dígitos numéricos.");
                 }
             } while (nuevoTelefono.length() != 9);
-            listaDoctores.get(dni).settlf(nuevoTelefono);
-            System.out.println("Número de teléfono actualizado correctamente.");
+            doctorAEditar.settlf(nuevoTelefono);
+            System.out.println("Número de teléfono actualizado correctamente para el doctor con DNI " + dni + ".");
         } else {
-            System.out.println("No existe un doctor con ese DNI.");
+            System.out.println("No existe un doctor con el DNI " + dni + ".");
         }
     }
 
     public void editarCorreo(Scanner scanner) {
-        System.out.print("Ingrese el DNI del doctor a editar: ");
+        System.out.print("Ingrese el DNI del doctor cuyo correo desea editar: ");
         String dni = scanner.nextLine().trim().toUpperCase();
         if (listaDoctores.containsKey(dni)) {
+            Doctor doctorAEditar = listaDoctores.get(dni);
             String nuevoCorreo;
+            boolean correoValido;
             do {
-                System.out.print("Ingrese el nuevo correo electrónico: ");
+                System.out.print("El correo actual es: " + doctorAEditar.getcorreo() + ". Ingrese el nuevo correo electrónico: ");
                 nuevoCorreo = scanner.nextLine().trim();
-                 if (nuevoCorreo.isEmpty()) {
+                if (nuevoCorreo.isEmpty()) {
                     System.out.println("El correo no puede estar vacío.");
-                } else if (!EMAIL_PATTERN.matcher(nuevoCorreo).matches()) {
-                    System.out.println("Formato de correo electrónico inválido.");
+                    correoValido = false;
+                } else if (!nuevoCorreo.contains("@") || !nuevoCorreo.contains(".") || nuevoCorreo.indexOf('@') > nuevoCorreo.lastIndexOf('.')) {
+                    System.out.println("Formato de correo electrónico inválido. Debe contener '@' y '.' (ej: usuario@dominio.com) y el '@' debe ir antes del último '.'.");
+                    correoValido = false;
+                } else {
+                    correoValido = true;
                 }
-            } while (nuevoCorreo.isEmpty() || !EMAIL_PATTERN.matcher(nuevoCorreo).matches());
-            listaDoctores.get(dni).setcorreo(nuevoCorreo);
-            System.out.println("Correo electrónico actualizado correctamente.");
+            } while (!correoValido);
+            doctorAEditar.setcorreo(nuevoCorreo);
+            System.out.println("Correo electrónico actualizado correctamente para el doctor con DNI " + dni + ".");
         } else {
-            System.out.println("No existe un doctor con ese DNI.");
+            System.out.println("No existe un doctor con el DNI " + dni + ".");
         }
     }
 
     public void editarEspecialidad(Scanner scanner) {
-        System.out.print("Ingrese el DNI del doctor a editar: ");
+        System.out.print("Ingrese el DNI del doctor cuya especialidad desea editar: ");
         String dni = scanner.nextLine().trim().toUpperCase();
         if (listaDoctores.containsKey(dni)) {
+            Doctor doctorAEditar = listaDoctores.get(dni);
             String nuevaEspecialidad;
             do {
-                System.out.print("Ingrese la nueva especialidad: ");
+                System.out.print("La especialidad actual es: " + doctorAEditar.getcodEspecialidad() + ". Ingrese la nueva especialidad: ");
                 nuevaEspecialidad = scanner.nextLine().trim();
                 if (nuevaEspecialidad.isEmpty()) System.out.println("La especialidad no puede estar vacía.");
             } while (nuevaEspecialidad.isEmpty());
-            listaDoctores.get(dni).setcodEspecialidad(nuevaEspecialidad);
-            System.out.println("Especialidad actualizada correctamente.");
+            doctorAEditar.setcodEspecialidad(nuevaEspecialidad);
+            System.out.println("Especialidad actualizada correctamente para el doctor con DNI " + dni + ".");
         } else {
-            System.out.println("No existe un doctor con ese DNI.");
+            System.out.println("No existe un doctor con el DNI " + dni + ".");
         }
     }
 
@@ -198,7 +208,7 @@ public class Doctores {
                     return;
                 } else if (listaDoctores.containsKey(nuevoDNI)) {
                     System.out.println("Error: Ya existe otro doctor registrado con el DNI " + nuevoDNI + ". Intente con otro.");
-                    nuevoDNI = "";
+                    nuevoDNI = ""; // Reset nuevoDNI to loop again
                 }
             } while (nuevoDNI.isEmpty());
 
@@ -221,6 +231,7 @@ public class Doctores {
                 Doctor doctor = listaDoctores.get(dni);
                 System.out.println(doctor.toString());
             }
+            System.out.println();
         }
     }
 }
