@@ -1,6 +1,9 @@
    package src.entidades;
    import java.util.HashMap;
    import java.util.Scanner;
+
+import src.utils.Link;
+import src.views.MenuPerfil;
    
    public class Users{
       private static HashMap<String,User> listausuarios=new HashMap<>();
@@ -8,7 +11,7 @@
       public Users(){
          listausuarios.put("admin",new User("00000000","EQUIPO","GESTION_CITAS","", "admin", true));
       }
-      
+
       public void CambiarDni(Scanner tcl,String usuario){
          String nuevodni,contraseña;
          System.out.println("========CAMBIAR DNI========");
@@ -32,6 +35,27 @@
       
       }
       
+      public void CambiarTelefono(Scanner tcl, String usuario){
+         String nuevotlf,contraseña;
+         System.out.println("========CAMBIAR TELEFONO========");
+         do{
+         System.out.print("Ingresar nuevo dni: ");
+         nuevotlf=tcl.nextLine();
+         nuevotlf=nuevotlf.replaceAll("[^0-9.]", "");
+         }while(nuevotlf.isEmpty()||!(nuevotlf.length()==8));
+
+         do{
+         System.out.print("Ingresar contraseña actual: ");
+         contraseña=tcl.nextLine();
+         }while(contraseña.isEmpty());
+
+         if(listausuarios.get(usuario).GetContraseña().equals(contraseña)){
+            listausuarios.get(usuario).SetTlf(nuevotlf);
+         }else{
+            System.out.println("No se puede cambiar el telefono");
+         }
+      }
+
       public String CambiarUsuario(Scanner tcl,String usuarioAct){
          String nuevousuario,contraseñaAct;
          System.out.println("========CAMBIAR USUARIO========");
@@ -265,6 +289,39 @@
                         MostrarDatosCompletos(usuario);
             }
          }
+         System.out.println("================================================================");
+      }
+   
+      public void AgregarRecepcionista(Scanner tcl){
+         System.out.println("======== AGREGAR RECEPCIONISTA ========");
+         Crear(tcl, false);
+         System.out.println("=======================================");
+      }
+      
+      public void EditarRecepcionista(Scanner tcl,Link link){
+         
+         String usuariorecepcionista;
+         MostrarLista(false);
+
+          do {
+            System.out.print("Ingresar usuario del recepcionista: ");
+            usuariorecepcionista=tcl.nextLine();
+         } while (usuariorecepcionista.isEmpty()||!listausuarios.containsKey(usuariorecepcionista));
+         
+         new MenuPerfil(tcl, link, usuariorecepcionista);
+
+      }
+   
+      public void EliminarRecepcionista(Scanner tcl){
+         String usuariorecepcionista;
+         MostrarLista(false);
+
+          do {
+            System.out.print("Ingresar usuario del recepcionista: ");
+            usuariorecepcionista=tcl.nextLine();
+         } while (usuariorecepcionista.isEmpty()||!listausuarios.containsKey(usuariorecepcionista));
+
+         Eliminar(usuariorecepcionista);
 
       }
    }

@@ -20,13 +20,13 @@ public MenuMantenimientoRecepcionista(Scanner tcl, Link link) {
 
             switch (opcion) {
                 case "1":
-                    
+                    link.usuarios.AgregarRecepcionista(tcl);
                     break;
                 case "2":
-                    
+                    link.usuarios.EditarRecepcionista(tcl, link);
                     break;
                 case "3":
-                    
+                    link.usuarios.EliminarRecepcionista(tcl);
                     break;
                 case "4":
                     link.usuarios.MostrarLista(false);

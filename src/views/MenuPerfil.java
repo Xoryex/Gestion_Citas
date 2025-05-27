@@ -16,9 +16,10 @@ public class MenuPerfil{
          System.out.println("2. Cambiar Nombre");
          System.out.println("3. Cambiar Apellido");
          System.out.println("4. Cambiar Telefono");
-         System.out.println("5. Cambiar contraseña");
-         System.out.println("6. Mostrar datos de perfil");
-         System.out.println("7. Eliminar perfil");
+         System.out.println("5. Cambiar usuario");
+         System.out.println("6. Cambiar contraseña");
+         System.out.println("7. Mostrar datos de perfil");
+         System.out.println("8. Eliminar perfil");
          System.out.println("0. Salir");
          System.out.println("==============================");
          System.out.print("Seleccionar opcion: ");
@@ -34,17 +35,23 @@ public class MenuPerfil{
             case "3":
                   link.usuarios.CambiarApellido(tcl, usuarioAct);
                break;
-            
+            case "4":
+                  link.usuarios.CambiarTelefono(tcl, usuarioAct);
+               break;
             
             case "5":
-                  link.usuarios.CambiarContraseña(tcl, usuarioAct);
+                  usuarioAct=link.usuarios.CambiarUsuario(tcl, usuarioAct);
                break;
 
                case "6":
-                  link.usuarios.MostrarDatos(usuarioAct);
+                  link.usuarios.CambiarContraseña(tcl, usuarioAct);
                break;
 
                case "7":
+                  link.usuarios.MostrarDatos(usuarioAct);
+               break;
+
+               case "8":
                   link.usuarios.Eliminar(usuarioAct);
                   opcion="0";
                break;   
