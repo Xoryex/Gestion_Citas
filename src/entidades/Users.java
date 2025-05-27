@@ -97,8 +97,10 @@
       public boolean Crear (String usuario,String nombre, String contraseña,boolean admin ){
          if(listausuarios.containsKey(usuario)){
             return false;
+            //verificamos que usuario ya exista en listausuarios, si no se crea devuelve false
          }else{
             listausuarios.put(usuario,new User(nombre,contraseña,admin));
+            //si el usuario no existe se crea una nueva lista de usuario usando a usuario como clave, true si fue exitosa
             return true;
          }
          }
