@@ -243,7 +243,7 @@ public class Doctores {
         }
     }
 
-    public static TreeMap<String, Doctor> getListaDoctores() {
+    public TreeMap<String, Doctor> getListaDoctores() {
         return listaDoctores;
     }
 }

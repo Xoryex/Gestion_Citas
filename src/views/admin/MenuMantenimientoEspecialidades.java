@@ -26,7 +26,7 @@ public class MenuMantenimientoEspecialidades {
                     link.especialidades.editarEspecialidad(tcl);
                     break;
                 case "3":
-                    link.especialidades.eliminarEspecialidad(tcl, link.doctores.getListaDoctores());
+                    link.especialidades.eliminarEspecialidad(tcl, link);
                     break;
                 case "4":
                     link.especialidades.imprimirEspecialidades();
