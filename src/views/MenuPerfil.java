@@ -15,7 +15,7 @@ public class MenuPerfil{
          System.out.println("1. Cambiar Dni");
          System.out.println("2. Cambiar Nombre");
          System.out.println("3. Cambiar Apellido");
-         System.out.println("4. Cambiarx Telefono");
+         System.out.println("4. Cambiar Telefono");
          System.out.println("5. Cambiar contraseña");
          System.out.println("6. Mostrar datos de perfil");
          System.out.println("7. Eliminar perfil");
