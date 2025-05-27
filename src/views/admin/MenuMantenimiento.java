@@ -15,7 +15,7 @@ public class MenuMantenimiento {
             System.out.println("2. Recepcionistas");
             System.out.println("3. Horarios");
             System.out.println("4. Consultorios"); //\
-            System.out.println("5. Doctors");
+            System.out.println("5. Doctores");
             System.out.println("6. Especialidades");//\
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
@@ -35,7 +35,7 @@ public class MenuMantenimiento {
                     new MenuMantenimientoConsultorios(tcl, link);
                     break;
                 case "5":
-                    // Código para la opción 5
+                    new MenuMantenimientoDoctores(tcl, link);
                     break;
                 case "6":
                     new MenuMantenimientoEspecialidades(tcl,link);
