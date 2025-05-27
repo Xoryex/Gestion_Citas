@@ -1,6 +1,10 @@
 package src.views.admin;
 
 import java.util.Scanner;
+<<<<<<< HEAD
+import src.entidades.Consultorio;
+=======
+>>>>>>> 0939171aaa1b7b492a271fa0e2a108ca56ce3079
 import src.utils.Link;
 
 public class MenuMantenimientoConsultorios {
