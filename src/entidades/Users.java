@@ -227,7 +227,12 @@
       }
       
       public void Bienvenida(String usuario){
-         System.out.println("Welcome: "+listausuarios.get(usuario).GetNombre());
+         System.out.println("Welcome: "+listausuarios.get(usuario).GetNombre()+" "+listausuarios.get(usuario).GetApellido());
       }
 
+      public void MostrarLista(Boolean quien){
+
+         
+
+      }
    }
