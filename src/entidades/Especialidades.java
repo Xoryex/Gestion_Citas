@@ -76,11 +76,18 @@ public class Especialidades {
 }
 
 
-    public void eliminarEspecialidad(Scanner tcl) {
+    public void eliminarEspecialidad(Scanner tcl, TreeMap<String, Doctor> listaDoctores) {
         System.out.print("Ingrese el código de la especialidad a eliminar: ");
-        String codigo = tcl.nextLine();
+        String codigo = tcl.nextLine().trim().toUpperCase();
         if (!especialidades.containsKey(codigo)) {
             System.out.println("El código no existe.");
+            return;
+        }
+        // Verificar si algún doctor usa esta especialidad
+        boolean enUso = listaDoctores.values().stream()
+            .anyMatch(doc -> doc.getcodEspecialidad().equals(codigo));
+        if (enUso) {
+            System.out.println("No se puede eliminar la especialidad porque está asignada a uno o más doctores.");
             return;
         }
         especialidades.remove(codigo);

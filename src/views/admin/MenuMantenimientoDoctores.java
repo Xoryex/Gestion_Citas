@@ -1,6 +1,5 @@
 package src.views.admin;
 import java.util.Scanner;
-
 import src.utils.Link;
 import src.views.admin.MenuEditar.MenuEditarDoctor;
 
@@ -20,7 +19,7 @@ public class MenuMantenimientoDoctores {
 
             switch (opcion) {
                 case "1":
-                    link.doctores.agregarDoctor(tcl);
+                    link.doctores.agregarDoctor(tcl, link.especialidades);
                     break;
                 case "2":
                     new MenuEditarDoctor (tcl, link); 

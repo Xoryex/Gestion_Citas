@@ -3,17 +3,19 @@ package src.entidades;
 import java.util.Scanner;
 import java.util.TreeMap;
 
+
+
 public class Doctores {
     private static TreeMap<String, Doctor> listaDoctores = new TreeMap<>();
 
     public Doctores() {
         if (!listaDoctores.containsKey("12345678A")) {
-            listaDoctores.put("12345678A", new Doctor("Juan", "Pérez", "Cardiología", "12345678A", "987654321", "juan.perez@example.com"));
+            listaDoctores.put("12345678A", new Doctor("Juan", "Pérez", "CAR", "12345678A", "987654321", "juan.perez@example.com"));
         }
     }
 
-    public void agregarDoctor(Scanner scanner) {
-        String nombre, apellido, codEspecialidad, dni, telefono, correo;
+    public void agregarDoctor(Scanner scanner, Especialidades especialidades) {
+        String nombre, apellido, dni, telefono, correo;
 
         System.out.println("\n--- Agregar Nuevo Doctor ---");
 
@@ -40,11 +42,17 @@ public class Doctores {
             if (apellido.isEmpty()) System.out.println("El apellido no puede estar vacío.");
         } while (apellido.isEmpty());
 
+        System.out.println("Especialidades disponibles:");
+        especialidades.imprimirEspecialidades();
+
+        String codEspecialidad;
         do {
-            System.out.print("Ingrese el código o nombre de la especialidad del doctor: ");
+            System.out.print("Ingrese el código de la especialidad del doctor: ");
             codEspecialidad = scanner.nextLine().trim();
-            if (codEspecialidad.isEmpty()) System.out.println("La especialidad no puede estar vacía.");
-        } while (codEspecialidad.isEmpty());
+            if (!Especialidades.especialidades.containsKey(codEspecialidad)) {
+                System.out.println("Código de especialidad no válido. Intente de nuevo.");
+            }
+        } while (!Especialidades.especialidades.containsKey(codEspecialidad));
 
         do {
             System.out.print("Ingrese el número de teléfono del doctor: ");
@@ -233,5 +241,9 @@ public class Doctores {
             }
             System.out.println();
         }
+    }
+
+    public static TreeMap<String, Doctor> getListaDoctores() {
+        return listaDoctores;
     }
 }
