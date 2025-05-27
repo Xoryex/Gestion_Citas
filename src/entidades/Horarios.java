@@ -14,7 +14,11 @@ public class Horarios  {
         String dia = tcl.nextLine();
         System.out.print("Ingrese la hora: ");
         String hora = tcl.nextLine();
-        listaHorarios.add(new Horario(dia, hora));
+        System.out.print("Ingrese la cantidad de doctores disponibles: ");
+        int estado = Integer.parseInt(tcl.nextLine());
+        System.out.print("Ingrese el límite de pacientes: ");
+        int limitePacientes = Integer.parseInt(tcl.nextLine());
+        listaHorarios.add(new Horario(dia, hora, estado, limitePacientes));
         System.out.println("Horario agregado correctamente.");
     }
 

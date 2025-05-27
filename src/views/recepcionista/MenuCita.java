@@ -1,4 +1,4 @@
-package src.views.noadmin;
+package src.views.recepcionista;
 
 import java.util.Scanner;
 
