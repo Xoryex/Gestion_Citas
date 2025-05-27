@@ -1,7 +1,6 @@
 package src.views.admin;
 
 import java.util.Scanner;
-
 import src.utils.Link;
 
 
@@ -27,7 +26,7 @@ public class MenuMantenimientoEspecialidades {
                     link.especialidades.editarEspecialidad(tcl);
                     break;
                 case "3":
-                    link.especialidades.eliminarEspecialidad(tcl);
+                    link.especialidades.eliminarEspecialidad(tcl, link.doctores.getListaDoctores());
                     break;
                 case "4":
                     link.especialidades.imprimirEspecialidades();
