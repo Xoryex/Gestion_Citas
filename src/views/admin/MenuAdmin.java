@@ -28,7 +28,7 @@ public class MenuAdmin{
          switch(opcion){
             case "1":
                   new MenuPerfil(tcl,link,usuarioAct);
-                  opcion=(link.usuarios.ValidarCredenciales(usuarioAct)?"1":"0");
+                  //opcion=(link.usuarios.ValidarCredenciales(usuarioAct)?"1":"0");
                break;
             case "2":
                   new MenuMantenimiento(tcl,link);

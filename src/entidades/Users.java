@@ -4,29 +4,66 @@
    
    public class Users{
       private static HashMap<String,User> listausuarios=new HashMap<>();
-      
+
       public Users(){
-         listausuarios.put("admin",new User("EQUIPO_GESTION_CITAS", "admin", true));
+         listausuarios.put("admin",new User("00000000","EQUIPO","GESTION_CITAS","", "admin", true));
+      }
+      
+      public void CambiarDni(Scanner tcl,String usuario){
+         String nuevodni,contraseña;
+         System.out.println("========CAMBIAR DNI========");
+         do{
+         System.out.print("Ingresar nuevo dni: ");
+         nuevodni=tcl.nextLine();
+         nuevodni=nuevodni.replaceAll("[^0-9.]", "");
+         }while(nuevodni.equals("")||!(Integer.valueOf(nuevodni)==8));
+
+         do{
+         System.out.print("Ingresar contraseña actual: ");
+         contraseña=tcl.nextLine();
+         }while(contraseña.equals(""));
+
+         if(listausuarios.get(usuario).GetContraseña().equals(contraseña)){
+            listausuarios.get(usuario).SetDni(nuevodni);
+         }else{
+            System.out.println("No se puede cambiar el dni");
+         }
+         
+      
       }
       
       public String CambiarUsuario(Scanner tcl,String usuarioAct){
+         String nuevousuario,contraseñaAct;
+         System.out.println("========CAMBIAR USUARIO========");
+         do{
+         System.out.print("Ingresar nuevo usuario:");
+         nuevousuario=tcl.nextLine();
+         }while(nuevousuario.equals(""));
+         do{
+         System.out.print("Ingresar contraseña actual: ");
+         contraseñaAct=tcl.nextLine();
+         }while(contraseñaAct.equals("")||!(contraseñaAct.length()>=8));
          
-         System.out.println("Ingresar nuevo nombre");
-         String nuevousuario=tcl.nextLine();
-         System.out.println("Ingresar contraseña actual");
-         String contraseña=tcl.nextLine();
-         
-         if(listausuarios.get(usuarioAct).GetContraseña().equals(contraseña)){
+         if(listausuarios.containsKey(nuevousuario)){
+
+            System.out.println("El nuevo ususario ya existe");
+            return usuarioAct;
+
+         }else if(listausuarios.get(usuarioAct).GetContraseña().equals(contraseñaAct)){
+
+            String dni=listausuarios.get(usuarioAct).GetDni();
             String nombre = listausuarios.get(usuarioAct).GetNombre();
+            String apellido=listausuarios.get(usuarioAct).GetApellido();
+            String tlf=listausuarios.get(usuarioAct).GetTlf();
+            String contraseña =listausuarios.get(usuarioAct).GetContraseña();
             boolean admin = listausuarios.get(usuarioAct).GetAdmin();
 
             listausuarios.remove(usuarioAct);
-
-            Crear(nuevousuario,nombre, contraseña,admin);
+            listausuarios.put(nuevousuario, new User(dni, nombre, apellido, tlf, contraseña, admin));
             System.out.println("Nombre [Anterior: "+usuarioAct +" :: Actual: "+nuevousuario+"]");
             return nuevousuario;
          }else{
-            System.out.println("No se puede cambiar el nombre");
+            System.out.println("Contraseña invalida");
             return usuarioAct;
          }
          
@@ -60,14 +97,12 @@
       }
 
       public void CambiarNombre(Scanner tcl, String usuario){
-         String nuevonombre,contraseñaactual;
          
+         System.out.print("Ingresar nuevo Nombre: ");
+         String nuevonombre=tcl.nextLine();
 
-         System.out.println("Ingresar nuevo Nombre");
-         nuevonombre=tcl.nextLine();
-
-         System.out.println("Ingresar contraseña actual");
-         contraseñaactual=tcl.nextLine();  
+         System.out.print("Ingresar contraseña actual: ");
+         String contraseñaactual=tcl.nextLine();  
 
          if(listausuarios.get(usuario).GetContraseña().equals(contraseñaactual)){
             listausuarios.get(usuario).SetNombre(nuevonombre);
@@ -76,7 +111,27 @@
             System.out.println("contraseña incorrecta");
          }
       }
+      
+      public void CambiarApellido(Scanner tcl, String usuario){
+         String nuevoapellido,contraseña;
+         System.out.print("===========CAMBIAR APELLIDO===========");
+         do{
+         System.out.print("Ingresar nuevo Apellido: ");
+         nuevoapellido=tcl.nextLine(); 
+         } while (nuevoapellido.equals(""));
 
+         do {
+         System.out.print("Ingrese contraseña: ");
+         contraseña=tcl.nextLine(); 
+         } while (contraseña.equals("")||contraseña.length()<8); 
+
+         if(listausuarios.get(usuario).GetContraseña().equals(contraseña)){
+            listausuarios.get(usuario).SetApellido(nuevoapellido);
+            System.out.println("Apellido del usuario cambiado");
+         }else{
+            System.out.println("contraseña incorrecta");
+         }
+      }
 
       public void Eliminar(String usuario){
 
@@ -94,30 +149,59 @@
 
             }
          
-      public boolean Crear (String usuario,String nombre, String contraseña,boolean admin ){
+      public void Crear (Scanner tcl,boolean admin ){
+         String usuario, dni,nombre,apellido,tlf, contraseña;
+         
+         do{
+         System.out.print("        Dni: ");
+         dni=tcl.nextLine();
+         dni=dni.replaceAll("[^0-9.]", "");
+         }while(dni.equals("")||!(Integer.valueOf(dni)==8));
+
+         do{
+         System.out.print("     Nombre: ");
+         nombre=tcl.nextLine();
+         }while(nombre.equals(""));
+
+         do{
+         System.out.print("   Apellido: ");
+         apellido=tcl.nextLine();
+         }while(apellido.equals(""));
+
+         do{
+         System.out.print("   Telefono: ");
+         tlf=tcl.nextLine();
+         tlf=tlf.replaceAll("[^0-9.]", "");
+         }while(tlf.equals("")||!(Integer.valueOf(tlf)==9));
+
+         do {
+         System.out.print("   Usuario: ");
+         usuario=tcl.nextLine(); 
+         } while (usuario.equals(""));
+
+         do {
+         System.out.print("   Password: ");
+         contraseña=tcl.nextLine(); 
+         } while (contraseña.equals("")||contraseña.length()<8);
+
+         
          if(listausuarios.containsKey(usuario)){
-            return false;
-            //verificamos que usuario ya exista en listausuarios, si no se crea devuelve false
+            System.out.println("Usuario ocupadado");
          }else{
-            listausuarios.put(usuario,new User(nombre,contraseña,admin));
-            //si el usuario no existe se crea una nueva lista de usuario usando a usuario como clave, true si fue exitosa
-            return true;
+            listausuarios.put(usuario,new User(dni,nombre,apellido,tlf,contraseña,admin));
+            System.out.println("Usuario registrado con exito");
          }
          }
          
-      public String ValidarCredenciales (String user,String pass){
-         if(ValidarCredenciales(user) && listausuarios.get(user).GetContraseña().equals(pass)&&listausuarios.get(user).GetAdmin()){
+      public String ValidarCredenciales (String usuario,String contraseña){
+         if(listausuarios.containsKey(usuario) && listausuarios.get(usuario).GetContraseña().equals(contraseña)&&listausuarios.get(usuario).GetAdmin()){
             return "1"; 
-         }else if(ValidarCredenciales(user) && listausuarios.get(user).GetContraseña().equals(pass)&&!listausuarios.get(user).GetAdmin()){
+         }else if(listausuarios.containsKey(usuario) && listausuarios.get(usuario).GetContraseña().equals(contraseña)&&!listausuarios.get(usuario).GetAdmin()){
             return "2";
          }else{
             return "0";
          }  
       
-      }
-
-      public boolean ValidarCredenciales (String usuario){
-         return listausuarios.containsKey(usuario);  
       }
 
       public int Contar(boolean quien){
@@ -134,12 +218,16 @@
          return n ;
       }
       
-      public void MostrarDatos(String user){
-         System.out.println("Usuario: "+user+listausuarios.get(user).GetDate());
+      public void MostrarDatos(String usuario){
+         System.out.println("[Dni: "+listausuarios.get(usuario).GetDni()
+                           +"\n|Nombre: "+listausuarios.get(usuario).GetNombre()
+                           +"\n|Apellido: "+listausuarios.get(usuario).GetApellido()
+                           +"\n|Telefono: "+listausuarios.get(usuario).GetTlf()
+                           +"\n[Admin: "+listausuarios.get(usuario).GetAdmin());
       }
       
-      public void Bienvenida(String user){
-         System.out.println("Welcome: "+listausuarios.get(user).GetNombre());
+      public void Bienvenida(String usuario){
+         System.out.println("Welcome: "+listausuarios.get(usuario).GetNombre());
       }
 
    }
