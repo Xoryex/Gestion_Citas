@@ -1,4 +1,4 @@
-   package src.entidades;
+   package src.Consultas;
    import java.util.HashMap;
    import java.util.Scanner;
 

@@ -1,4 +1,4 @@
-package src.entidades;
+package src.Consultas;
 
 public class Horario {
     private String dia;

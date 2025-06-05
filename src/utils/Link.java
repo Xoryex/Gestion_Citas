@@ -1,11 +1,11 @@
 package src.utils;
   
-import src.entidades.Consultorios;
-import src.entidades.Doctores;
-import src.entidades.Especialidades;
-import src.entidades.Horarios;
-import src.entidades.Pacientes;
-import src.entidades.Users;
+import src.Consultas.Consultorios;
+import src.Consultas.Doctores;
+import src.Consultas.Especialidades;
+import src.Consultas.Horarios;
+import src.Consultas.Pacientes;
+import src.Consultas.Users;
 
 public class Link {
         public final Users usuarios=new Users();
@@ -14,11 +14,5 @@ public class Link {
         public final Consultorios consultorios=new Consultorios();
         public final Horarios horarios=new Horarios();
         public final Pacientes pacientes=new Pacientes();
-
-    public class consultorio {
-
-        public consultorio() {
-        }
-    }
         
 }

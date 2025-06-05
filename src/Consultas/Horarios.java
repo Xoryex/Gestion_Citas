@@ -1,4 +1,4 @@
-package src.entidades;
+package src.Consultas;
 
 import java.util.ArrayList;
 import java.util.List;

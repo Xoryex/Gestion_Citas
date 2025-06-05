@@ -1,6 +1,5 @@
 package src.main;
-import java.util.Scanner;
-import src.utils.Link;
+//import src.utils.Link;
 import src.views.Init;
 
 
@@ -8,10 +7,12 @@ import src.views.Init;
 class Main {
    public static void main(String[] args) {
             
-       Scanner tcl= new Scanner(System.in);
-       Link link = new Link();
+       
+       //Link link = new Link();
     
-      new Init(tcl,link);
+      Init init =new Init();
+      init.setVisible(true);
+      init.setLocationRelativeTo(null);
    
    }
 }
