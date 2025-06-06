@@ -1,4 +1,4 @@
-package src.Consultas;
+package src.querys;
 
 import java.util.Scanner;
 import java.util.TreeMap;

@@ -1,6 +1,8 @@
-package src.Consultas;
+package src.querys;
 import java.util.Scanner;
 import java.util.TreeMap;
+
+import src.querys.objetos.Consultorio;
 
 public class Consultorios {
     private final TreeMap<String, Consultorio> listaConsultorios = new TreeMap<>();

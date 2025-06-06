@@ -1,9 +1,9 @@
-package src.Consultas;
+package src.querys;
 
 import java.util.Scanner;
 import java.util.TreeMap;
 
-public class Pacientes {
+public class QueryPacientes {
     // Colección: clave = DNI, valor = nombre del paciente
     private static TreeMap<String, String> listapacientes = new TreeMap<>();
 

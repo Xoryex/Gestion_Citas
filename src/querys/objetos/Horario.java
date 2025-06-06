@@ -1,4 +1,4 @@
-package src.Consultas;
+package src.querys.objetos;
 
 public class Horario {
     private String dia;

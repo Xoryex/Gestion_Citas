@@ -4,6 +4,7 @@ package src.views;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import src.querys.QueryUser;
 
 /**
  * Ventana principal de inicio de sesión
@@ -55,7 +56,7 @@ public class Init extends JFrame {
 
         // Etiqueta de usuario
         jLabel2.setFont(new Font("Microsoft JhengHei", Font.BOLD, 14));
-        jLabel2.setText("Usuario");
+        jLabel2.setText("Dni del Usuario");
 
         // Campo de contraseña
         txtcontraseña.setFont(new Font("Segoe UI", Font.PLAIN, 13));
@@ -114,7 +115,7 @@ public class Init extends JFrame {
                         .addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 127, GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(80, 80, 80)
-                        .addComponent(jLabel2, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel2, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(80, 80, 80)
                         .addComponent(txtusuario, GroupLayout.PREFERRED_SIZE, 220, GroupLayout.PREFERRED_SIZE))
@@ -197,6 +198,8 @@ public class Init extends JFrame {
 
     // Método para manejar clic en botón de inicio
     private void btninicioActionPerformed(ActionEvent evt) {
+            QueryUser.Verificarusuario(txtusuario.getText(),String.valueOf(txtcontraseña.getPassword()));
+    
     }
 
     

@@ -1,7 +1,9 @@
-package src.Consultas;
+package src.querys;
 
 import java.util.Scanner;
 import java.util.TreeMap;
+
+import src.querys.objetos.Doctor;
 
 
 

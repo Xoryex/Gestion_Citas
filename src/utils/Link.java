@@ -1,18 +1,18 @@
 package src.utils;
   
-import src.Consultas.Consultorios;
-import src.Consultas.Doctores;
-import src.Consultas.Especialidades;
-import src.Consultas.Horarios;
-import src.Consultas.Pacientes;
-import src.Consultas.Users;
+import src.querys.Consultorios;
+import src.querys.Doctores;
+import src.querys.Especialidades;
+import src.querys.Horarios;
+import src.querys.QueryPacientes;
+import src.querys.QueryUser;
 
 public class Link {
-        public final Users usuarios=new Users();
+        public final QueryUser usuarios=new QueryUser();
         public final Doctores doctores=new Doctores();
         public final Especialidades especialidades =new Especialidades();
         public final Consultorios consultorios=new Consultorios();
         public final Horarios horarios=new Horarios();
-        public final Pacientes pacientes=new Pacientes();
+        public final QueryPacientes pacientes=new QueryPacientes();
         
 }

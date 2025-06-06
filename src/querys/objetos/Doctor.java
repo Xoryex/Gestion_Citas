@@ -1,11 +1,7 @@
-package src.Consultas;
+package src.querys.objetos;
 
-public class Doctor {
-    private String nombre;
-    private String apellido;
+public class Doctor extends Persona{
     private String codEspecialidad;
-    private String dni;
-    private String tlf;
     private String correo;
 
     public Doctor(String nombre, String apellido, String codEspecialidad, String dni, String tlf, String correo) {
