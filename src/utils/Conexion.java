@@ -8,32 +8,27 @@ import javax.swing.JOptionPane;
 
 public class Conexion {
     
-    static String  server="localhost",
-            port="1433",
-            db="GESTION_CITA",
-            user="sa",
-            pass="1234";
+    static String   server="localhost",
+                    port="1433",
+                    db="GESTION_CITA",
+                    user="sa",
+                    pass="1234";
 
-
-public static Connection getConexion(){
+    public static Connection getConexion(){
 
     String url =
                         "jdbc:sqlserver://"+server+":"+port+";"
                         + "database="+db+";"
                         + "user="+user+";"
                         + "password="+pass+";"
-                        + "encrypt=true;"
-                        + "trustServerCertificate=true;"
-                        + "loginTimeout=5;";
+                        + "loginTimeout=30;";
 
         try {
-            Connection con = DriverManager.getConnection(url);
-            return con;
-
+            return DriverManager.getConnection(url);
         }
         // Handle any errors that may have occurred.
         catch (SQLException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage());
+                JOptionPane.showMessageDialog(null, e.toString());
             return null;
         }
     

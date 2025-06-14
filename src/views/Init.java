@@ -22,7 +22,7 @@ public class Init extends JFrame {
     private JSeparator jSeparator2;
     private JPasswordField txtcontraseña;
     private JLabel txtregistrar;
-    private JTextField txtusuario;
+    private JTextField txtdni;
 
 
 
@@ -34,7 +34,7 @@ public class Init extends JFrame {
         jLabel2 = new JLabel();
         txtcontraseña = new JPasswordField();
         Contraseña = new JLabel();
-        txtusuario = new JTextField();
+        txtdni = new JTextField();
         btninicio = new JButton();
         jLabel1 = new JLabel();
         jLabel4 = new JLabel();
@@ -67,9 +67,9 @@ public class Init extends JFrame {
         Contraseña.setText("Contraseña");
 
         // Campo de usuario
-        txtusuario.setFont(new Font("Roboto", Font.PLAIN, 13));
-        txtusuario.setHorizontalAlignment(JTextField.LEFT);
-        txtusuario.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        txtdni.setFont(new Font("Roboto", Font.PLAIN, 13));
+        txtdni.setHorizontalAlignment(JTextField.LEFT);
+        txtdni.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         
         // Botón de inicio de sesión
         btninicio.setFont(new Font("Segoe UI", Font.PLAIN, 14));
@@ -118,7 +118,7 @@ public class Init extends JFrame {
                         .addComponent(jLabel2, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(80, 80, 80)
-                        .addComponent(txtusuario, GroupLayout.PREFERRED_SIZE, 220, GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtdni, GroupLayout.PREFERRED_SIZE, 220, GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(80, 80, 80)
                         .addComponent(jSeparator1, GroupLayout.PREFERRED_SIZE, 220, GroupLayout.PREFERRED_SIZE))
@@ -151,7 +151,7 @@ public class Init extends JFrame {
                 .addGap(32, 32, 32)
                 .addComponent(jLabel2)
                 .addGap(0, 0, 0)
-                .addComponent(txtusuario, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtdni, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(jSeparator1, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10)
@@ -198,7 +198,9 @@ public class Init extends JFrame {
 
     // Método para manejar clic en botón de inicio
     private void btninicioActionPerformed(ActionEvent evt) {
-            QueryUser.Verificarusuario(txtusuario.getText(),String.valueOf(txtcontraseña.getPassword()));
+            String dni = txtdni.getText();
+            String contraseña = new String(txtcontraseña.getPassword());
+            QueryUser.Verificarusuario(dni,contraseña);
     
     }
 

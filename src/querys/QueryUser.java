@@ -12,73 +12,6 @@ import src.querys.objetos.User;
    public class QueryUser extends Query{
       static User usuarioactual =new User() ;
       
-
-      private QueryUser(){
-      }
-
-      static void CambiarDni(String usuario){
-
-      }
-      
-      static void CambiarTelefono( String usuario){
-        
-      }
-
-      static void CambiarUsuario( ){
-         
-         
-      }
-      
-      static void CambiarContraseña (String usuario){
-        
-      }
-
-      static void CambiarNombre( String usuario){
-       
-      }
-      
-      static void CambiarApellido(){
-        
-      }
-
-      static void Eliminar(String usuario){
-
-            }
-      
-      static void Crear (User usuario,boolean admin ){
-          
-
-      
-      }
-
-      public int Contar(boolean quien){
-
-         return 4 ;
-      }
-      
-      public void MostrarDatos(String usuario){
-      }
-
-      public void MostrarDatosCompletos (String usuario){
-      }
-      
-      public void Bienvenida(String usuario){
-
-      }
-
-      public void MostrarLista(Boolean quien){
-         
-      }
-   
-      public void AgregarRecepcionista(){
-         
-      }
-      
-      public void EditarRecepcionista(){
-         
-        
-
-      }
    
       public static void Verificarusuario (String dni , String contraseña){
          
@@ -89,19 +22,19 @@ import src.querys.objetos.User;
             pstm.setString(2, contraseña);
             rs=pstm.executeQuery();
             
-
-            if (dni==rs.getString("DniRecep") && contraseña==rs.getString("Contrasena")) {
-               usuarioactual.dni=rs.getString(1);
-               usuarioactual.nombre=rs.getString(2);
-               usuarioactual.apellido=rs.getString(3) ;
-               usuarioactual.tlf=rs.getString(4) ;
-               usuarioactual.contraseña=rs.getString(5) ;
-               usuarioactual.admin=rs.getBoolean(6) ;
+            
+            if (rs.next()) {
+               //usuarioactual.dni=rs.getString(1);
+               //usuarioactual.nombre=rs.getString(2);
+               //usuarioactual.apellido=rs.getString(3) ;
+               //usuarioactual.tlf=rs.getString(4) ;
+               //usuarioactual.contraseña=rs.getString(5) ;
+               //usuarioactual.admin=rs.getBoolean(6) ;
                JOptionPane.showMessageDialog(null, "Bienvenido"+rs.getString(2) );
                //return true;
-            }else{
+            }//else{
                //return false;
-               }
+               //}
             
             
          }catch(SQLException e){
