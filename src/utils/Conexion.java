@@ -21,6 +21,8 @@ public class Conexion {
                         + "database="+db+";"
                         + "user="+user+";"
                         + "password="+pass+";"
+                        + "encrypt=true;"          // Habilitar encriptación
+                        + "trustServerCertificate=true;" // Aceptar certificado no confiable
                         + "loginTimeout=30;";
 
         try {
