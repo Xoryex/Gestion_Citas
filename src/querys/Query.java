@@ -7,8 +7,5 @@ import java.sql.ResultSet;
 import src.utils.Conexion;
 
 public class Query {
-    public static Connection con = Conexion.getConexion();
-    public static PreparedStatement pstm;
-    public static ResultSet rs;
-
+    protected static Connection con = Conexion.getConexion();
 }

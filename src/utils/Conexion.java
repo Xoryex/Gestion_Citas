@@ -7,13 +7,13 @@ import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 public class Conexion {
-    
     static String   server="localhost",
                     port="1433",
                     db="GESTION_CITA",
                     user="sa",
                     pass="1234";
 
+    
     public static Connection getConexion(){
 
     String url =
@@ -28,7 +28,6 @@ public class Conexion {
         try {
             return DriverManager.getConnection(url);
         }
-        // Handle any errors that may have occurred.
         catch (SQLException e) {
                 JOptionPane.showMessageDialog(null, e.toString());
             return null;
