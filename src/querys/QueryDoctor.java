@@ -1,10 +1,9 @@
 package src.querys;
 
 
-
-public class QueryPacientes implements Query{
-
-     @Override
+public class QueryDoctor implements Query{
+   
+    @Override
     public void Crear(Object datos_persona) {
         // TODO Auto-generated method stub
         

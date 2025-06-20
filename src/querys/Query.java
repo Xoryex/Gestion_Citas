@@ -1,11 +1,10 @@
 package src.querys;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+interface Query<T> {
 
-import src.utils.Conexion;
+    void insetar(T datos_persona);
+    void Eliminar(String indice);
+    void actualizar (T datos_modificados);
+    Object seleccionar();
 
-public class Query {
-    protected static Connection con = Conexion.getConexion();
 }

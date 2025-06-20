@@ -11,17 +11,17 @@ import src.querys.QueryUser;
  */
 public class Init extends JFrame {
 
-    private JLabel Contraseña;
+    private JLabel jLabel3;
     private JButton btninicio;
     private JLabel jLabel1;
     private JLabel jLabel2;
-    private JLabel jLabel3;
+ 
     private JLabel jLabel4;
     private JPanel jPanel2;
     private JSeparator jSeparator1;
     private JSeparator jSeparator2;
     private JPasswordField txtcontraseña;
-    private JLabel txtregistrar;
+    private JLabel lblregistrar;
     private JTextField txtdni;
 
 
@@ -29,27 +29,27 @@ public class Init extends JFrame {
     // Constructor
     public Init() {
         // Componentes de la interfaz
-        jLabel3 = new JLabel();
         jPanel2 = new JPanel();
         jLabel2 = new JLabel();
         txtcontraseña = new JPasswordField();
-        Contraseña = new JLabel();
+        jLabel3 = new JLabel();
         txtdni = new JTextField();
         btninicio = new JButton();
         jLabel1 = new JLabel();
         jLabel4 = new JLabel();
-        txtregistrar = new JLabel();
+        lblregistrar = new JLabel();
         jSeparator1 = new JSeparator();
         jSeparator2 = new JSeparator();
 
         // Configuración inicial de componentes
-        jLabel3.setText("jLabel3");
+
 
         // Configuración de la ventana principal
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("INICIO");
         setResizable(false);
-        
+        setSize(400,360);
+        setLayout(new BorderLayout());
 
         // Panel principal
         jPanel2.setBackground(new Color(255, 255, 255));
@@ -63,8 +63,8 @@ public class Init extends JFrame {
         txtcontraseña.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
         // Etiqueta de contraseña
-        Contraseña.setFont(new Font("Microsoft JhengHei", Font.BOLD, 14));
-        Contraseña.setText("Contraseña");
+        jLabel3.setFont(new Font("Microsoft JhengHei", Font.BOLD, 14));
+        jLabel3.setText("Contraseña");
 
         // Campo de usuario
         txtdni.setFont(new Font("Roboto", Font.PLAIN, 13));
@@ -90,12 +90,12 @@ public class Init extends JFrame {
         jLabel4.setText("Aun no tienes un usuario?");
 
         // Enlace de registro
-        txtregistrar.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        txtregistrar.setForeground(new Color(102, 102, 255));
-        txtregistrar.setHorizontalAlignment(SwingConstants.CENTER);
-        txtregistrar.setText("Registrar");
-        txtregistrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        txtregistrar.addMouseListener(new MouseAdapter() {
+        lblregistrar.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        lblregistrar.setForeground(new Color(102, 102, 255));
+        lblregistrar.setHorizontalAlignment(SwingConstants.CENTER);
+        lblregistrar.setText("Registrar");
+        lblregistrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        lblregistrar.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
                 txtregistrarMouseClicked(evt);
             }
@@ -108,80 +108,60 @@ public class Init extends JFrame {
         // Configuración horizontal del layout
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(130, 130, 130)
-                        .addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 127, GroupLayout.PREFERRED_SIZE))
+                        .addGap(130)
+                        .addComponent(jLabel1, 127, 127, 127))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(80, 80, 80)
-                        .addComponent(jLabel2, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE))
+                        .addGap(80)
+                        .addComponent(jLabel2, 150, 150, 150))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(80, 80, 80)
-                        .addComponent(txtdni, GroupLayout.PREFERRED_SIZE, 220, GroupLayout.PREFERRED_SIZE))
+                        .addGap(80)
+                        .addComponent(txtdni, 220, 220, 220))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(80, 80, 80)
-                        .addComponent(jSeparator1, GroupLayout.PREFERRED_SIZE, 220, GroupLayout.PREFERRED_SIZE))
+                        .addGap(80)
+                        .addComponent(jSeparator1, 220, 220, 220))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(80, 80, 80)
-                        .addComponent(Contraseña))
+                        .addGap(80)
+                        .addComponent(jLabel3))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(80, 80, 80)
-                        .addComponent(txtcontraseña, GroupLayout.PREFERRED_SIZE, 220, GroupLayout.PREFERRED_SIZE))
+                        .addGap(80)
+                        .addComponent(txtcontraseña, 220, 220, 220))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(80, 80, 80)
-                        .addComponent(jSeparator2, GroupLayout.PREFERRED_SIZE, 220, GroupLayout.PREFERRED_SIZE))
+                        .addGap(80)
+                        .addComponent(jSeparator2, 220, 220,220))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(130, 130, 130)
-                        .addComponent(btninicio, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE))
+                        .addGap(130)
+                        .addComponent(btninicio, 120, 120, 120))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(jLabel4, GroupLayout.PREFERRED_SIZE, 158, GroupLayout.PREFERRED_SIZE)
-                        .addGap(122, 122, 122)
-                        .addComponent(txtregistrar, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(11, Short.MAX_VALUE))
-        );
+                        .addGap(20)
+                        .addComponent(jLabel4, 158, 158, 158)
+                        .addGap(122)
+                        .addComponent(lblregistrar, 70, 70, 70)));
         
         // Configuración vertical del layout
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32)
+                .addGap(30)
+                .addComponent(jLabel1)
+                .addGap(32)
                 .addComponent(jLabel2)
-                .addGap(0, 0, 0)
-                .addComponent(txtdni, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(jSeparator1, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
-                .addComponent(Contraseña)
-                .addGap(0, 0, 0)
-                .addComponent(txtcontraseña, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(jSeparator2, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
-                .addComponent(btninicio, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
+                .addComponent(txtdni)
+                .addComponent(jSeparator1)
+                .addGap(10)
+                .addComponent(jLabel3)
+                .addComponent(txtcontraseña)
+                .addComponent(jSeparator2)
+                .addGap(20)
+                .addComponent(btninicio)
+                .addGap(40)
                 .addGroup(jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
-                    .addComponent(txtregistrar))
-                .addContainerGap(14, Short.MAX_VALUE))
-        );
-
+                    .addComponent(lblregistrar))
+                .addGap(14)));
         // Layout principal de la ventana
-        GroupLayout layout = new GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
-        pack();
+        
+        add(jPanel2,BorderLayout.CENTER);
     }
 
    

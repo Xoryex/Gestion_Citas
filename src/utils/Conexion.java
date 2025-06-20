@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 public class Conexion {
+
+    public static Connection con = Conexion.getConexion();
+
     static String   server="localhost",
                     port="1433",
                     db="GESTION_CITA",
@@ -14,7 +17,7 @@ public class Conexion {
                     pass="1234";
 
     
-    public static Connection getConexion(){
+    private static Connection getConexion(){
 
     String url =
                         "jdbc:sqlserver://"+server+":"+port+";"
