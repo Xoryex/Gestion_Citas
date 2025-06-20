@@ -5,17 +5,11 @@
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import javax.swing.JOptionPane;
-
-import src.querys.objetos.User;
-
+import static src.querys.objetos.User.usuario_actual;
    
    public class QueryUser {
-   
-      
-      
-      
+
       public static boolean Verificarusuario (String dni , String contraseña){
          try{
 
@@ -26,12 +20,12 @@ import src.querys.objetos.User;
             
             
             if (rs.next()) {
-               User.usuario_actual.dni=rs.getString(1);
-               User.usuario_actual.nombre=rs.getString(2);
-               User.usuario_actual.apellido=rs.getString(3) ;
-               User.usuario_actual.tlf=rs.getString(4) ;
-               User.usuario_actual.contraseña=rs.getString(5) ;
-               User.usuario_actual.admin=rs.getBoolean(6) ;
+               usuario_actual.dni=rs.getString(1);
+               usuario_actual.nombre=rs.getString(2);
+               usuario_actual.apellido=rs.getString(3) ;
+               usuario_actual.tlf=rs.getString(4) ;
+               usuario_actual.contraseña=rs.getString(5) ;
+               usuario_actual.admin=rs.getBoolean(6) ;
                
                return true;
             }else{
