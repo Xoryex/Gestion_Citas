@@ -1,4 +1,4 @@
-package src.objetos;
+package src.models;
 
 public class Paciente extends Persona {
     private boolean genero;

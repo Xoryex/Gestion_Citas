@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import src.objetos.Horario;
+import src.models.Horario;
 
 public class Horarios  {
     // Lista para guardar los valores de los horarios

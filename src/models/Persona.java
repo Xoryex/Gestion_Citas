@@ -1,7 +1,16 @@
-package src.objetos;
+package src.models;
 
 public class Persona {
       private String dni,nombre, apellido, tlf,correo;
+
+        public Persona(String dni, String nombre, String apellido, String tlf) {
+            this.dni = dni;
+            this.nombre = nombre;
+            this.apellido = apellido;
+            this.tlf = tlf;
+        }
+
+        public Persona() {}
 
       public String getApellido() {
           return apellido;

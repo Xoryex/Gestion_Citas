@@ -1,4 +1,4 @@
-package src.views;
+package src.frames;
 
 // Importaciones optimizadas
 import javax.swing.*;
@@ -10,7 +10,8 @@ import src.querys.QueryUser;
  * Ventana principal de inicio de sesión
  */
 public class Init extends JFrame {
-
+   QueryUser queryuser = new QueryUser();
+    // Componentes de la interfaz
     private JLabel jLabel3;
     private JButton btninicio;
     private JLabel jLabel1;
@@ -28,16 +29,17 @@ public class Init extends JFrame {
 
     // Constructor
     public Init() {
+        
         // Componentes de la interfaz
         jPanel2 = new JPanel();
-        jLabel2 = new JLabel();
+        jLabel2 = new JLabel("Dni del Usuario");
         txtcontraseña = new JPasswordField();
-        jLabel3 = new JLabel();
+        jLabel3 = new JLabel("Contraseña");
         txtdni = new JTextField();
-        btninicio = new JButton();
-        jLabel1 = new JLabel();
-        jLabel4 = new JLabel();
-        lblregistrar = new JLabel();
+        btninicio = new JButton("Iniciar Sesion");
+        jLabel1 = new JLabel("LOGIN");
+        jLabel4 = new JLabel("Aun no tienes un usuario?");
+        lblregistrar = new JLabel("Registrar");
         jSeparator1 = new JSeparator();
         jSeparator2 = new JSeparator();
 
@@ -49,14 +51,16 @@ public class Init extends JFrame {
         setTitle("INICIO");
         setResizable(false);
         setSize(400,360);
+        setLocationRelativeTo(null);
         setLayout(new BorderLayout());
+
+        add(jPanel2,BorderLayout.CENTER);
 
         // Panel principal
         jPanel2.setBackground(new Color(255, 255, 255));
 
         // Etiqueta de usuario
         jLabel2.setFont(new Font("Microsoft JhengHei", Font.BOLD, 14));
-        jLabel2.setText("Dni del Usuario");
 
         // Campo de contraseña
         txtcontraseña.setFont(new Font("Segoe UI", Font.PLAIN, 13));
@@ -64,7 +68,6 @@ public class Init extends JFrame {
 
         // Etiqueta de contraseña
         jLabel3.setFont(new Font("Microsoft JhengHei", Font.BOLD, 14));
-        jLabel3.setText("Contraseña");
 
         // Campo de usuario
         txtdni.setFont(new Font("Roboto", Font.PLAIN, 13));
@@ -73,7 +76,6 @@ public class Init extends JFrame {
         
         // Botón de inicio de sesión
         btninicio.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        btninicio.setText("Iniciar Sesion");
         btninicio.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 btninicioActionPerformed(evt);
@@ -83,18 +85,14 @@ public class Init extends JFrame {
         // Título principal
         jLabel1.setFont(new Font("Swis721 WGL4 BT", Font.BOLD, 18));
         jLabel1.setHorizontalAlignment(SwingConstants.CENTER);
-        jLabel1.setText("LOGIN");
         jLabel1.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-        // Etiqueta de registro
-        jLabel4.setText("Aun no tienes un usuario?");
 
         // Enlace de registro
         lblregistrar.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblregistrar.setForeground(new Color(102, 102, 255));
         lblregistrar.setHorizontalAlignment(SwingConstants.CENTER);
-        lblregistrar.setText("Registrar");
         lblregistrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
         lblregistrar.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
                 txtregistrarMouseClicked(evt);
@@ -161,18 +159,20 @@ public class Init extends JFrame {
                 .addGap(14)));
         // Layout principal de la ventana
         
-        add(jPanel2,BorderLayout.CENTER);
+        
+        //hacer visible la ventana
+        setVisible(true);
     }
 
    
 
     // Método para manejar evento en campo de usuario
 
+    
+
     // Método para manejar clic en enlace de registro
     private void txtregistrarMouseClicked(MouseEvent evt) {
-        Registro_Usuario registro= new Registro_Usuario();
-        registro.setVisible(true);
-        registro.setLocationRelativeTo(null);
+        new Registro_Usuario();
         dispose();
     }
 
@@ -180,7 +180,7 @@ public class Init extends JFrame {
     private void btninicioActionPerformed(ActionEvent evt) {
             String dni = txtdni.getText();
             String contraseña = new String(txtcontraseña.getPassword());
-            QueryUser.Verificarusuario(dni,contraseña);
+            queryuser.IniciarSesion(dni,contraseña);
     
     }
 

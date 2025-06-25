@@ -2,9 +2,9 @@ package src.querys;
 
 interface Query<T> {
 
-    void insetar(T datos_persona);
-    void Eliminar(String indice);
+    void Insetar(T datos_persona);
+    void Eliminar(String codigo);
     void actualizar (T datos_modificados);
-    Object seleccionar();
+    String[][] seleccionar();
 
 }

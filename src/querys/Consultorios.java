@@ -2,7 +2,7 @@ package src.querys;
 import java.util.Scanner;
 import java.util.TreeMap;
 
-import src.objetos.Consultorio;
+import src.models.Consultorio;
 
 public class Consultorios {
     private final TreeMap<String, Consultorio> listaConsultorios = new TreeMap<>();

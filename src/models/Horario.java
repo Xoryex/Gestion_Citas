@@ -1,4 +1,4 @@
-package src.objetos;
+package src.models;
 
 public class Horario {
     private String codigo_horario;
