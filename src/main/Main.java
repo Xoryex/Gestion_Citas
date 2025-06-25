@@ -1,21 +1,16 @@
 package src.main;
-import java.sql.SQLException;
-import javax.swing.JOptionPane;
 
 import src.frames.Init;
-
-import static src.utils.Conexion.con;
+import src.utils.Conexion;
 
 
 
 class Main {
    public static void main(String[] args) {
 
+      Conexion.getConnection(); // Establecer conexión a la base de datos
+      // Iniciar la aplicación
       new Init();
-      try{
-      con.close();
-      }catch(SQLException e){
-         JOptionPane.showMessageDialog(null,e.toString());
-      }
+      Conexion.closeConnection(); // Cerrar conexión al finalizar
    }
 }

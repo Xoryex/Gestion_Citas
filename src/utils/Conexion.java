@@ -3,39 +3,53 @@ package src.utils;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
 import javax.swing.JOptionPane;
 
 public class Conexion {
-
-    public static Connection con = Conexion.getConexion();
-
-    static String   server="localhost",
-                    port="1433",
-                    db="GESTION_CITA",
-                    user="sa",
-                    pass="1234";
-
+    private static final String SERVER = "localhost";
+    private static final String PORT = "1433";
+    private static final String DB = "GESTION_CITA";
+    private static final String USER = "sa";
+    private static final String PASS = "1234";
     
-    private static Connection getConexion(){
+    public static Connection con = null;
 
-    String url =
-                        "jdbc:sqlserver://"+server+":"+port+";"
-                        + "database="+db+";"
-                        + "user="+user+";"
-                        + "password="+pass+";"
-                        + "encrypt=true;"          // Habilitar encriptación
-                        + "trustServerCertificate=true;" // Aceptar certificado no confiable
-                        + "loginTimeout=30;";
+    public static Connection getConnection() {
+        if (con == null) {
+            String url = "jdbc:sqlserver://" + SERVER + ":" + PORT + ";" +
+                        "databaseName=" + DB + ";" +
+                        "user=" + USER + ";" +
+                        "password=" + PASS + ";" +
+                        "encrypt=true;" +
+                        "trustServerCertificate=true;" +
+                        "loginTimeout=30;";
+            
+            try {
+                con = DriverManager.getConnection(url);
+                JOptionPane.showMessageDialog(null, "Conexión exitosa");
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, 
+                    "Error de conexión:\n" + e.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+                con = null; // Asegurar que sea null en caso de error
+            }
+        }
+        return con;
+    }
 
+    public static void closeConnection() {
         try {
-            return DriverManager.getConnection(url);
+            if (con != null && !con.isClosed()) {
+                con.close();
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, 
+                "Error al cerrar conexión:\n" + e.getMessage(), 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+        } finally {
+            con = null; // Asegurar limpieza
         }
-        catch (SQLException e) {
-                JOptionPane.showMessageDialog(null, e.toString());
-            return null;
-        }
-    
-}
-
+    }
 }

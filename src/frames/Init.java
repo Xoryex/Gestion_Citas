@@ -12,39 +12,22 @@ import src.querys.QueryUser;
 public class Init extends JFrame {
    QueryUser queryuser = new QueryUser();
     // Componentes de la interfaz
-    private JLabel jLabel3;
-    private JButton btninicio;
-    private JLabel jLabel1;
-    private JLabel jLabel2;
- 
-    private JLabel jLabel4;
-    private JPanel jPanel2;
-    private JSeparator jSeparator1;
-    private JSeparator jSeparator2;
-    private JPasswordField txtcontraseña;
-    private JLabel lblregistrar;
-    private JTextField txtdni;
+    JPanel jPanel2 = new JPanel();
+    JLabel jLabel2 = new JLabel("Dni del Usuario");
+    JPasswordField txtcontraseña = new JPasswordField();
+    JLabel jLabel3 = new JLabel("Contraseña");
+    JTextField txtdni = new JTextField();
+    JButton btninicio = new JButton("Iniciar Sesion");
+    JLabel jLabel1 = new JLabel("LOGIN");
+    JLabel jLabel4 = new JLabel("Aun no tienes un usuario?");
+    JLabel lblregistrar = new JLabel("Registrar");
+    JSeparator jSeparator1 = new JSeparator();
+    JSeparator jSeparator2 = new JSeparator();
 
 
 
     // Constructor
     public Init() {
-        
-        // Componentes de la interfaz
-        jPanel2 = new JPanel();
-        jLabel2 = new JLabel("Dni del Usuario");
-        txtcontraseña = new JPasswordField();
-        jLabel3 = new JLabel("Contraseña");
-        txtdni = new JTextField();
-        btninicio = new JButton("Iniciar Sesion");
-        jLabel1 = new JLabel("LOGIN");
-        jLabel4 = new JLabel("Aun no tienes un usuario?");
-        lblregistrar = new JLabel("Registrar");
-        jSeparator1 = new JSeparator();
-        jSeparator2 = new JSeparator();
-
-        // Configuración inicial de componentes
-
 
         // Configuración de la ventana principal
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -163,12 +146,6 @@ public class Init extends JFrame {
         //hacer visible la ventana
         setVisible(true);
     }
-
-   
-
-    // Método para manejar evento en campo de usuario
-
-    
 
     // Método para manejar clic en enlace de registro
     private void txtregistrarMouseClicked(MouseEvent evt) {

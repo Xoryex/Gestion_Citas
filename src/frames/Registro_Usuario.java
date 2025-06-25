@@ -9,31 +9,31 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class Registro_Usuario extends JFrame {
-
+    QueryUser queryuser = new QueryUser();
     // Variables declaration - do not modify                     
-    private JButton btnregistrar;
-    private JLabel jLabel1;
-    private JLabel jLabel2;
-    private JLabel jLabel3;
-    private JLabel jLabel4;
-    private JLabel jLabel5;
-    private JLabel jLabel6;
-    private JLabel jLabel7;
-    private JLabel jLabel8;
-    private JLabel jLabel9;
-    private JPanel jPanel1;
-    private JSeparator jSeparator1;
-    private JSeparator jSeparator2;
-    private JSeparator jSeparator3;
-    private JSeparator jSeparator4;
-    private JSeparator jSeparator5;
-    private JSeparator jSeparator6;
-    private JTextField txtapellido;
-    private JTextField txtcelular;
-    private JPasswordField txtconfirmarcontraseña;
-    private JPasswordField txtcontraseña;
-    private JTextField txtdni;
-    private JTextField txtnombre;
+    JLabel jLabel1 = new JLabel("REGISTRARSE");
+    JTextField txtdni = new JTextField();
+    JTextField txtnombre = new JTextField();
+    JTextField txtcelular = new JTextField();
+    JTextField txtapellido = new JTextField();
+    JPanel jPanel1 = new JPanel();
+    JLabel jLabel2 = new JLabel("Dni del Usuario");
+    JLabel jLabel3 = new JLabel("Confirmar Contraseña");
+    JLabel jLabel4 = new JLabel("Nombres");
+    JLabel jLabel5 = new JLabel("Apellidos");
+    JLabel jLabel6 = new JLabel("Celular");
+    JLabel jLabel7 = new JLabel("Contraseña");
+    JPasswordField txtcontraseña = new JPasswordField();
+    JPasswordField txtconfirmarcontraseña = new JPasswordField();
+    JLabel jLabel8 = new JLabel("Ya tienes un usuario?");
+    JLabel jLabel9 = new JLabel("Iniciar Sesion");
+    JButton btnregistrar = new JButton("REGISTRARSE");
+    JSeparator jSeparator1 = new JSeparator();
+    JSeparator jSeparator2 = new JSeparator();
+    JSeparator jSeparator3 = new JSeparator();
+    JSeparator jSeparator4 = new JSeparator();
+    JSeparator jSeparator5 = new JSeparator();
+    JSeparator jSeparator6 = new JSeparator();
     // End of variables declaration   
 
 
@@ -43,32 +43,8 @@ public class Registro_Usuario extends JFrame {
      * Creates new form NewJFrame
      */
     public Registro_Usuario() {
-        QueryUser queryuser = new QueryUser();
-
-        jPanel1 = new JPanel();
+        // Inicializar componentes
         
-        jLabel1 = new JLabel("REGISTRARSE");
-        txtdni = new JTextField();
-        txtnombre = new JTextField();
-        txtcelular = new JTextField();
-        txtapellido = new JTextField();
-        jLabel2 = new JLabel("Dni del Usuario");
-        jLabel3 = new JLabel("Confirmar Contraseña");
-        jLabel4 = new JLabel("Nombres");
-        jLabel5 = new JLabel("Apellidos");
-        jLabel6 = new JLabel("Celular");
-        jLabel7 = new JLabel("Contraseña");
-        txtcontraseña = new JPasswordField();
-        txtconfirmarcontraseña = new JPasswordField();
-        jLabel8 = new JLabel("Ya tienes un usuario?");
-        jLabel9 = new JLabel("Iniciar Sesion");
-        btnregistrar = new JButton("REGISTRARSE");
-        jSeparator1 = new JSeparator();
-        jSeparator2 = new JSeparator();
-        jSeparator3 = new JSeparator();
-        jSeparator4 = new JSeparator();
-        jSeparator5 = new JSeparator();
-        jSeparator6 = new JSeparator();
         
         super("Registro de Usuario");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -110,6 +86,14 @@ public class Registro_Usuario extends JFrame {
         jLabel9.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         btnregistrar.setFont(new Font("Roboto", 1, 14));
+        btnregistrar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                new Init();
+                dispose(); // Cierra la ventana actual
+            }
+
+        });
 
         txtdni.addKeyListener(new KeyAdapter() {
             @Override
