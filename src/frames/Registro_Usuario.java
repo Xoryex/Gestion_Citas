@@ -1,6 +1,7 @@
 package src.frames;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 
 import src.models.User;
 import src.querys.QueryUser;
@@ -10,13 +11,13 @@ import java.awt.event.*;
 
 public class Registro_Usuario extends JFrame {
     QueryUser queryuser = new QueryUser();
+
     // Variables declaration - do not modify                     
     JLabel jLabel1 = new JLabel("REGISTRARSE");
     JTextField txtdni = new JTextField();
     JTextField txtnombre = new JTextField();
     JTextField txtcelular = new JTextField();
     JTextField txtapellido = new JTextField();
-    JPanel jPanel1 = new JPanel();
     JLabel jLabel2 = new JLabel("Dni del Usuario");
     JLabel jLabel3 = new JLabel("Confirmar Contraseña");
     JLabel jLabel4 = new JLabel("Nombres");
@@ -28,12 +29,7 @@ public class Registro_Usuario extends JFrame {
     JLabel jLabel8 = new JLabel("Ya tienes un usuario?");
     JLabel jLabel9 = new JLabel("Iniciar Sesion");
     JButton btnregistrar = new JButton("REGISTRARSE");
-    JSeparator jSeparator1 = new JSeparator();
-    JSeparator jSeparator2 = new JSeparator();
-    JSeparator jSeparator3 = new JSeparator();
-    JSeparator jSeparator4 = new JSeparator();
-    JSeparator jSeparator5 = new JSeparator();
-    JSeparator jSeparator6 = new JSeparator();
+
     // End of variables declaration   
 
 
@@ -43,9 +39,7 @@ public class Registro_Usuario extends JFrame {
      * Creates new form NewJFrame
      */
     public Registro_Usuario() {
-        // Inicializar componentes
-        
-        
+
         super("Registro de Usuario");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
@@ -53,39 +47,122 @@ public class Registro_Usuario extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        add(jPanel1, BorderLayout.CENTER);
+        Diseños();
+        Oyentes();
 
-        jPanel1.setBackground(new Color(255, 255, 255));
+        createHeader();
+        createBody();
+        createFooter();
 
-        //Agregamos fuentes y bordes a los componentes
+        setVisible(true);
+    }
+private void createHeader() {
+    JPanel header = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    header.setBackground(Color.WHITE);
+    header.setBorder(BorderFactory.createEmptyBorder(20, 10, 15, 10));
+    header.add(jLabel1);
+    add(header, BorderLayout.NORTH);
+}
+
+private void createBody() {
+    // Panel principal del cuerpo
+    JPanel body = new JPanel();
+    body.setLayout(new BoxLayout(body, BoxLayout.PAGE_AXIS));
+    body.setBackground(Color.WHITE);
+    body.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+    // Panel de formulario
+    JPanel formPanel = createFormPanel();
+    formPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    
+    // Botón centrado
+    btnregistrar.setAlignmentX(Component.CENTER_ALIGNMENT);
+    
+    // Añadir componentes al cuerpo con espaciado
+    body.add(Box.createVerticalGlue());
+    body.add(formPanel);
+    body.add(Box.createRigidArea(new Dimension(0, 20))); // Espacio fijo
+    body.add(btnregistrar);
+    body.add(Box.createVerticalGlue());
+    
+    add(body, BorderLayout.CENTER);
+}
+
+private JPanel createFormPanel() {
+    JPanel formPanel = new JPanel(new GridLayout(7, 2, 10, 10));
+    formPanel.setBackground(Color.WHITE);
+    formPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+    // Añadir pares label/campo de forma estructurada
+    addFormField(formPanel, jLabel2, txtdni);
+    addFormField(formPanel, jLabel4, txtnombre);
+    addFormField(formPanel, jLabel5, txtapellido);
+    addFormField(formPanel, jLabel6, txtcelular);
+    addFormField(formPanel, jLabel7, txtcontraseña);
+    addFormField(formPanel, jLabel3, txtconfirmarcontraseña);
+    
+    return formPanel;
+}
+
+private void addFormField(JPanel panel, JLabel label, JComponent field) {
+    panel.add(label);
+    panel.add(field);
+}
+
+private void createFooter() {
+    JPanel footer = new JPanel(new BorderLayout());
+    footer.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+    footer.setBackground(Color.WHITE); // Añadido para consistencia
+
+    footer.add(jLabel8, BorderLayout.WEST);
+    footer.add(jLabel9, BorderLayout.EAST);
+    
+    add(footer, BorderLayout.SOUTH);
+}
+
+    private void Diseños(){
+        Font Lbl_Txt_Font = new Font("Roboto", 0, 14);
+        Border lineBottonBorder = BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK);
         jLabel1.setFont(new Font("Roboto Condensed Black", 1, 18)); 
-        txtdni.setFont(new Font("Roboto", 0, 14)); 
-        txtdni.setBorder(null);
-        txtnombre.setFont(new Font("Roboto", 0, 14)); 
-        txtnombre.setBorder(null);
-        txtcelular.setFont(new Font("Roboto", 0, 14)); 
-        txtcelular.setBorder(null);
-        txtapellido.setFont(new Font("Roboto", 0, 14)); 
-        txtapellido.setBorder(null);
-        jLabel2.setFont(new Font("Roboto", 0, 14)); 
-        jLabel3.setFont(new Font("Roboto", 0, 14));
-        jLabel4.setFont(new Font("Roboto", 0, 14)); 
-        jLabel5.setFont(new Font("Roboto", 0, 14)); 
-        jLabel6.setFont(new Font("Roboto", 0, 14)); 
-        jLabel7.setFont(new Font("Roboto", 0, 14)); 
-        txtcontraseña.setFont(new Font("Roboto", 0, 14)); 
-        txtcontraseña.setBorder(null);
-        txtconfirmarcontraseña.setFont(new Font("Roboto", 0, 14)); 
-        txtconfirmarcontraseña.setBorder(null);
-        
 
+        jLabel2.setFont(Lbl_Txt_Font); 
+        jLabel3.setFont(Lbl_Txt_Font);
+        jLabel4.setFont(Lbl_Txt_Font); 
+        jLabel5.setFont(Lbl_Txt_Font); 
+        jLabel6.setFont(Lbl_Txt_Font); 
+        jLabel7.setFont(Lbl_Txt_Font);
 
+        txtdni.setFont(Lbl_Txt_Font); 
+        txtdni.setBorder(lineBottonBorder);
+        txtnombre.setFont(Lbl_Txt_Font); 
+        txtnombre.setBorder(lineBottonBorder);
+        txtcelular.setFont(Lbl_Txt_Font); 
+        txtcelular.setBorder(lineBottonBorder);
+        txtapellido.setFont(Lbl_Txt_Font); 
+        txtapellido.setBorder(lineBottonBorder);
+        txtcontraseña.setFont(Lbl_Txt_Font); 
+        txtcontraseña.setBorder(lineBottonBorder);
+        txtconfirmarcontraseña.setFont(Lbl_Txt_Font);
+        txtconfirmarcontraseña.setBorder(lineBottonBorder);
+        btnregistrar.setFont(new Font("Roboto", 1, 14));
         jLabel8.setFont(new Font("Roboto", 0, 12)); 
         jLabel9.setFont(new Font("Roboto", 1, 12)); 
         jLabel9.setForeground(new Color(51, 102, 255));
         jLabel9.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        btnregistrar.setFont(new Font("Roboto", 1, 14));
+
+    }
+
+    private void Oyentes(){
+
+        jLabel9.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                // Aquí puedes agregar la lógica para iniciar sesión
+                new Init();
+                dispose(); // Cierra la ventana actual
+            }
+        });
         btnregistrar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
@@ -119,7 +196,7 @@ public class Registro_Usuario extends JFrame {
             @Override
             public void keyTyped(KeyEvent evt) {
                 // Limitar a números y longitud máxima de 9 caracteres
-                if (!Character.isDigit(evt.getKeyChar()) || txtcelular.getText().length() >= 9) {
+                if (!Character.isDigit(evt.getKeyChar())||(txtcelular.getText().length()==0&&evt.getKeyChar()!='9')|| txtcelular.getText().length() >= 9) {
                     evt.consume();
                 }
             }
@@ -190,153 +267,7 @@ public class Registro_Usuario extends JFrame {
             }
         });
 
-        GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
 
-        // 3. Constantes para dimensiones (ajusta estos valores según necesites)
-        final int FIELD_WIDTH = 173;
-        final int LEFT_MARGIN = 73;
-        final int LABEL_GAP = 49;
-        final int TOP_MARGIN = 23;
-        final int ROW_GAP = 12;
-        final int SECTION_GAP = 32;
-
-        // 4. Configuración horizontal completa
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(LEFT_MARGIN)
-                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    // Título centrado
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(117)
-                        .addComponent(jLabel1))
-                    
-                    // Campos de formulario
-                    // DNI
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(LABEL_GAP+50)
-                        .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(txtdni, FIELD_WIDTH, FIELD_WIDTH, FIELD_WIDTH)
-                            .addComponent(jSeparator1, FIELD_WIDTH, FIELD_WIDTH, FIELD_WIDTH)))
-                    
-                    // Nombre
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addGap(LABEL_GAP+85)
-                        .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(txtnombre, FIELD_WIDTH, FIELD_WIDTH, FIELD_WIDTH)
-                            .addComponent(jSeparator2, FIELD_WIDTH, FIELD_WIDTH, FIELD_WIDTH)))
-                    
-                    // Apellido
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(LABEL_GAP+86)
-                        .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(txtapellido, FIELD_WIDTH, FIELD_WIDTH, FIELD_WIDTH)
-                            .addComponent(jSeparator3, FIELD_WIDTH, FIELD_WIDTH, FIELD_WIDTH)))
-                    
-                    // Celular
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addGap(LABEL_GAP+99)
-                        .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(txtcelular, FIELD_WIDTH, FIELD_WIDTH, FIELD_WIDTH)
-                            .addComponent(jSeparator4, FIELD_WIDTH, FIELD_WIDTH, FIELD_WIDTH)))
-                    
-                    // Contraseña
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addGap(LABEL_GAP+70)
-                        .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(txtcontraseña, FIELD_WIDTH, FIELD_WIDTH, FIELD_WIDTH)
-                            .addComponent(jSeparator5, FIELD_WIDTH, FIELD_WIDTH, FIELD_WIDTH)))
-                    
-                    // Confirmar Contraseña
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(LABEL_GAP+1)
-                        .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(txtconfirmarcontraseña, FIELD_WIDTH, FIELD_WIDTH, FIELD_WIDTH)
-                            .addComponent(jSeparator6, FIELD_WIDTH, FIELD_WIDTH, FIELD_WIDTH)))
-                    
-                    // Botón centrado
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(110)
-                        .addComponent(btnregistrar)))
-                )
-
-            // Footer (jLabel8 y jLabel9)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addGap(12)
-                    .addComponent(jLabel8)
-                    .addGap(270)
-                    .addComponent(jLabel9))
-        );
-
-        // 5. Configuración vertical completa
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createSequentialGroup()
-                .addGap(TOP_MARGIN)
-                .addComponent(jLabel1)
-                .addGap(45)
-                
-                // DNI
-                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtdni))
-                .addComponent(jSeparator1)
-                .addGap(ROW_GAP)
-                
-                // Nombre
-                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(txtnombre))
-                .addComponent(jSeparator2)
-                .addGap(ROW_GAP)
-                
-                // Apellido
-                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(txtapellido))
-                .addComponent(jSeparator3)
-                .addGap(ROW_GAP)
-                
-                // Celular
-                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(txtcelular))
-                .addComponent(jSeparator4)
-                .addGap(SECTION_GAP)
-                
-                // Contraseña
-                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(txtcontraseña))
-                .addComponent(jSeparator5)
-                .addGap(ROW_GAP)
-                
-                // Confirmar Contraseña
-                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(txtconfirmarcontraseña))
-                .addComponent(jSeparator6)
-                .addGap(SECTION_GAP)
-                
-                // Botón
-                .addComponent(btnregistrar)
-                .addGap(56)
-                
-                // Footer
-                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel9))
-                );
-
-        //hacer visible la ventana
-        setVisible(true);
     }
-                     
-   
+
 }

@@ -1,16 +1,12 @@
 package src.frames;
 
-// Importaciones optimizadas
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import src.querys.QueryUser;
 
-/**
- * Ventana principal de inicio de sesión
- */
 public class Init extends JFrame {
-   QueryUser queryuser = new QueryUser();
+    QueryUser queryuser = new QueryUser();
     // Componentes de la interfaz
     JPanel jPanel2 = new JPanel();
     JLabel jLabel2 = new JLabel("Dni del Usuario");
@@ -24,142 +20,95 @@ public class Init extends JFrame {
     JSeparator jSeparator1 = new JSeparator();
     JSeparator jSeparator2 = new JSeparator();
 
-
-
-    // Constructor
     public Init() {
-
         // Configuración de la ventana principal
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("INICIO");
         setResizable(false);
-        setSize(400,360);
+        setSize(400, 360);
         setLocationRelativeTo(null);
-        setLayout(new BorderLayout());
+        
+        // Configurar panel principal con layout nulo (absolute positioning)
+        jPanel2.setLayout(null);
+        jPanel2.setBackground(Color.WHITE);
+        add(jPanel2, BorderLayout.CENTER);
 
-        add(jPanel2,BorderLayout.CENTER);
+        // Configurar posición y tamaño de cada componente
+        jLabel1.setBounds(130, 30, 140, 30);
+        jLabel2.setBounds(80, 80, 150, 20);
+        txtdni.setBounds(80, 100, 220, 25);
+        jSeparator1.setBounds(80, 125, 220, 2);
+        jLabel3.setBounds(80, 140, 150, 20);
+        txtcontraseña.setBounds(80, 160, 220, 25);
+        jSeparator2.setBounds(80, 185, 220, 2);
+        btninicio.setBounds(140, 210, 120, 30);
+        jLabel4.setBounds(80, 270, 160, 20);
+        lblregistrar.setBounds(240, 270, 70, 20);
 
-        // Panel principal
-        jPanel2.setBackground(new Color(255, 255, 255));
-
-        // Etiqueta de usuario
+        // Configurar estilos de los componentes (manteniendo los originales)
+        jLabel1.setFont(new Font("Swis721 WGL4 BT", Font.BOLD, 18));
+        jLabel1.setHorizontalAlignment(SwingConstants.CENTER);
+        
         jLabel2.setFont(new Font("Microsoft JhengHei", Font.BOLD, 14));
-
-        // Campo de contraseña
-        txtcontraseña.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        txtcontraseña.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-
-        // Etiqueta de contraseña
         jLabel3.setFont(new Font("Microsoft JhengHei", Font.BOLD, 14));
-
-        // Campo de usuario
+        
         txtdni.setFont(new Font("Roboto", Font.PLAIN, 13));
-        txtdni.setHorizontalAlignment(JTextField.LEFT);
         txtdni.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         
-        // Botón de inicio de sesión
+        txtcontraseña.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        txtcontraseña.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        
         btninicio.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        btninicio.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                btninicioActionPerformed(evt);
+        
+        lblregistrar.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        lblregistrar.setForeground(new Color(102, 102, 255));
+        lblregistrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        // Añadir componentes al panel
+        jPanel2.add(jLabel1);
+        jPanel2.add(jLabel2);
+        jPanel2.add(txtdni);
+        jPanel2.add(jSeparator1);
+        jPanel2.add(jLabel3);
+        jPanel2.add(txtcontraseña);
+        jPanel2.add(jSeparator2);
+        jPanel2.add(btninicio);
+        jPanel2.add(jLabel4);
+        jPanel2.add(lblregistrar);
+
+        // Event listeners (manteniendo los originales)
+
+        txtdni.addKeyListener( new KeyAdapter() {
+            public void keyTyped(KeyEvent evt) {
+                if (!Character.isDigit(evt.getKeyChar()) || txtdni.getText().length() >= 8) {
+                    evt.consume();
+                }
             }
         });
 
-        // Título principal
-        jLabel1.setFont(new Font("Swis721 WGL4 BT", Font.BOLD, 18));
-        jLabel1.setHorizontalAlignment(SwingConstants.CENTER);
-        jLabel1.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        txtcontraseña.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent evt) {
+                if (txtcontraseña.getPassword().length >= 20 || evt.getKeyChar() == ' ') {
+                    evt.consume();
+                }
+            }
+        });
 
-        // Enlace de registro
-        lblregistrar.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        lblregistrar.setForeground(new Color(102, 102, 255));
-        lblregistrar.setHorizontalAlignment(SwingConstants.CENTER);
-        lblregistrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btninicio.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                String dni = txtdni.getText();
+                String contraseña = new String(txtcontraseña.getPassword());
+                queryuser.IniciarSesion(dni, contraseña);
+            }
+        });
 
         lblregistrar.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
-                txtregistrarMouseClicked(evt);
+                new Registro_Usuario();
+                dispose();
             }
         });
 
-        // Layout del panel principal
-        GroupLayout jPanel2Layout = new GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        
-        // Configuración horizontal del layout
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(130)
-                        .addComponent(jLabel1, 127, 127, 127))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(80)
-                        .addComponent(jLabel2, 150, 150, 150))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(80)
-                        .addComponent(txtdni, 220, 220, 220))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(80)
-                        .addComponent(jSeparator1, 220, 220, 220))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(80)
-                        .addComponent(jLabel3))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(80)
-                        .addComponent(txtcontraseña, 220, 220, 220))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(80)
-                        .addComponent(jSeparator2, 220, 220,220))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(130)
-                        .addComponent(btninicio, 120, 120, 120))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(20)
-                        .addComponent(jLabel4, 158, 158, 158)
-                        .addGap(122)
-                        .addComponent(lblregistrar, 70, 70, 70)));
-        
-        // Configuración vertical del layout
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(30)
-                .addComponent(jLabel1)
-                .addGap(32)
-                .addComponent(jLabel2)
-                .addComponent(txtdni)
-                .addComponent(jSeparator1)
-                .addGap(10)
-                .addComponent(jLabel3)
-                .addComponent(txtcontraseña)
-                .addComponent(jSeparator2)
-                .addGap(20)
-                .addComponent(btninicio)
-                .addGap(40)
-                .addGroup(jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
-                    .addComponent(lblregistrar))
-                .addGap(14)));
-        // Layout principal de la ventana
-        
-        
-        //hacer visible la ventana
         setVisible(true);
     }
-
-    // Método para manejar clic en enlace de registro
-    private void txtregistrarMouseClicked(MouseEvent evt) {
-        new Registro_Usuario();
-        dispose();
-    }
-
-    // Método para manejar clic en botón de inicio
-    private void btninicioActionPerformed(ActionEvent evt) {
-            String dni = txtdni.getText();
-            String contraseña = new String(txtcontraseña.getPassword());
-            queryuser.IniciarSesion(dni,contraseña);
-    
-    }
-
-    
 }
