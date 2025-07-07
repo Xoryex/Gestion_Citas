@@ -253,8 +253,7 @@ private void createFooter() {
                     txtcontraseña.setText("");
                     txtconfirmarcontraseña.setText("");
                 } else {
-                    User usuario = new User(dni, nombre, apellido, celular, contraseña, false);
-                    queryuser.Insetar(usuario);
+                    
                     // Limpiar campos después del registro
                     txtdni.setText("");
                     txtnombre.setText("");

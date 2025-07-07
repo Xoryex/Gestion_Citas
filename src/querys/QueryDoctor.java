@@ -1,7 +1,7 @@
 package src.querys;
 
 
-public class QueryDoctor implements Query{
+public class QueryDoctor implements Query<Doctor>{
    
     @Override
     public void Crear(Object datos_persona) {

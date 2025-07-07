@@ -96,9 +96,11 @@ public class Init extends JFrame {
 
         btninicio.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                String dni = txtdni.getText();
+                int dni = Integer.parseInt(txtdni.getText());
                 String contraseña = new String(txtcontraseña.getPassword());
-                queryuser.IniciarSesion(dni, contraseña);
+                if(queryuser.IniciarSesion(dni, contraseña)){
+                    JOptionPane.showMessageDialog(null, "Bienvenido " + QueryUser.usuario_actual.getNombre() + " " + QueryUser.usuario_actual.getApellido());
+                }
             }
         });
 

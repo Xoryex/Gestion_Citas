@@ -20,23 +20,12 @@ public class QueryUser implements Query<User> {
       
 
 
-      if (ExisteUsuario(persona.getDni(), persona.getContraseña())) {
+      
          JOptionPane.showMessageDialog(null, "El usuario ya existe");
 
-      } else {
-         try (CallableStatement cbtm = con.prepareCall("{call Sp_insert_user(?,?,?,?,?,?)}")) {
-            cbtm.setString(1, persona.getDni());
-            cbtm.setString(2, persona.getNombre());
-            cbtm.setString(3, persona.getApellido());
-            cbtm.setString(4, persona.getTlf());
-            cbtm.setString(5, persona.getContraseña());
-            cbtm.setBoolean(6, persona.getAdmin());
-            cbtm.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Usuario registrado correctamente");
-         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
-         }
-      }
+      
+         
+      
    }
 
    @Override
@@ -49,12 +38,11 @@ public class QueryUser implements Query<User> {
 
    }
 
-   public boolean IniciarSesion(String dni, String contraseña) {
+   public boolean IniciarSesion(int dni, String contraseña) {
       
          try {
-            CallableStatement cstm = con
-                  .prepareCall("{call paLogin(?,?)}");
-            cstm.setString(1, dni);
+            CallableStatement cstm = con.prepareCall("{call paLogin(?,?)}");
+            cstm.setInt(1, dni);
             cstm.setString(2, contraseña);
             ResultSet rs = cstm.executeQuery();
 
@@ -76,4 +64,4 @@ public class QueryUser implements Query<User> {
    }
 
 
-}
+

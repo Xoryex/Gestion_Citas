@@ -4,7 +4,7 @@ package src.models;
       private String contraseña;
       private boolean admin;
 
-        public User(String dni, String nombre, String apellido, String tlf, String contraseña, boolean admin) {
+        public User(int dni, String nombre, String apellido, int tlf, String contraseña, boolean admin) {
             super(dni, nombre, apellido, tlf);
             this.contraseña = contraseña;
             this.admin = admin;
