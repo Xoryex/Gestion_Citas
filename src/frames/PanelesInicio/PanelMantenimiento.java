@@ -3,7 +3,7 @@ package PanelesInicio;
 
 import javax.swing.*;
 
-import VentanasMantenimiento.*;
+import ventanasmantenimiento.*;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
