@@ -1,9 +1,10 @@
 package src.models;
 
 public class Persona {
-      private String dni,nombre, apellido, tlf,correo;
+      private String nombre, apellido,correo;
+      private int dni,tlf;
 
-        public Persona(String dni, String nombre, String apellido, String tlf) {
+        public Persona(int dni, String nombre, String apellido, int  tlf) {
             this.dni = dni;
             this.nombre = nombre;
             this.apellido = apellido;
@@ -15,7 +16,7 @@ public class Persona {
       public String getApellido() {
           return apellido;
       }
-      public String getDni() {
+      public int getDni() {
           return dni;
       }
       public String getNombre() {
@@ -27,13 +28,13 @@ public class Persona {
       public void setApellido(String apellido) {
           this.apellido = apellido;
       }
-      public void setDni(String dni) {
+      public void setDni(int dni) {
           this.dni = dni;
       }
       public void setNombre(String nombre) {
           this.nombre = nombre;
       }
-      public void setTlf(String tlf) {
+      public void setTlf(int tlf) {
           this.tlf = tlf;
       }
 

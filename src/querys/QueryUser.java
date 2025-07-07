@@ -50,7 +50,7 @@ public class QueryUser implements Query<User> {
    }
 
    public boolean IniciarSesion(String dni, String contraseña) {
-      if (ExisteUsuario(dni, contraseña)) {
+      
          try {
             CallableStatement cstm = con
                   .prepareCall("{call paLogin(?,?)}");
@@ -58,10 +58,10 @@ public class QueryUser implements Query<User> {
             cstm.setString(2, contraseña);
             ResultSet rs = cstm.executeQuery();
 
-            usuario_actual.setDni(rs.getString("DniRecep"));
+            usuario_actual.setDni(rs.getInt("DniRecep"));
             usuario_actual.setNombre(rs.getString("NombreRecep"));
             usuario_actual.setApellido(rs.getString("ApellidoRecep"));
-            usuario_actual.setTlf(rs.getString("TelefonoRecep"));
+            usuario_actual.setTlf(rs.getInt("TelefonoRecep"));
             usuario_actual.setContraseña(rs.getString("Contrasena"));
             usuario_actual.setAdmin(rs.getBoolean("Admin"));
 
@@ -71,30 +71,9 @@ public class QueryUser implements Query<User> {
             JOptionPane.showMessageDialog(null, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
             return false;
          }
-      } else {
-         return false;
-      }
-   }
-
-   private boolean ExisteUsuario(String dni, String contraseña) {
-      try {
-         PreparedStatement pstm = con
-               .prepareStatement("select * from Recepcionista where DniRecep=? and Contrasena =?");
-         pstm.setString(1, dni);
-         pstm.setString(2, contraseña);
-         ResultSet rs = pstm.executeQuery();
-
-         if (rs.next()) {
-            return true;
-         } else {
-            JOptionPane.showMessageDialog(null, "No existe una cuenta con estas credenciales");
-            return false;
-         }
-
-      } catch (SQLException e) {
-         JOptionPane.showMessageDialog(null, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
-         return false;
       }
 
    }
+
+
 }
