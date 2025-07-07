@@ -1,4 +1,4 @@
-package panelesinicio;
+package PanelesInicio;
 import HerramientasCitas.pnlDatosCita;
 import HerramientasCitas.pnlModificarDatosCita;
 import HerramientasCitas.pnlTablaCitas;

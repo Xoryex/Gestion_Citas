@@ -1,5 +1,5 @@
 // Archivo: PanelesInicio/PanelMantenimiento.java
-package panelesinicio;
+package PanelesInicio;
 
 import javax.swing.*;
 
