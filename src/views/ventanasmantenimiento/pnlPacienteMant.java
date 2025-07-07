@@ -1,4 +1,4 @@
-package ventanasmantenimiento;
+package views.ventanasmantenimiento;
 import java.awt.*;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-import src.utils.Conexion;
+import utils.Conexion;
 
 public class pnlPacienteMant extends JPanel {
     private JTable tblPaciente;

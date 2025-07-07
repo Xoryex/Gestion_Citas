@@ -1,6 +1,6 @@
 package main;
 
-import frames.Init;
+import views.Init;
 import utils.Conexion;
 
 class Main {

@@ -11,7 +11,7 @@ begin
 	end
 	
 	if not exists (select DniRecep from Recepcionista where DniRecep = @dni and Contrasena=@contrasena)begin
-		raiserror('Constraseña incorrecta',16,1)
+		raiserror('Constraseï¿½a incorrecta',16,1)
 		return @@ERROR
 	end
 	select * from Recepcionista where DniRecep=@dni
@@ -24,7 +24,7 @@ create procedure paInsertRecepcionista
 	@nombre varchar(50),
 	@apellido varchar(50),
 	@celular numeric(9),
-	@contraseña varchar(20),
+	@contraseï¿½a varchar(20),
 	@admin bit
 )
 as
@@ -35,10 +35,10 @@ begin
 	end
 
 	insert into Recepcionista (DniRecep,NomRecep,ApellRecep,TelfRecep,Contrasena,EsAdmin) 
-	values(@dni,@nombre,@apellido,@celular,@contraseña,@admin)
+	values(@dni,@nombre,@apellido,@celular,@contraseï¿½a,@admin)
 
 
 end
 go
 
-select * from Recepcionista
+
