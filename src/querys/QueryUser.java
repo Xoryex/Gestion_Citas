@@ -2,21 +2,21 @@ package querys;
 
 import java.sql.*;
 import javax.swing.JOptionPane;
-import models.User;
+import models.Recepcionista;
 
 import utils.Conexion;
 
-public class QueryUser implements Query<User> {
-   public static User usuario_actual = new User();
-  
+public class QueryUser implements Query<Recepcionista> {
+   public static Recepcionista usuario_actual = new Recepcionista();
+
 
    @Override
-   public void actualizar(User datos_modificados) {
+   public void actualizar(Recepcionista datos_modificados) {
 
    }
 
    @Override
-   public void Insetar(User persona) {
+   public void Insetar(Recepcionista persona) {
       try {
          CallableStatement cstm = Conexion.getConnection().prepareCall("{call paInsertRecepcionista(?,?,?,?,?,?)}");
          cstm.setInt(1, persona.getDni());

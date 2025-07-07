@@ -1,10 +1,10 @@
-package src.frames;
+package frames;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 
-import src.models.User;
-import src.querys.QueryUser;
+import models.Recepcionista;
+import querys.QueryUser;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -260,7 +260,7 @@ private void createFooter() {
                     txtcontraseña.setText("");
                     txtconfirmarcontraseña.setText("");
                 } else {
-                    User user = new User(dni, nombre, apellido, celular, contraseña, false);
+                    Recepcionista user = new Recepcionista(dni, nombre, apellido, celular, contraseña, false);
                     queryuser.Insetar(user);
                     // Limpiar campos después del registro
                     txtdni.setText("");

@@ -3,7 +3,7 @@ package frames;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import src.query.QueryUser;
+import querys.QueryUser;
 
 
 public class Init extends JFrame {
@@ -106,17 +106,26 @@ public class Init extends JFrame {
         });
 
         btninicio.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
                 int dni = Integer.parseInt(txtdni.getText());
                 String contraseña = new String(txtcontraseña.getPassword());
+            if(String.valueOf(dni).isEmpty() || contraseña.isEmpty()){
+                JOptionPane.showMessageDialog(Init.this, "Por favor, complete todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
+            
+            } else {
                 if(queryuser.IniciarSesion(dni, contraseña)){
                     
                     dispose();
                 }
             }
-        });
+        });q
 
         lblregistrar.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseEntered(MouseEvent evt) {
+                lblregistrar.setForeground(new Color(0, 0, 255));
+            }
+            
             public void mouseClicked(MouseEvent evt) {
                 new Registro_Usuario();
                 dispose();
