@@ -61,7 +61,7 @@ public class pnlEspecialidadMant extends JPanel {
             try {
                 
                 if (conn != null) {
-                    CallableStatement stmt = conn.prepareCall("{CALL CRU_InsertarEspecialidad(?, ?)}");
+                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRU_InsertarEspecialidad(?, ?)}");
                     stmt.setString(1, codigo);
                     stmt.setString(2, nombre);
 
@@ -84,12 +84,87 @@ public class pnlEspecialidadMant extends JPanel {
     }
 
     public void actualizar() {
-        JOptionPane.showMessageDialog(this, "Función actualizar aún no implementada.");
+        int filaSeleccionada = tblEspecialidad.getSelectedRow();
+
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona una fila para actualizar.");
+            return;
+        }
+
+        String codigoActual = modelEspecialidad.getValueAt(filaSeleccionada, 0).toString();
+        String nombreActual = modelEspecialidad.getValueAt(filaSeleccionada, 1).toString();
+
+        JTextField txtNuevoNombre = new JTextField(nombreActual);
+
+        Object[] mensaje = {
+            "Código (no editable): " + codigoActual,
+            "Nuevo nombre:", txtNuevoNombre
+        };
+
+        int opcion = JOptionPane.showConfirmDialog(this, mensaje, "Actualizar Especialidad", JOptionPane.OK_CANCEL_OPTION);
+
+        if (opcion == JOptionPane.OK_OPTION) {
+            String nuevoNombre = txtNuevoNombre.getText().trim();
+
+            if (nuevoNombre.isEmpty() ) {
+                JOptionPane.showMessageDialog(this, "El nombre no puede estar vacío.");
+                return;
+            }
+
+            try {
+                if (conn != null) {
+                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRU_ActualizarEspecialidad(?, ?)}");
+                    stmt.setString(1, codigoActual);
+                    stmt.setString(2, nuevoNombre);
+                    stmt.execute();
+
+                    modelEspecialidad.setValueAt(nuevoNombre, filaSeleccionada, 1);
+
+                    JOptionPane.showMessageDialog(this, "Especialidad actualizada correctamente.");
+                    stmt.close();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error al conectar con la base de datos.");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error al actualizar: " + e.getMessage());
+            }
+        }
     }
 
     public void eliminar() {
-        JOptionPane.showMessageDialog(this, "Función eliminar aún no implementada.");
+        int filaSeleccionada = tblEspecialidad.getSelectedRow();
+
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona una fila para eliminar.");
+            return;
+        }
+
+        String codigo = modelEspecialidad.getValueAt(filaSeleccionada, 0).toString();
+
+        int confirmacion = JOptionPane.showConfirmDialog(this, "¿Eliminar la especialidad con código: " + codigo + "?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            try {
+                if (conn != null) {
+                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRU_EliminarEspecialidad(?)}");
+                    stmt.setString(1, codigo);
+                    stmt.execute();
+
+                    modelEspecialidad.removeRow(filaSeleccionada);
+
+                    JOptionPane.showMessageDialog(this, "Especialidad eliminada correctamente.");
+                    stmt.close();
+                } else {
+                    JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error al eliminar: " + e.getMessage());
+            }
+        }
     }
+
 
     public void agregarDatosEjemplo() {
 
