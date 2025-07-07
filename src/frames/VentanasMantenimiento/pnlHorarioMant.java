@@ -34,7 +34,7 @@ public class pnlHorarioMant extends JPanel {
         return modelHorario;
     }
     
-    public void agregarDatosEjemplo() {
+    public void agregarDatos() {
 
     }
     

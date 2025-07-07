@@ -61,7 +61,7 @@ public class pnlEspecialidadMant extends JPanel {
             try {
                 
                 if (conn != null) {
-                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRU_InsertarEspecialidad(?, ?)}");
+                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_InsertarEspecialidad(?, ?)}");
                     stmt.setString(1, codigo);
                     stmt.setString(2, nombre);
 
@@ -113,7 +113,7 @@ public class pnlEspecialidadMant extends JPanel {
 
             try {
                 if (conn != null) {
-                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRU_ActualizarEspecialidad(?, ?)}");
+                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_ActualizarEspecialidad(?, ?)}");
                     stmt.setString(1, codigoActual);
                     stmt.setString(2, nuevoNombre);
                     stmt.execute();
@@ -166,7 +166,7 @@ public class pnlEspecialidadMant extends JPanel {
     }
 
 
-    public void agregarDatosEjemplo() {
+    public void agregarDatos() {
 
     }
 }

@@ -36,7 +36,7 @@ public class pnlPacienteMant extends JPanel {
         return modelPaciente;
     }
     
-    public void agregarDatosEjemplo() {
+    public void agregarDatos() {
 
     }
 

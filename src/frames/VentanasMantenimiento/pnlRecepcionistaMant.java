@@ -34,7 +34,7 @@ public class pnlRecepcionistaMant extends JPanel {
         return modelRecepcionista;
     }
     
-    public void agregarDatosEjemplo() {
+    public void agregarDatos() {
         
     }
 
