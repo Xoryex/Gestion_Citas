@@ -173,12 +173,12 @@ private void eliminarRegistro() {
     
     // Método para cargar datos de ejemplo en todos los paneles
     public void agregarDatos() {
-        panelRecepcionista.agregarDatos();
-        panelConsultorio.agregarDatos();
-        panelDoctor.agregarDatos();
-        panelEspecialidad.agregarDatos();
-        panelHorario.agregarDatos();
-        panelPaciente.agregarDatos();
+        panelRecepcionista.cargarDatos();
+        panelConsultorio.cargarDatos();
+        panelDoctor.cargarDatos();
+        panelEspecialidad.cargarDatos();
+        panelHorario.cargarDatos();
+        panelPaciente.cargarDatos();
     }
     
     // Getters para acceder a los paneles desde otras clases
