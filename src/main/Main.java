@@ -1,7 +1,7 @@
-package src.main;
+package main;
 
-import src.frames.Init;
-import src.utils.Conexion;
+import frames.Init;
+import utils.Conexion;
 
 class Main {
    public static void main(String[] args) {

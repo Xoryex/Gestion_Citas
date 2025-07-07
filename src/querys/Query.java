@@ -1,4 +1,4 @@
-package src.querys;
+package querys;
 
 interface Query<T> {
 

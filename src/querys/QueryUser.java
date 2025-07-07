@@ -1,10 +1,10 @@
-package src.querys;
+package querys;
 
 import java.sql.*;
 import javax.swing.JOptionPane;
-import src.models.User;
+import models.User;
 
-import src.utils.Conexion;
+import utils.Conexion;
 
 public class QueryUser implements Query<User> {
    public static User usuario_actual = new User();

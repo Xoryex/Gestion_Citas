@@ -1,3 +1,4 @@
+package frames;
 
 import PanelesInicio.PanelCitasMedicas;
 import PanelesInicio.PanelConfiguracion;
