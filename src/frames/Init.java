@@ -79,6 +79,11 @@ public class Init extends JFrame {
         // Event listeners (manteniendo los originales)
 
         txtdni.addKeyListener( new KeyAdapter() {
+            public void keyPressed(KeyEvent evt) {
+                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                    btninicio.doClick();
+                }
+            }
             public void keyTyped(KeyEvent evt) {
                 if (!Character.isDigit(evt.getKeyChar()) || txtdni.getText().length() >= 8) {
                     evt.consume();
@@ -87,6 +92,11 @@ public class Init extends JFrame {
         });
 
         txtcontraseña.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent evt) {
+                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                    btninicio.doClick();
+                }
+            }
             public void keyTyped(KeyEvent evt) {
                 if (txtcontraseña.getPassword().length >= 20 || evt.getKeyChar() == ' ') {
                     evt.consume();
@@ -99,7 +109,8 @@ public class Init extends JFrame {
                 int dni = Integer.parseInt(txtdni.getText());
                 String contraseña = new String(txtcontraseña.getPassword());
                 if(queryuser.IniciarSesion(dni, contraseña)){
-                    JOptionPane.showMessageDialog(null, "Bienvenido " + QueryUser.usuario_actual.getNombre() + " " + QueryUser.usuario_actual.getApellido());
+                    new APLICACION();
+                    dispose();
                 }
             }
         });
