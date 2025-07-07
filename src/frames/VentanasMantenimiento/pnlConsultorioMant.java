@@ -68,11 +68,9 @@ public class pnlConsultorioMant extends JPanel {
 
                     stmt.execute();
 
-                    // Insertar también en la tabla visual
-                    modelConsultorio.addRow(new Object[]{ID, nombre});
-
                     JOptionPane.showMessageDialog(this, "Consultorio agregado correctamente.");
                     stmt.close();
+                    cargarDatos();
                     conn.close();
                 } else {
                     JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.");
@@ -166,12 +164,27 @@ public class pnlConsultorioMant extends JPanel {
         }
     }
 
-
-
-    public void agregarDatos() {
-
+    public void cargarDatos() {
+        // Limpia la tabla
+        modelConsultorio.setRowCount(0);
+        try {
+            if (conn != null) {
+                CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_MostrarConsultorios()}");
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    String id = rs.getString("ID");
+                    String nombre = rs.getString("NombreConsultorio");
+                    modelConsultorio.addRow(new Object[]{id, nombre});
+                }
+                rs.close();
+                stmt.close();
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al cargar datos: " + e.getMessage());
+        }
     }
-
-    
 
 }
