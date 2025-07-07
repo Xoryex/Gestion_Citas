@@ -239,10 +239,17 @@ private void createFooter() {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 // Aquí puedes agregar la lógica para registrar al usuario
-                int dni = Integer.parseInt(txtdni.getText());
+                int dni, celular;
+                try {
+                    dni = Integer.parseInt(txtdni.getText());
+                    celular = Integer.parseInt(txtcelular.getText());
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, "Por favor, ingresa un número válido en los campos de DNI y Celular.");
+                    return;
+                }
                 String nombre = txtnombre.getText().trim();
                 String apellido = txtapellido.getText().trim();
-                int celular = Integer.parseInt(txtcelular.getText());
+                
                 String contraseña = new String(txtcontraseña.getPassword());
                 String confirmarContraseña = new String(txtconfirmarcontraseña.getPassword());
 

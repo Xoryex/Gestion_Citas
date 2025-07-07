@@ -18,7 +18,7 @@ public class QueryUser implements Query<User> {
    @Override
    public void Insetar(User persona) {
       try {
-         CallableStatement cstm = Conexion.getConnection().prepareCall("{call paInsertRecepcionista(?,?,?,?,?)}");
+         CallableStatement cstm = Conexion.getConnection().prepareCall("{call paInsertRecepcionista(?,?,?,?,?,?)}");
          cstm.setInt(1, persona.getDni());
          cstm.setString(2, persona.getNombre());
          cstm.setString(3, persona.getApellido());

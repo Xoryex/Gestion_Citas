@@ -109,7 +109,7 @@ public class Init extends JFrame {
                 int dni = Integer.parseInt(txtdni.getText());
                 String contraseña = new String(txtcontraseña.getPassword());
                 if(queryuser.IniciarSesion(dni, contraseña)){
-                    new APLICACION();
+                    
                     dispose();
                 }
             }
