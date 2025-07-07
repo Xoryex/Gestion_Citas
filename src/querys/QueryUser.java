@@ -17,6 +17,9 @@ public class QueryUser implements Query<User> {
 
    @Override
    public void Insetar(User persona) {
+      
+
+
       if (ExisteUsuario(persona.getDni(), persona.getContraseña())) {
          JOptionPane.showMessageDialog(null, "El usuario ya existe");
 
@@ -49,11 +52,11 @@ public class QueryUser implements Query<User> {
    public boolean IniciarSesion(String dni, String contraseña) {
       if (ExisteUsuario(dni, contraseña)) {
          try {
-            PreparedStatement pstm = con
-                  .prepareStatement("select * from Recepcionista where DniRecep=? and Contrasena =?");
-            pstm.setString(1, dni);
-            pstm.setString(2, contraseña);
-            ResultSet rs = pstm.executeQuery();
+            CallableStatement cstm = con
+                  .prepareCall("{call paLogin(?,?)}");
+            cstm.setString(1, dni);
+            cstm.setString(2, contraseña);
+            ResultSet rs = cstm.executeQuery();
 
             usuario_actual.setDni(rs.getString("DniRecep"));
             usuario_actual.setNombre(rs.getString("NombreRecep"));
