@@ -1,9 +1,10 @@
-package src.frames;
+package frames;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import src.querys.QueryUser;
+
 
 public class Init extends JFrame {
     QueryUser queryuser = new QueryUser();

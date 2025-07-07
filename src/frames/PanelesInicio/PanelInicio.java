@@ -1,4 +1,4 @@
-package PanelesInicio;
+package panelesinicio;
 import java.awt.*;
 import javax.swing.*;
 

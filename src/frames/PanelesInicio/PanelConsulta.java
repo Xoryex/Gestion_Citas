@@ -1,4 +1,4 @@
-package PanelesInicio;
+package panelesinicio;
 
 import HerramientasConsultaReporte.*;
 import java.awt.*;

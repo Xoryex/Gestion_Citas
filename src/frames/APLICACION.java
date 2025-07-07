@@ -1,12 +1,13 @@
-import PanelesInicio.PanelCitasMedicas;
-import PanelesInicio.PanelConfiguracion;
-import PanelesInicio.PanelConsulta;
-import PanelesInicio.PanelInicio;
-import PanelesInicio.PanelMantenimiento;
-import PanelesInicio.PanelReporte;
+package frames;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import panelesinicio.PanelCitasMedicas;
+import panelesinicio.PanelConfiguracion;
+import panelesinicio.PanelConsulta;
+import panelesinicio.PanelInicio;
+import panelesinicio.PanelMantenimiento;
+import panelesinicio.PanelReporte;
 
 public class APLICACION extends JFrame {
     private JLabel lblNomRecepc;
