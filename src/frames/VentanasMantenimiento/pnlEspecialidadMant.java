@@ -67,11 +67,9 @@ public class pnlEspecialidadMant extends JPanel {
 
                     stmt.execute();
 
-                    // Insertar también en la tabla visual
-                    modelEspecialidad.addRow(new Object[]{codigo, nombre});
-
                     JOptionPane.showMessageDialog(this, "Especialidad agregada correctamente.");
                     stmt.close();
+                    cargarDatos(); // Recargar datos después de agregar
                     conn.close();
                 } else {
                     JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.");
@@ -118,10 +116,9 @@ public class pnlEspecialidadMant extends JPanel {
                     stmt.setString(2, nuevoNombre);
                     stmt.execute();
 
-                    modelEspecialidad.setValueAt(nuevoNombre, filaSeleccionada, 1);
-
-                    JOptionPane.showMessageDialog(this, "Especialidad actualizada correctamente.");
+                    JOptionPane.showMessageDialog(this, "Especialidad actualizada correctamente."); // Recargar datos después de actualizar
                     stmt.close();
+                    cargarDatos(); // Recargar datos después de actualizar
                 } else {
                     JOptionPane.showMessageDialog(this, "Error al conectar con la base de datos.");
                 }
@@ -151,10 +148,9 @@ public class pnlEspecialidadMant extends JPanel {
                     stmt.setString(1, codigo);
                     stmt.execute();
 
-                    modelEspecialidad.removeRow(filaSeleccionada);
-
                     JOptionPane.showMessageDialog(this, "Especialidad eliminada correctamente.");
                     stmt.close();
+                    cargarDatos(); // Recargar datos después de eliminar
                 } else {
                     JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.");
                 }
@@ -165,8 +161,25 @@ public class pnlEspecialidadMant extends JPanel {
         }
     }
 
-
-    public void agregarDatos() {
-
+    public void cargarDatos() {
+        modelEspecialidad.setRowCount(0); // Limpiar la tabla
+        try {
+            if (conn != null) {
+                CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_MostrarEspecialidades()}");
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    String codigo = rs.getString("Codigo");
+                    String nombre = rs.getString("Especialidad");
+                    modelEspecialidad.addRow(new Object[]{codigo, nombre});
+                }
+                rs.close();
+                stmt.close();
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al cargar datos: " + e.getMessage());
+        }
     }
 }
