@@ -82,14 +82,13 @@ public class Especialidades {
         String codigo = tcl.nextLine().trim().toUpperCase();
         if (!especialidades.containsKey(codigo)) {
             System.out.println("El código no existe.");
-           
+            return; // <-- Agrega este return
         }
-        // Verificar si algún doctor usa esta especialidad
         boolean enUso = link.doctores.getListaDoctores().values().stream()
             .anyMatch(doc -> doc.getcodEspecialidad().equals(codigo));
         if (enUso) {
             System.out.println("No se puede eliminar la especialidad porque está asignada a uno o más doctores.");
-            
+            return; // <-- Agrega este return
         }
         especialidades.remove(codigo);
         System.out.println("Especialidad eliminada correctamente.");

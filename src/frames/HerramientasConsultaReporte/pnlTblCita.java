@@ -1,13 +1,18 @@
-package HerramientasConsultaReporte;
+package src.frames.HerramientasConsultaReporte;
 
 import java.awt.*;
+import java.sql.*;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import src.utils.Conexion;
 
 public class pnlTblCita extends JPanel {
 
     private JTable tblCRCitas;
     private JScrollPane scrollTabla;
+    private DefaultTableModel modeloTabla;
+    private Connection conn = Conexion.getConnection();
 
     public pnlTblCita() {
         setBackground(new Color(57, 93, 129));
@@ -15,17 +20,16 @@ public class pnlTblCita extends JPanel {
         setLayout(new BorderLayout());
 
         initComponents();
+        cargarDatosDesdeBD();
     }
 
     private void initComponents() {
-        // Definir columnas
         String[] columnas = {
-            "ID de Cita", "DNI del Paciente", "Paciente", "Consultorio",
-            "Doctor", "Hora Inicio", "Hora Fin", "Atención", "Estado", "Recepcionista"
+            "ID de Cita", "DNI del NomPct", "NomPct", "NomConst",
+            "NomDoc", "Hora Inicio", "Hora Fin", "Atención", "EstadoCita", "NomRecep"
         };
 
-        // Modelo de tabla sin datos iniciales
-        DefaultTableModel modelo = new DefaultTableModel(null, columnas) {
+        modeloTabla = new DefaultTableModel(null, columnas) {
             private final Class<?>[] columnTypes = new Class<?>[] {
                 String.class, String.class, String.class, String.class,
                 String.class, String.class, String.class, String.class,
@@ -47,7 +51,7 @@ public class pnlTblCita extends JPanel {
             }
         };
 
-        tblCRCitas = new JTable(modelo);
+        tblCRCitas = new JTable(modeloTabla);
         tblCRCitas.setFont(new Font("Roboto", Font.PLAIN, 14));
         tblCRCitas.getTableHeader().setResizingAllowed(false);
         tblCRCitas.getTableHeader().setReorderingAllowed(false);
@@ -58,5 +62,39 @@ public class pnlTblCita extends JPanel {
 
     public JTable getTablaCitas() {
         return tblCRCitas;
+    }
+
+    public void cargarDatosDesdeBD() {
+        modeloTabla.setRowCount(0); // Limpiar tabla
+
+        try (
+            CallableStatement stmt = conn != null ? conn.prepareCall("{CALL PA_CRUD_ListarCitas()}") : null;
+            ResultSet rs = stmt != null ? stmt.executeQuery() : null
+        ) {
+            if (rs != null) {
+                while (rs.next()) {
+                    String CodCita = rs.getString("CodCita");
+                    String DniPct = rs.getString("DniPct");
+                    String NomPct = rs.getString("NomPct");
+                    String NomConst = rs.getString("NomConst");
+                    String NomDoc = rs.getString("NomDoc");
+                    String horaInicio = rs.getString("HoraInicio");
+                    String horaFin = rs.getString("HoraFin");
+                    String TipoAtencion = rs.getString("TipoAtencion");
+                    String EstadoCita = rs.getString("EstadoCita");
+                    String NomRecep = rs.getString("NomRecep");
+
+                    modeloTabla.addRow(new Object[] {
+                        CodCita, DniPct, NomPct, NomConst, NomDoc,
+                        horaInicio, horaFin, TipoAtencion, EstadoCita, NomRecep
+                    });
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al cargar datos: " + e.getMessage());
+        }
     }
 }
