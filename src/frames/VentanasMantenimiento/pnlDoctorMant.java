@@ -1,4 +1,4 @@
-package VentanasMantenimiento;
+package ventanasmantenimiento;
 
 import java.awt.*;
 import javax.swing.*;
