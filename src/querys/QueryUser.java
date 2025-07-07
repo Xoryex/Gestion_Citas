@@ -8,7 +8,7 @@ import src.utils.Conexion;
 
 public class QueryUser implements Query<User> {
    public static User usuario_actual = new User();
-   private Connection con = Conexion.getConnection();
+  
 
    @Override
    public void actualizar(User datos_modificados) {
@@ -17,26 +17,24 @@ public class QueryUser implements Query<User> {
 
    @Override
    public void Insetar(User persona) {
-      
-
-
-      if (ExisteUsuario(persona.getDni(), persona.getContraseña())) {
-         JOptionPane.showMessageDialog(null, "El usuario ya existe");
-
-      } else {
-         try (CallableStatement cbtm = con.prepareCall("{call Sp_insert_user(?,?,?,?,?,?)}")) {
-            cbtm.setString(1, persona.getDni());
-            cbtm.setString(2, persona.getNombre());
-            cbtm.setString(3, persona.getApellido());
-            cbtm.setString(4, persona.getTlf());
-            cbtm.setString(5, persona.getContraseña());
-            cbtm.setBoolean(6, persona.getAdmin());
-            cbtm.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Usuario registrado correctamente");
-         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
-         }
+      try {
+         CallableStatement cstm = Conexion.getConnection().prepareCall("{call paInsertRecepcionista(?,?,?,?,?)}");
+         cstm.setInt(1, persona.getDni());
+         cstm.setString(2, persona.getNombre());
+         cstm.setString(3, persona.getApellido());
+         cstm.setInt(4, persona.getTlf());
+         cstm.setString(5, persona.getContraseña());
+         cstm.setBoolean(6, persona.getAdmin());
+         cstm.executeUpdate();
+         JOptionPane.showMessageDialog(null, "Usuario registrado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+      }catch (SQLException e) {
+         JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
       }
+
+
+      
+         
+      
    }
 
    @Override
@@ -49,26 +47,28 @@ public class QueryUser implements Query<User> {
 
    }
 
-   public boolean IniciarSesion(String dni, String contraseña) {
+   public boolean IniciarSesion(int dni, String contraseña) {
       
          try {
-            CallableStatement cstm = con
-                  .prepareCall("{call paLogin(?,?)}");
-            cstm.setString(1, dni);
+            CallableStatement cstm = Conexion.getConnection().prepareCall("{call paSelectRecepcionista(?,?)}");
+            cstm.setInt(1, dni);
             cstm.setString(2, contraseña);
             ResultSet rs = cstm.executeQuery();
 
-            usuario_actual.setDni(rs.getInt("DniRecep"));
-            usuario_actual.setNombre(rs.getString("NombreRecep"));
-            usuario_actual.setApellido(rs.getString("ApellidoRecep"));
-            usuario_actual.setTlf(rs.getInt("TelefonoRecep"));
-            usuario_actual.setContraseña(rs.getString("Contrasena"));
-            usuario_actual.setAdmin(rs.getBoolean("Admin"));
-
+            if (rs.next()) {
+                usuario_actual.setDni(rs.getInt("DniRecep"));
+                usuario_actual.setNombre(rs.getString("NomRecep"));
+                usuario_actual.setApellido(rs.getString("ApellRecep"));
+                usuario_actual.setTlf(rs.getInt("TelfRecep"));
+                usuario_actual.setContraseña(rs.getString("Contrasena"));
+                usuario_actual.setAdmin(rs.getBoolean("EsAdmin"));
+            }
+            
+            
             return true;
 
          } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             return false;
          }
       }
@@ -76,4 +76,4 @@ public class QueryUser implements Query<User> {
    }
 
 
-}
+

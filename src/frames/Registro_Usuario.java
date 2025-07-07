@@ -239,22 +239,22 @@ private void createFooter() {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 // Aquí puedes agregar la lógica para registrar al usuario
-                String dni = txtdni.getText();
+                int dni = Integer.parseInt(txtdni.getText());
                 String nombre = txtnombre.getText().trim();
                 String apellido = txtapellido.getText().trim();
-                String celular = txtcelular.getText();
+                int celular = Integer.parseInt(txtcelular.getText());
                 String contraseña = new String(txtcontraseña.getPassword());
                 String confirmarContraseña = new String(txtconfirmarcontraseña.getPassword());
 
-                if (dni.isEmpty() || nombre.isEmpty() || apellido.isEmpty() || celular.isEmpty() || contraseña.isEmpty() || confirmarContraseña.isEmpty()||dni.length() < 8 || celular.length() < 9) {
+                if (String.valueOf(dni).isEmpty() || nombre.isEmpty() || apellido.isEmpty() || String.valueOf(celular).isEmpty() || contraseña.isEmpty() || confirmarContraseña.isEmpty()||String.valueOf(dni).length() < 8 || String.valueOf(celular).length() < 9) {
                     JOptionPane.showMessageDialog(null, "Por favor, completa todos los campos.");
                 } else if (!contraseña.equals(confirmarContraseña)) {
                     JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden.");
                     txtcontraseña.setText("");
                     txtconfirmarcontraseña.setText("");
                 } else {
-                    User usuario = new User(dni, nombre, apellido, celular, contraseña, false);
-                    queryuser.Insetar(usuario);
+                    User user = new User(dni, nombre, apellido, celular, contraseña, false);
+                    queryuser.Insetar(user);
                     // Limpiar campos después del registro
                     txtdni.setText("");
                     txtnombre.setText("");

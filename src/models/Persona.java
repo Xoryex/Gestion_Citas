@@ -22,7 +22,7 @@ public class Persona {
       public String getNombre() {
           return nombre;
       }
-      public String getTlf() {
+      public int getTlf() {
           return tlf;
       }
       public void setApellido(String apellido) {
