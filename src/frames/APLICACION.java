@@ -1,3 +1,4 @@
+
 import PanelesInicio.PanelCitasMedicas;
 import PanelesInicio.PanelConfiguracion;
 import PanelesInicio.PanelConsulta;
@@ -7,6 +8,7 @@ import PanelesInicio.PanelReporte;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
 
 public class APLICACION extends JFrame {
     private JLabel lblNomRecepc;
@@ -54,7 +56,8 @@ public class APLICACION extends JFrame {
         add(pnlCabecera, BorderLayout.NORTH);
 
         // PANEL RELLENO DEL FRAME
-        JPanel pnlRelleno = new JPanel(new BorderLayout());
+        JPanel pnlRelleno;
+        pnlRelleno = new JPanel(new BorderLayout());
 
         // TABBED PANE
         tbdpnInicio = new JTabbedPane();
