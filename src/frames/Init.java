@@ -5,7 +5,6 @@ import java.awt.*;
 import java.awt.event.*;
 import querys.QueryUser;
 
-
 public class Init extends JFrame {
     QueryUser queryuser = new QueryUser();
     // Componentes de la interfaz
@@ -28,7 +27,7 @@ public class Init extends JFrame {
         setResizable(false);
         setSize(400, 360);
         setLocationRelativeTo(null);
-        
+
         // Configurar panel principal con layout nulo (absolute positioning)
         jPanel2.setLayout(null);
         jPanel2.setBackground(Color.WHITE);
@@ -49,18 +48,18 @@ public class Init extends JFrame {
         // Configurar estilos de los componentes (manteniendo los originales)
         jLabel1.setFont(new Font("Swis721 WGL4 BT", Font.BOLD, 18));
         jLabel1.setHorizontalAlignment(SwingConstants.CENTER);
-        
+
         jLabel2.setFont(new Font("Microsoft JhengHei", Font.BOLD, 14));
         jLabel3.setFont(new Font("Microsoft JhengHei", Font.BOLD, 14));
-        
+
         txtdni.setFont(new Font("Roboto", Font.PLAIN, 13));
         txtdni.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        
+
         txtcontraseña.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         txtcontraseña.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        
+
         btninicio.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        
+
         lblregistrar.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblregistrar.setForeground(new Color(102, 102, 255));
         lblregistrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -79,12 +78,13 @@ public class Init extends JFrame {
 
         // Event listeners (manteniendo los originales)
 
-        txtdni.addKeyListener( new KeyAdapter() {
+        txtdni.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent evt) {
                 if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
                     btninicio.doClick();
                 }
             }
+
             public void keyTyped(KeyEvent evt) {
                 if (!Character.isDigit(evt.getKeyChar()) || txtdni.getText().length() >= 8) {
                     evt.consume();
@@ -98,6 +98,7 @@ public class Init extends JFrame {
                     btninicio.doClick();
                 }
             }
+
             public void keyTyped(KeyEvent evt) {
                 if (txtcontraseña.getPassword().length >= 20 || evt.getKeyChar() == ' ') {
                     evt.consume();
@@ -106,26 +107,33 @@ public class Init extends JFrame {
         });
 
         btninicio.addActionListener(new ActionListener() {
-                int dni = Integer.parseInt(txtdni.getText());
-                String contraseña = new String(txtcontraseña.getPassword());
-            if(String.valueOf(dni).isEmpty() || contraseña.isEmpty()){
-                JOptionPane.showMessageDialog(Init.this, "Por favor, complete todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
-            
-            } else {
-                if(queryuser.IniciarSesion(dni, contraseña)){
-                    
-                    dispose();
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+
+                if (txtdni.getText().isEmpty() || txtcontraseña.getPassword().length == 0) {
+                    JOptionPane.showMessageDialog(null, "Por favor, complete todos los campos.", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                } else {
+                    int dni;
+                    try {
+                        dni = Integer.parseInt(txtdni.getText());
+                    } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(null, "El DNI debe ser un número válido.", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    String contraseña = new String(txtcontraseña.getPassword());
+                    if (queryuser.IniciarSesion(dni, contraseña)) {
+                        dispose();
+                    }
                 }
             }
-        });q
+        });
 
         lblregistrar.addMouseListener(new MouseAdapter() {
 
             @Override
-            public void mouseEntered(MouseEvent evt) {
-                lblregistrar.setForeground(new Color(0, 0, 255));
-            }
-            
             public void mouseClicked(MouseEvent evt) {
                 new Registro_Usuario();
                 dispose();
