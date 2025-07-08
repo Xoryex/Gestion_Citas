@@ -260,13 +260,9 @@ public class Registro_Usuario extends JFrame {
 
                     Recepcionista newuser = new Recepcionista(dni, nombre, apellido, celular, contraseña, false);
                     queryuser.Insetar(newuser);
-                    // Limpiar campos después del registro
-                    txtdni.setText("");
-                    txtnombre.setText("");
-                    txtapellido.setText("");
-                    txtcelular.setText("");
-                    txtcontraseña.setText("");
-                    txtconfirmarcontraseña.setText("");
+                    new Init();
+                    dispose();
+                    
                 }
 
             }

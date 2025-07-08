@@ -4,14 +4,14 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.event.*;
-import java.sql.*;
-
+import querys.QueryUser;
 import static querys.QueryUser.usuario_actual;
-import utils.*;
 
 import views.Init;
 
 public class PanelConfiguracion extends JPanel {
+    private QueryUser queryuser= new QueryUser();
+
     private JPanel pnlCabeceraConf;
     private JPanel pnlBotonConf;
 
@@ -160,12 +160,9 @@ public class PanelConfiguracion extends JPanel {
                             JOptionPane.ERROR_MESSAGE);
                     
                 } else {
-                    
+                    queryuser.Eliminar(usuario_actual.getDni());
 
-
-                    
-
-                    Window ventana = SwingUtilities.getWindowAncestor(btnElimiwnarUsuario);
+                    Window ventana = SwingUtilities.getWindowAncestor(btnEliminarUsuario);
                     new Init();
                     ventana.dispose();
                 }
