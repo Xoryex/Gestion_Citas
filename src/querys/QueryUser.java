@@ -12,8 +12,9 @@ public class QueryUser implements Query<Recepcionista> {
 
    @Override
    public void actualizar(Recepcionista datos_modificados) {
-
-   }
+      try{ 
+         
+      }
 
    @Override
    public void Insetar(Recepcionista persona) {
@@ -47,12 +48,11 @@ public class QueryUser implements Query<Recepcionista> {
                         CallableStatement cstm=null;
       try {
                         cstm = Conexion.getConnection()
-                                .prepareCall("{call  PA_CRUD_EliminarRecepcionista ? }");
+                                .prepareCall("{call  PA_CRUD_EliminarRecepcionista (?) }");
                         cstm.setInt(1,indice);
                         cstm.executeUpdate();
-                        JOptionPane.showMessageDialog(null, "Usuario eliminado");
+                        JOptionPane.showMessageDialog(null, "Recepcionista eliminado");
                     } catch (SQLException ex) {
-                       
                         JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }finally{
@@ -69,7 +69,7 @@ public class QueryUser implements Query<Recepcionista> {
    public boolean IniciarSesion(int dni, String contraseña) {
       
          try {
-            CallableStatement cstm = Conexion.getConnection().prepareCall("{call paLogin(?,?)}");
+            CallableStatement cstm = Conexion.getConnection().prepareCall("{call  paLogin(?,?)}");
             cstm.setInt(1, dni);
             cstm.setString(2, contraseña);
             ResultSet rs = cstm.executeQuery();
