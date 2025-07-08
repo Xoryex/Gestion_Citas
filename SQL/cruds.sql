@@ -740,28 +740,65 @@ GO
 
 
 --listado con filtro
-CREATE OR ALTER PROCEDURE PA_CRUD_ListarPacienteConFiltro
-(
-    @Filtro VARCHAR(150)
-)
+CREATE OR ALTER PROCEDURE PA_CRUD_ListarPacienteConFiltro 
+    @FiltroTexto NVARCHAR(100) = NULL
 AS
 BEGIN
-    SELECT * 
-    FROM Vw_ListarPaciente
+    SET NOCOUNT ON;
+    
+    SELECT 
+        p.DniPct AS [DNI],
+        p.NomPct AS [Nombre],
+        p.TlfPct AS [Teléfono],
+        p.GeneroPct AS [Género],
+        -- Conteo de citas asistidas
+        (SELECT COUNT(*) 
+         FROM dbo.Cita c 
+         WHERE c.DniPct = p.DniPct 
+         AND c.IdEstadoCita = (SELECT IdEstadoCita FROM dbo.EstadoCita WHERE EstadoCita = 'Atendida')
+        ) AS [Citas Asistidas],
+        -- Conteo de citas perdidas
+        (SELECT COUNT(*) 
+         FROM dbo.Cita c 
+         WHERE c.DniPct = p.DniPct 
+         AND c.IdEstadoCita = (SELECT IdEstadoCita FROM dbo.EstadoCita WHERE EstadoCita = 'Perdida')
+        ) AS [Citas Perdidas],
+        p.EmailPct AS [Email],
+        p.FechNaciPct AS [Fecha de Nacimiento],
+        p.DirecPct AS [Dirección],
+        p.OcupPct AS [Ocupación],
+        p.GrupSangPct AS [Grupo Sanguíneo],
+        p.ProcedenciaPct AS [Procedencia],
+        p.EstCivilPct AS [Estado Civil],
+        p.GrupEtnicoPct AS [Grupo Étnico],
+        p.CentrTrabPct AS [Centro de Trabajo],
+        p.GradInstrPct AS [Grado de Instrucción],
+        p.HijosPct AS [Hijos]
+    FROM dbo.Paciente p
     WHERE 
-        Dni LIKE '%' + @Filtro + '%' OR
-        Nombre LIKE '%' + @Filtro + '%' OR
-        Apellido LIKE '%' + @Filtro + '%' OR
-        Telefono LIKE '%' + @Filtro + '%' OR
-        Genero LIKE '%' + @Filtro + '%' OR
-        Email LIKE '%' + @Filtro + '%' OR
-        Procedencia LIKE '%' + @Filtro + '%' OR
-        [Estado Civil] LIKE '%' + @Filtro + '%' OR
-        [Grupo Sanguineo] LIKE '%' + @Filtro + '%' OR
-        [Grupo_Etnico] LIKE '%' + @Filtro + '%' OR
-        [Centro_Trabajo] LIKE '%' + @Filtro + '%';
+        (@FiltroTexto IS NULL OR @FiltroTexto = '') OR
+        (
+            p.DniPct LIKE '%' + @FiltroTexto + '%' OR
+            p.NomPct LIKE '%' + @FiltroTexto + '%' OR
+            p.ApellPct LIKE '%' + @FiltroTexto + '%' OR
+            p.TlfPct LIKE '%' + @FiltroTexto + '%' OR
+            p.GeneroPct LIKE '%' + @FiltroTexto + '%' OR
+            p.EmailPct LIKE '%' + @FiltroTexto + '%' OR
+            p.DirecPct LIKE '%' + @FiltroTexto + '%' OR
+            p.OcupPct LIKE '%' + @FiltroTexto + '%' OR
+            p.GrupSangPct LIKE '%' + @FiltroTexto + '%' OR
+            p.ProcedenciaPct LIKE '%' + @FiltroTexto + '%' OR
+            p.EstCivilPct LIKE '%' + @FiltroTexto + '%' OR
+            p.GrupEtnicoPct LIKE '%' + @FiltroTexto + '%' OR
+            p.CentrTrabPct LIKE '%' + @FiltroTexto + '%' OR
+            p.GradInstrPct LIKE '%' + @FiltroTexto + '%' OR
+            CAST(p.HijosPct AS NVARCHAR) LIKE '%' + @FiltroTexto + '%'
+        )
+    ORDER BY 
+        p.NomPct, 
+        p.ApellPct;
 END
-GO
+go
 
 
 
@@ -1227,24 +1264,55 @@ END
 GO
 
 -- Listar con filtro
-CREATE OR ALTER PROCEDURE PA_ListarDoctoresConFiltro
-(
-    @Filtro VARCHAR(150)
-)
+CREATE OR ALTER PROCEDURE PA_CRUD_ListarDoctorConFiltro 
+    @FiltroTexto NVARCHAR(100) = NULL
 AS
 BEGIN
-    SELECT *
-    FROM Vw_ListarDoctores
+    SET NOCOUNT ON;
+    
+    SELECT 
+        d.DniDoc AS [DNI],
+        d.NomDoc AS [Nombre],
+        e.Especialidad AS [Especialidad],
+        -- Asumiendo que hay un campo de estado en Doctor, si no, puedes ajustarlo
+        CASE 
+            WHEN d.DniDoc IS NOT NULL THEN 'Activo'
+            ELSE 'Inactivo'
+        END AS [Estado],
+        -- Conteo de citas pendientes
+        (SELECT COUNT(*) 
+         FROM dbo.Cita c 
+         WHERE c.DniDoc = d.DniDoc 
+         AND c.IdEstadoCita = (SELECT IdEstadoCita FROM dbo.EstadoCita WHERE EstadoCita = 'Pendiente')
+        ) AS [Citas Pendientes],
+        -- Conteo de citas atendidas
+        (SELECT COUNT(*) 
+         FROM dbo.Cita c 
+         WHERE c.DniDoc = d.DniDoc 
+         AND c.IdEstadoCita = (SELECT IdEstadoCita FROM dbo.EstadoCita WHERE EstadoCita = 'Atendida')
+        ) AS [Citas Atendidas],
+        c.NomConst AS [Consultorio],
+        d.CorreoDoctor AS [Correo],
+        d.TelfDoctor AS [Teléfono]
+    FROM dbo.Doctor d
+    LEFT JOIN dbo.Consultorio c ON d.CodConst = c.CodConst
+    LEFT JOIN dbo.Especialidad e ON c.CodEspecia = e.CodEspecia
     WHERE 
-        CAST(DNI AS VARCHAR) LIKE '%' + @Filtro + '%' OR
-        Nombre LIKE '%' + @Filtro + '%' OR
-        Apellido LIKE '%' + @Filtro + '%' OR
-        Especialidad LIKE '%' + @Filtro + '%' OR
-        CodConsultorio LIKE '%' + @Filtro + '%' OR
-        Correo LIKE '%' + @Filtro + '%' OR
-        Telefono LIKE '%' + @Filtro + '%';
+        (@FiltroTexto IS NULL OR @FiltroTexto = '') OR
+        (
+            d.DniDoc LIKE '%' + @FiltroTexto + '%' OR
+            d.NomDoc LIKE '%' + @FiltroTexto + '%' OR
+            d.ApellDoc LIKE '%' + @FiltroTexto + '%' OR
+            d.CorreoDoctor LIKE '%' + @FiltroTexto + '%' OR
+            d.TelfDoctor LIKE '%' + @FiltroTexto + '%' OR
+            e.Especialidad LIKE '%' + @FiltroTexto + '%' OR
+            c.NomConst LIKE '%' + @FiltroTexto + '%'
+        )
+    ORDER BY 
+        d.NomDoc, 
+        d.ApellDoc;
 END
-GO
+go
 
 
 

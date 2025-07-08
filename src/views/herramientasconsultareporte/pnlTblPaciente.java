@@ -83,23 +83,23 @@ public class pnlTblPaciente extends JPanel {
             // Cargar datos del ResultSet
             while (rs.next()) {
                 Object[] fila = new Object[17];
-                fila[0] = rs.getString("dni");
-                fila[1] = rs.getString("nombre");
-                fila[2] = rs.getString("telefono");
-                fila[3] = rs.getString("genero");
-                fila[4] = rs.getInt("citas_asistidas");
-                fila[5] = rs.getInt("citas_perdidas");
-                fila[6] = rs.getString("email");
-                fila[7] = rs.getString("fecha_nacimiento");
-                fila[8] = rs.getString("direccion");
-                fila[9] = rs.getString("ocupacion");
-                fila[10] = rs.getString("grupo_sanguineo");
-                fila[11] = rs.getString("procedencia");
-                fila[12] = rs.getString("estado_civil");
-                fila[13] = rs.getString("grupo_etnico");
-                fila[14] = rs.getString("centro_trabajo");
-                fila[15] = rs.getString("grado_instruccion");
-                fila[16] = rs.getInt("hijos");
+                fila[0] = rs.getString("DNI");
+                fila[1] = rs.getString("Nombre");
+                fila[2] = rs.getString("Teléfono");
+                fila[3] = rs.getString("Género");
+                fila[4] = rs.getInt("Citas Asistidas");
+                fila[5] = rs.getInt("Citas Perdidas");
+                fila[6] = rs.getString("Email");
+                fila[7] = rs.getString("Fecha de Nacimiento");
+                fila[8] = rs.getString("Dirección");
+                fila[9] = rs.getString("Ocupación");
+                fila[10] = rs.getString("Grupo Sanguíneo");
+                fila[11] = rs.getString("Procedencia");
+                fila[12] = rs.getString("Estado Civil");
+                fila[13] = rs.getString("Grupo Étnico");
+                fila[14] = rs.getString("Centro de Trabajo");
+                fila[15] = rs.getString("Grado de Instrucción");
+                fila[16] = rs.getInt("Hijos");
                 
                 modelo.addRow(fila);
             }
