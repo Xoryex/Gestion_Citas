@@ -6,7 +6,7 @@ create procedure paLogin
 as 
 begin
 	if not exists(select DniRecep from Recepcionista where DniRecep = @dni)begin
-		raiserror('Usuario no existe',16,1)
+		raiserror('Recepcionita no existe',16,1)
 		return @@ERROR
 	end
 	
@@ -16,6 +16,7 @@ begin
 	end
 	select * from Recepcionista where DniRecep=@dni
 end
+go
 
 
 

@@ -50,7 +50,7 @@ public class QueryUser implements Query<Recepcionista> {
    public boolean IniciarSesion(int dni, String contraseña) {
       
          try {
-            CallableStatement cstm = Conexion.getConnection().prepareCall("{call PA_LoginRecepcionista(?,?)}");
+            CallableStatement cstm = Conexion.getConnection().prepareCall("{call paLogin(?,?)}");
             cstm.setInt(1, dni);
             cstm.setString(2, contraseña);
             ResultSet rs = cstm.executeQuery();

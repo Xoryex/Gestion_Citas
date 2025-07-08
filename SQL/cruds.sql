@@ -1,23 +1,5 @@
 ﻿/*CRUDS PARA RECEPCINISTA-usuario*/
-create procedure paSelectRecepcionista
-(
-	@dni numeric(8),
-	@contrasena varchar(20)
-)
-as 
-begin
-	if not exists(select DniRecep from Recepcionista where DniRecep = @dni)begin
-		raiserror('Recepcionita no existe',16,1)
-		return @@ERROR
-	end
-	
-	if not exists (select DniRecep from Recepcionista where DniRecep = @dni and Contrasena=@contrasena)begin
-		raiserror('Constraseña incorrecta',16,1)
-		return @@ERROR
-	end
-	select * from Recepcionista where DniRecep=@dni
-end
-go
+
 
 create procedure paInsertRecepcionista
 (
