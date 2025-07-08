@@ -12,9 +12,31 @@ public class QueryUser implements Query<Recepcionista> {
 
    @Override
    public void actualizar(Recepcionista datos_modificados) {
+      CallableStatement cstm =null;
+      try{ 
+         cstm = Conexion.getConnection().prepareCall("{call PA_CRUD_ModificarRecepcionista(?,?,?,?,?,?)}");
+         cstm.setInt(1, usuario_actual.getDni());
+         cstm.setString(2, usuario_actual.getNombre());
+         cstm.setString(3, usuario_actual.getApellido());
+         cstm.setInt(4, usuario_actual.getTlf());
+         cstm.setString(5, usuario_actual.getContraseña());
+         cstm.setBoolean(6, usuario_actual.getAdmin());
+         cstm.executeUpdate();
 
+      }catch (SQLException e) {
+         JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+      }finally{
+         try {
+            if (cstm != null) {
+               cstm.close();
+            }
+
+         } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+         }
+      }
    }
-
+      
    @Override
    public void Insetar(Recepcionista persona) {
       try {
@@ -47,12 +69,11 @@ public class QueryUser implements Query<Recepcionista> {
                         CallableStatement cstm=null;
       try {
                         cstm = Conexion.getConnection()
-                                .prepareCall("{call  PA_CRUD_EliminarRecepcionista ? }");
+                                .prepareCall("{call  PA_CRUD_EliminarRecepcionista (?) }");
                         cstm.setInt(1,indice);
                         cstm.executeUpdate();
-                        JOptionPane.showMessageDialog(null, "Usuario eliminado");
+                        JOptionPane.showMessageDialog(null, "Recepcionista eliminado");
                     } catch (SQLException ex) {
-                       
                         JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }finally{
@@ -69,7 +90,7 @@ public class QueryUser implements Query<Recepcionista> {
    public boolean IniciarSesion(int dni, String contraseña) {
       
          try {
-            CallableStatement cstm = Conexion.getConnection().prepareCall("{call paLogin(?,?)}");
+            CallableStatement cstm = Conexion.getConnection().prepareCall("{call  paLogin(?,?)}");
             cstm.setInt(1, dni);
             cstm.setString(2, contraseña);
             ResultSet rs = cstm.executeQuery();

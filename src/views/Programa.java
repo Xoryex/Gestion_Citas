@@ -60,13 +60,14 @@ public class Programa extends JFrame {
         tbdpnInicio = new JTabbedPane();
         tbdpnInicio.addTab("INICIO", new PanelInicio());
         //tbdpnInicio.addTab("CITAS MEDICAS", new PanelCitasMedicas());
-        tbdpnInicio.addTab("CONFIGURACIÓN", new PanelConfiguracion());
         tbdpnInicio.addTab("MANTENIMIENTO", new PanelMantenimiento());
         tbdpnInicio.addTab("CONSULTAS", new PanelConsulta());
         //tbdpnInicio.addTab("REPORTE", new PanelReporte());
+        tbdpnInicio.addTab("CONFIGURACIÓN", new PanelConfiguracion());
 
         pnlRelleno.add(tbdpnInicio, BorderLayout.CENTER);
         add(pnlRelleno, BorderLayout.CENTER);
+        
 
         setVisible(true);
     }

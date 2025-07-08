@@ -1,8 +1,7 @@
 package views.ventanasmantenimiento;
+
 import java.awt.*;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
+import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import utils.Conexion;
@@ -14,6 +13,7 @@ public class pnlHorarioMant extends JPanel {
 
     public pnlHorarioMant() {
         initComponents();
+        cargarDatos();  // Carga al inicio
     }
     
     private void initComponents() {
@@ -21,13 +21,15 @@ public class pnlHorarioMant extends JPanel {
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createTitledBorder("Mantenimiento de Horarios"));
         
-        String[] columnas = {"ID Horario", "Día", "Hora Inicio", "Hora Fin", "Límite de Pacientes", "Estado del Horario"};
+        String[] columnas = {
+            "ID Horario", "Día", "Hora Inicio", "Hora Fin",
+            "Turno", "Límite de Pacientes", "Estado"
+        };
         modelHorario = new DefaultTableModel(columnas, 0);
         tblHorario = new JTable(modelHorario);
         
         JScrollPane scrollPane = new JScrollPane(tblHorario);
         scrollPane.setPreferredSize(new Dimension(800, 400));
-        
         add(scrollPane, BorderLayout.CENTER);
     }
     
@@ -40,187 +42,184 @@ public class pnlHorarioMant extends JPanel {
     }
     
     public void agregar() {
-        JTextField txtCodHorario = new JTextField();
-        JTextField txtDia = new JTextField();
-        JTextField txtHoraInicio = new JTextField();
-        JTextField txtHoraFin = new JTextField();
-        JTextField txtLimitPct = new JTextField();
-        JTextField txtEstadoHorario = new JTextField();
+        JTextField txtCodHorario   = new JTextField();
+        JTextField txtDia          = new JTextField();
+        JTextField txtHoraInicio   = new JTextField();
+        JTextField txtHoraFin      = new JTextField();
+        JTextField txtLimitPct     = new JTextField();
+        JTextField txtEstadoHorario= new JTextField();
 
         Object[] mensaje = {
             "ID Horario:", txtCodHorario,
             "Día:", txtDia,
-            "Hora Inicio:", txtHoraInicio,
-            "Hora Fin:", txtHoraFin,
+            "Hora Inicio (HH:MM:SS):", txtHoraInicio,
+            "Hora Fin (HH:MM:SS):", txtHoraFin,
             "Límite de Pacientes:", txtLimitPct,
-            "Estado del Horario:", txtEstadoHorario
+            "Estado (1=Habilitado, 0=Deshabilitado):", txtEstadoHorario
         };
 
-        int opcion = JOptionPane.showConfirmDialog(this, mensaje, "Agregar Horario", JOptionPane.OK_CANCEL_OPTION);
+        int opcion = JOptionPane.showConfirmDialog(
+            this, mensaje, "Agregar Horario", JOptionPane.OK_CANCEL_OPTION
+        );
 
         if (opcion == JOptionPane.OK_OPTION) {
-            String codHorario = txtCodHorario.getText().trim();
-            String dia = txtDia.getText().trim();
-            String horaInicio = txtHoraInicio.getText().trim();
-            String horaFin = txtHoraFin.getText().trim();
-            String limitPct = txtLimitPct.getText().trim();
-            String estadoHorario = txtEstadoHorario.getText().trim();
-
-            if (codHorario.isEmpty() || dia.isEmpty() || horaInicio.isEmpty() || horaFin.isEmpty() || limitPct.isEmpty() || estadoHorario.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.");
-                return;
-            }
-
             try {
-                if (conn != null) {
-                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_InsertarHorario(?, ?, ?, ?, ?, ?)}");
-                    stmt.setString(1, codHorario);      // CodHorario
-                    stmt.setString(2, dia);            // Dia
-                    stmt.setString(3, horaInicio);     // HoraInicio
-                    stmt.setString(4, horaFin);        // HoraFin
-                    stmt.setString(5, limitPct);       // LimitPct
-                    stmt.setString(6, estadoHorario);  // EstadoHorario
+                int codHorario    = Integer.parseInt(txtCodHorario.getText().trim());
+                String dia        = txtDia.getText().trim();
+                Time horaInicio   = Time.valueOf(txtHoraInicio.getText().trim());
+                Time horaFin      = Time.valueOf(txtHoraFin.getText().trim());
+                int limitPct      = Integer.parseInt(txtLimitPct.getText().trim());
+                boolean estado    = txtEstadoHorario.getText().trim().equals("1");
 
-                    stmt.execute();
-
-                    JOptionPane.showMessageDialog(this, "Horario agregado correctamente.");
-                    stmt.close();
-                    cargarDatos();
-                } else {
-                    JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.");
+                if (dia.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "El campo Día es obligatorio.");
+                    return;
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error al insertar: " + e.getMessage());
+
+                CallableStatement stmt = conn.prepareCall(
+                    "{CALL PA_CRUD_InsertarHorario(?, ?, ?, ?, ?, ?)}"
+                );
+                stmt.setInt(1, codHorario);
+                stmt.setString(2, dia);
+                stmt.setTime(3, horaInicio);
+                stmt.setTime(4, horaFin);
+                stmt.setInt(5, limitPct);
+                stmt.setBoolean(6, estado);
+
+                stmt.execute();
+                stmt.close();
+                JOptionPane.showMessageDialog(this, "Horario agregado correctamente.");
+                cargarDatos();
+
+            } catch (NumberFormatException nfe) {
+                JOptionPane.showMessageDialog(this, "Datos numéricos inválidos.");
+            } catch (IllegalArgumentException ie) {
+                JOptionPane.showMessageDialog(this, "Formato de hora inválido.");
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(
+                    this, "Error al insertar: " + e.getMessage()
+                );
             }
         }
     }
 
     public void actualizar() {
-        int filaSeleccionada = tblHorario.getSelectedRow();
-
-        if (filaSeleccionada == -1) {
+        int fila = tblHorario.getSelectedRow();
+        if (fila == -1) {
             JOptionPane.showMessageDialog(this, "Selecciona una fila para actualizar.");
             return;
         }
 
-        String codHorario = modelHorario.getValueAt(filaSeleccionada, 0).toString();
-        String diaActual = modelHorario.getValueAt(filaSeleccionada, 1).toString();
-        String horaInicioActual = modelHorario.getValueAt(filaSeleccionada, 2).toString();
-        String horaFinActual = modelHorario.getValueAt(filaSeleccionada, 3).toString();
-        String limitPctActual = modelHorario.getValueAt(filaSeleccionada, 4).toString();
-        String estadoHorarioActual = modelHorario.getValueAt(filaSeleccionada, 5).toString();
+        String codHorarioStr = modelHorario.getValueAt(fila, 0).toString();
+        String diaActual     = modelHorario.getValueAt(fila, 1).toString();
+        String horaInicioAct = modelHorario.getValueAt(fila, 2).toString();
+        String limitPctAct   = modelHorario.getValueAt(fila, 5).toString();
+        String estadoAct     = modelHorario.getValueAt(fila, 6).toString();
 
-        JTextField txtDia = new JTextField(diaActual);
-        JTextField txtHoraInicio = new JTextField(horaInicioActual);
-        JTextField txtHoraFin = new JTextField(horaFinActual);
-        JTextField txtLimitPct = new JTextField(limitPctActual);
-        JTextField txtEstadoHorario = new JTextField(estadoHorarioActual);
+        JTextField txtDia        = new JTextField(diaActual);
+        JTextField txtHoraInicio = new JTextField(horaInicioAct);
+        JTextField txtLimitPct   = new JTextField(limitPctAct);
+        JTextField txtEstado     = new JTextField(estadoAct.equals("Habilitado") ? "1" : "0");
 
         Object[] mensaje = {
-            "ID Horario (no editable): " + codHorario,
+            "ID Horario (no editable): " + codHorarioStr,
             "Día:", txtDia,
-            "Hora Inicio:", txtHoraInicio,
-            "Hora Fin:", txtHoraFin,
+            "Hora Inicio (HH:MM:SS):", txtHoraInicio,
             "Límite de Pacientes:", txtLimitPct,
-            "Estado del Horario:", txtEstadoHorario
+            "Estado (1=Habilitado, 0=Deshabilitado):", txtEstado
         };
 
-        int opcion = JOptionPane.showConfirmDialog(this, mensaje, "Actualizar Horario", JOptionPane.OK_CANCEL_OPTION);
+        int opcion = JOptionPane.showConfirmDialog(
+            this, mensaje, "Actualizar Horario", JOptionPane.OK_CANCEL_OPTION
+        );
+        if (opcion != JOptionPane.OK_OPTION) return;
 
-        if (opcion == JOptionPane.OK_OPTION) {
-            String dia = txtDia.getText().trim();
-            String horaInicio = txtHoraInicio.getText().trim();
-            String horaFin = txtHoraFin.getText().trim();
-            String limitPct = txtLimitPct.getText().trim();
-            String estadoHorario = txtEstadoHorario.getText().trim();
+        try {
+            int codHorario  = Integer.parseInt(codHorarioStr);
+            String dia      = txtDia.getText().trim();
+            Time horaInicio= Time.valueOf(txtHoraInicio.getText().trim());
+            int limitPct    = Integer.parseInt(txtLimitPct.getText().trim());
+            boolean estado  = txtEstado.getText().trim().equals("1");
 
-            if (dia.isEmpty() || horaInicio.isEmpty() || horaFin.isEmpty() || limitPct.isEmpty() || estadoHorario.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.");
-                return;
-            }
+            CallableStatement stmt = conn.prepareCall(
+                "{CALL PA_CRUD_ModificarHorario(?, ?, ?, ?, ?)}"
+            );
+            stmt.setInt(1, codHorario);
+            stmt.setTime(2, horaInicio);
+            stmt.setString(3, dia);
+            stmt.setInt(4, limitPct);
+            stmt.setBoolean(5, estado);
 
-            try {
-                if (conn != null) {
-                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_ModificarHorario(?, ?, ?, ?, ?, ?)}");
-                    stmt.setString(1, codHorario);      // CodHorario
-                    stmt.setString(2, dia);            // Dia
-                    stmt.setString(3, horaInicio);     // HoraInicio
-                    stmt.setString(4, horaFin);        // HoraFin
-                    stmt.setString(5, limitPct);       // LimitPct
-                    stmt.setString(6, estadoHorario);  // EstadoHorario
+            stmt.execute();
+            stmt.close();
+            JOptionPane.showMessageDialog(this, "Horario actualizado correctamente.");
+            cargarDatos();
 
-                    stmt.execute();
-
-                    JOptionPane.showMessageDialog(this, "Horario actualizado correctamente.");
-                    stmt.close();
-                    cargarDatos();
-                } else {
-                    JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error al actualizar: " + e.getMessage());
-            }
+        } catch (NumberFormatException nfe) {
+            JOptionPane.showMessageDialog(this, "Datos numéricos inválidos.");
+        } catch (IllegalArgumentException ie) {
+            JOptionPane.showMessageDialog(this, "Formato de hora inválido.");
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(
+                this, "Error al actualizar: " + e.getMessage()
+            );
         }
     }
 
     public void eliminar() {
-        int filaSeleccionada = tblHorario.getSelectedRow();
-
-        if (filaSeleccionada == -1) {
+        int fila = tblHorario.getSelectedRow();
+        if (fila == -1) {
             JOptionPane.showMessageDialog(this, "Selecciona una fila para eliminar.");
             return;
         }
 
-        String codHorario = modelHorario.getValueAt(filaSeleccionada, 0).toString();
+        String codHorarioStr = modelHorario.getValueAt(fila, 0).toString();
+        int confirm = JOptionPane.showConfirmDialog(
+            this,
+            "¿Eliminar el horario con ID: " + codHorarioStr + "?",
+            "Confirmar eliminación",
+            JOptionPane.YES_NO_OPTION
+        );
+        if (confirm != JOptionPane.YES_OPTION) return;
 
-        int confirmacion = JOptionPane.showConfirmDialog(this, "¿Eliminar el horario con ID: " + codHorario + "?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+        try {
+            int codHorario = Integer.parseInt(codHorarioStr);
+            CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_EliminarHorario(?)}");
+            stmt.setInt(1, codHorario);
+            stmt.execute();
+            stmt.close();
+            JOptionPane.showMessageDialog(this, "Horario eliminado correctamente.");
+            cargarDatos();
 
-        if (confirmacion == JOptionPane.YES_OPTION) {
-            try {
-                if (conn != null) {
-                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_EliminarHorario(?)}");
-                    stmt.setString(1, codHorario); // CodHorario
-                    stmt.execute();
-
-                    JOptionPane.showMessageDialog(this, "Horario eliminado correctamente.");
-                    stmt.close();
-                    cargarDatos();
-                } else {
-                    JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error al eliminar: " + e.getMessage());
-            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(
+                this, "Error al eliminar: " + e.getMessage()
+            );
         }
     }
 
     public void cargarDatos() {
-        modelHorario.setRowCount(0); // Limpiar la tabla
+        modelHorario.setRowCount(0);
         try {
-            if (conn != null) {
-                CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_ListarHorario()}");
-                ResultSet rs = stmt.executeQuery();
-                while (rs.next()) {
-                    String codHorario = rs.getString("CodHorario");
-                    String dia = rs.getString("Dia");
-                    String horaInicio = rs.getString("HoraInicio");
-                    String horaFin = rs.getString("HoraFin");
-                    String limitPct = rs.getString("LimitPct");
-                    String estadoHorario = rs.getString("EstadoHorario");
-
-                    modelHorario.addRow(new Object[]{codHorario, dia, horaInicio, horaFin, limitPct, estadoHorario});
-                }
-                rs.close();
-                stmt.close();
-            } else {
-                JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.");
+            CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_ListarHorario()}");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                modelHorario.addRow(new Object[]{
+                    rs.getString("Codigo"),
+                    rs.getString("Dia"),
+                    rs.getString("HoraInicio"),
+                    rs.getString("HoraFin"),
+                    rs.getString("Turno"),
+                    rs.getString("Limite_Pacientes"),
+                    rs.getString("Estado")
+                });
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error al cargar datos: " + e.getMessage());
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(
+                this, "Error al cargar datos: " + e.getMessage()
+            );
         }
     }
 }

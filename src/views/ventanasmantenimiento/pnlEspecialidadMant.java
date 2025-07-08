@@ -12,6 +12,7 @@ public class pnlEspecialidadMant extends JPanel {
 
     public pnlEspecialidadMant() {
         initComponents();
+        cargarDatos();
     }
 
     private void initComponents() {
@@ -167,8 +168,9 @@ public class pnlEspecialidadMant extends JPanel {
                 CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_ListarEspecialidad()}");
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
-                    String codEspecia = rs.getString("CodEspecia");
-                    String especialidad = rs.getString("Especialidad");
+                    String codEspecia = rs.getString("Codigo");
+                    String especialidad = rs.getString("Nombre Especialidad");
+                    
                     modelEspecialidad.addRow(new Object[]{codEspecia, especialidad});
                 }
                 rs.close();
