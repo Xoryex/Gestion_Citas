@@ -1,0 +1,8 @@
+{
+    "java.project.sourcePaths": [
+        "src"
+    ],
+    "java.project.referencedLibraries": [
+        "c:\\Users\\BENJA\\Desktop\\mssql-jdbc-12.10.1.jre11.jar"
+    ]
+}
