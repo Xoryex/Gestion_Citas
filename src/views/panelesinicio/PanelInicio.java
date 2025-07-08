@@ -13,12 +13,12 @@ public class PanelInicio extends JPanel {
         setLayout(new BorderLayout());
 
         // Título
-        JLabel lblTituloInicio = new JLabel("Bienvenido, estas son las citas de hoy:", SwingConstants.CENTER);
+        JLabel lblTituloInicio = new JLabel("Bienvenido, estas son las citas pendientes:", SwingConstants.CENTER);
         lblTituloInicio.setFont(new Font("Arial", Font.BOLD, 18));
         add(lblTituloInicio, BorderLayout.NORTH);
 
-        // Configurar tabla
-        String[] columnas = {"ID", "Paciente", "Fecha", "Hora", "Estado"};
+        // Configurar tabla con las columnas correctas
+        String[] columnas = {"ID", "Paciente", "Apellido", "Fecha", "Hora Inicio", "Hora Fin", "Estado"};
         modeloTabla = new DefaultTableModel(columnas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -52,20 +52,20 @@ public class PanelInicio extends JPanel {
         ResultSet rs = null;
         
         try {
-    
-
-            // Llamar al procedimiento almacenado
-            stmt = Conexion.getConnection().prepareCall("{call PA_CRUD_CitasPendientes}");
+            // Llamar al procedimiento almacenado corregido
+            stmt = Conexion.getConnection().prepareCall("{call PA_CRUD_MostrarCitasPendientes}");
             rs = stmt.executeQuery();
 
-            // Procesar resultados
+            // Procesar resultados con los nombres correctos de las columnas
             while (rs.next()) {
-                Object[] fila = new Object[5];
-                fila[0] = rs.getInt("ID"); // Ajustar según el nombre real de la columna
-                fila[1] = rs.getString("Paciente"); // Ajustar según el nombre real de la columna
-                fila[2] = rs.getDate("Fecha"); // Ajustar según el nombre real de la columna
-                fila[3] = rs.getTime("Hora"); // Ajustar según el nombre real de la columna
-                fila[4] = rs.getString("Estado"); // Ajustar según el nombre real de la columna
+                Object[] fila = new Object[7];
+                fila[0] = rs.getInt("ID");
+                fila[1] = rs.getString("NombrePaciente");
+                fila[2] = rs.getString("ApellidoPaciente");
+                fila[3] = rs.getDate("Fecha");
+                fila[4] = rs.getTime("HoraInicio");
+                fila[5] = rs.getTime("HoraFin");
+                fila[6] = rs.getInt("Estado") == 1 ? "Pendiente" : "Cancelada";
                 
                 modeloTabla.addRow(fila);
             }
@@ -97,6 +97,5 @@ public class PanelInicio extends JPanel {
     private void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje, "Información", JOptionPane.INFORMATION_MESSAGE);
     }
-
 
 }

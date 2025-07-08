@@ -22,7 +22,7 @@ public class pnlTblDoctor extends JPanel {
     private void initComponents() {
         // Definir columnas
         String[] columnas = {
-            "DNI", "Nombre Completo", "Especialidad", "Chambeando?",
+            "DNI", "Nombre", "Especialidad", "Estado",
             "Citas Pendientes", "Citas Atendidas", "Consultorio", "Correo", "Teléfono"
         };
 
@@ -81,10 +81,10 @@ public class pnlTblDoctor extends JPanel {
             // Cargar datos del ResultSet
             while (rs.next()) {
                 Object[] fila = new Object[9];
-                fila[0] = rs.getString("dni");
-                fila[1] = rs.getString("nombre_completo");
-                fila[2] = rs.getString("especialidad");
-                fila[3] = rs.getString("chambeando");
+                fila[0] = rs.getString("DNI");
+                fila[1] = rs.getString("Nombre");
+                fila[2] = rs.getString("Especialidad");
+                fila[3] = rs.getString("Estado");
                 fila[4] = rs.getInt("citas_pendientes");
                 fila[5] = rs.getInt("citas_atendidas");
                 fila[6] = rs.getString("consultorio");

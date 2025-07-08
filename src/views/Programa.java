@@ -58,11 +58,11 @@ public class Programa extends JFrame {
 
         // TABBED PANE
         tbdpnInicio = new JTabbedPane();
-        //tbdpnInicio.addTab("INICIO", new PanelInicio());
+        tbdpnInicio.addTab("INICIO", new PanelInicio());
         //tbdpnInicio.addTab("CITAS MEDICAS", new PanelCitasMedicas());
         tbdpnInicio.addTab("CONFIGURACIÓN", new PanelConfiguracion());
         tbdpnInicio.addTab("MANTENIMIENTO", new PanelMantenimiento());
-        //tbdpnInicio.addTab("CONSULTAS", new PanelConsulta());
+        tbdpnInicio.addTab("CONSULTAS", new PanelConsulta());
         //tbdpnInicio.addTab("REPORTE", new PanelReporte());
 
         pnlRelleno.add(tbdpnInicio, BorderLayout.CENTER);

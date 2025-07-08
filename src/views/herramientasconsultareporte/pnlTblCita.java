@@ -82,16 +82,16 @@ public class pnlTblCita extends JPanel {
             // Cargar datos del ResultSet
             while (rs.next()) {
                 Object[] fila = new Object[10];
-                fila[0] = rs.getString("id_cita");
-                fila[1] = rs.getString("dni_paciente");
-                fila[2] = rs.getString("nombre_paciente");
-                fila[3] = rs.getString("consultorio");
-                fila[4] = rs.getString("nombre_doctor");
-                fila[5] = rs.getString("hora_inicio");
-                fila[6] = rs.getString("hora_fin");
-                fila[7] = rs.getString("fecha_atencion");
-                fila[8] = rs.getString("estado");
-                fila[9] = rs.getString("recepcionista");
+                fila[0] = rs.getString("IdCita");
+                fila[1] = rs.getString("DniPaciente");
+                fila[2] = rs.getString("NombrePaciente");
+                fila[3] = rs.getString("Consultorio");
+                fila[4] = rs.getString("NombreDoctor");
+                fila[5] = rs.getString("HoraInicio");
+                fila[6] = rs.getString("HoraFin");
+                fila[7] = rs.getString("Atencion");
+                fila[8] = rs.getString("Estado");
+                fila[9] = rs.getString("NombreRecepcionista");
                 
                 modelo.addRow(fila);
             }
