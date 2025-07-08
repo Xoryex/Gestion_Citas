@@ -1,5 +1,5 @@
 ﻿/*CRUDS PARA RECEPCINISTA-usuario*/
-create or alter procedure PA_LoginRecepcionista
+create procedure paSelectRecepcionista
 (
 	@dni numeric(8),
 	@contrasena varchar(20)

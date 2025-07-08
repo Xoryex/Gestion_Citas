@@ -5,7 +5,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import views.panelesinicio.*;
-
+import static querys.QueryUser.usuario_actual;;
 
 public class APLICACION extends JFrame {
     private JLabel lblNomRecepc;
@@ -35,7 +35,7 @@ public class APLICACION extends JFrame {
         lblFuncion.setFont(new Font("Arial", Font.PLAIN, 16));
         lblFuncion.setForeground(Color.WHITE);
 
-        lblNombre = new JLabel("AMYLING RACHEL AZANG VILCHEZ");
+        lblNombre = new JLabel();
         lblNombre.setFont(new Font("Arial", Font.BOLD, 16));
         lblNombre.setForeground(Color.WHITE);
         lblNombre.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -52,6 +52,7 @@ public class APLICACION extends JFrame {
 
         add(pnlCabecera, BorderLayout.NORTH);
 
+        lblNombre.setText(usuario_actual.getNombre() + " " + usuario_actual.getApellido());
         // PANEL RELLENO DEL FRAME
         JPanel pnlRelleno;
         pnlRelleno = new JPanel(new BorderLayout());

@@ -2,6 +2,8 @@ package views.panelesinicio;
 
 import views.herramientasconsultareporte.*;
 import java.awt.*;
+import java.awt.event.*;
+
 import javax.swing.*;
 
 public class PanelReporte extends JPanel {
@@ -23,8 +25,6 @@ public class PanelReporte extends JPanel {
     // Componentes de cabecera
     private JLabel lblConsltPor;
     private JComboBox<String> cbxConsulta;
-    private JLabel lblFechaInicioConsult;
-    private JSpinner spnFechaInicioConsult;
     private JLabel lblBuscarConsult;
     private JTextField txtBuscarConsult;
     private JButton btnFiltroConsulta;
@@ -43,9 +43,7 @@ public class PanelReporte extends JPanel {
         });
         cbxConsulta.setPreferredSize(new Dimension(125, 23));
 
-        lblFechaInicioConsult = new JLabel("Fecha inicio:");
-        spnFechaInicioConsult = new JSpinner(new SpinnerDateModel());
-        spnFechaInicioConsult.setPreferredSize(new Dimension(113, 23));
+     
 
         lblBuscarConsult = new JLabel("Buscar:");
         txtBuscarConsult = new JTextField(10);
@@ -58,8 +56,6 @@ public class PanelReporte extends JPanel {
 
         pnlCabeceraConsult.add(lblConsltPor);
         pnlCabeceraConsult.add(cbxConsulta);
-        pnlCabeceraConsult.add(lblFechaInicioConsult);
-        pnlCabeceraConsult.add(spnFechaInicioConsult);
         pnlCabeceraConsult.add(lblBuscarConsult);
         pnlCabeceraConsult.add(txtBuscarConsult);
         pnlCabeceraConsult.add(btnFiltroConsulta);
@@ -87,25 +83,31 @@ public class PanelReporte extends JPanel {
         add(pnlVentanasConsultas, BorderLayout.CENTER);
 
         // 🎯 Manejador de evento para el ComboBox
-        cbxConsulta.addActionListener(e -> {
-            String seleccion = (String) cbxConsulta.getSelectedItem();
-            if (seleccion != null) {
-                tablaConsult.show(pnlVentanasConsultas, seleccion);
-                // Actualizar interfaz para evitar problemas de renderizado
-                SwingUtilities.updateComponentTreeUI(this);
-                this.repaint();
+        cbxConsulta.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String seleccion = (String) cbxConsulta.getSelectedItem();
+                if (seleccion != null) {
+                    tablaConsult.show(pnlVentanasConsultas, seleccion);
+                    // Actualizar interfaz para evitar problemas de renderizado
+                    SwingUtilities.updateComponentTreeUI(pnlVentanasConsultas);
+                    pnlVentanasConsultas.repaint();
+                }
             }
         });
 
         // Agregar funcionalidad al botón filtrar
-        btnFiltroConsulta.addActionListener(e -> {
-            String textoBusqueda = txtBuscarConsult.getText().trim();
-            if (!textoBusqueda.isEmpty()) {
-                // Aquí puedes agregar la lógica de filtrado
-                JOptionPane.showMessageDialog(this, 
-                    "Buscando: " + textoBusqueda, 
-                    "Filtro", 
-                    JOptionPane.INFORMATION_MESSAGE);
+        btnFiltroConsulta.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String textoBusqueda = txtBuscarConsult.getText().trim();
+                if (!textoBusqueda.isEmpty()) {
+                    // Aquí puedes agregar la lógica de filtrado
+                    JOptionPane.showMessageDialog(null,
+                        "Buscando: " + textoBusqueda,
+                        "Filtro",
+                        JOptionPane.INFORMATION_MESSAGE);
+                }
             }
         });
 

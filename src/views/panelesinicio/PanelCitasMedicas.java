@@ -1,14 +1,9 @@
 package views.panelesinicio;
 
 import views.herramientascitas.*;
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.FlowLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;;
 
 
 public class PanelCitasMedicas extends JPanel {
@@ -68,22 +63,27 @@ public class PanelCitasMedicas extends JPanel {
         // Acción del botón Agregar
         btnAgregarCita.addActionListener(e -> {
             AgregarDatosCita.show(pnlTablaCitasMedicas, "Agregar");
-            SwingUtilities.updateComponentTreeUI(this);
-            this.repaint();
+            SwingUtilities.updateComponentTreeUI(PanelCitasMedicas.this);
+            PanelCitasMedicas.this.repaint();
         });
 
         // Acción del botón Reprogramar
-        btnReprogramarCita.addActionListener(e -> {
-            AgregarDatosCita.show(pnlTablaCitasMedicas, "Reprogramar");
-            SwingUtilities.updateComponentTreeUI(this);
-            this.repaint();
+        btnReprogramarCita.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AgregarDatosCita.show(pnlTablaCitasMedicas, "Reprogramar");
+                SwingUtilities.updateComponentTreeUI(PanelCitasMedicas.this);
+                PanelCitasMedicas.this.repaint();
+            }
         });
 
         // Acción del botón ver la tabla
-        btnVerTablaCita.addActionListener(evt -> {
-            AgregarDatosCita.show(pnlTablaCitasMedicas, "Ver Tabla");
-            SwingUtilities.updateComponentTreeUI(this);
-            this.repaint();
+        btnVerTablaCita.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AgregarDatosCita.show(pnlTablaCitasMedicas, "Ver Tabla");
+                SwingUtilities.updateComponentTreeUI(pnlTablaCitasMedicas);
+            }
         });
     }
 }
