@@ -25,8 +25,6 @@ public class PanelReporte extends JPanel {
     // Componentes de cabecera
     private JLabel lblConsltPor;
     private JComboBox<String> cbxConsulta;
-    private JLabel lblFechaInicioConsult;
-    private JSpinner spnFechaInicioConsult;
     private JLabel lblBuscarConsult;
     private JTextField txtBuscarConsult;
     private JButton btnFiltroConsulta;
@@ -45,9 +43,7 @@ public class PanelReporte extends JPanel {
         });
         cbxConsulta.setPreferredSize(new Dimension(125, 23));
 
-        lblFechaInicioConsult = new JLabel("Fecha inicio:");
-        spnFechaInicioConsult = new JSpinner(new SpinnerDateModel());
-        spnFechaInicioConsult.setPreferredSize(new Dimension(113, 23));
+     
 
         lblBuscarConsult = new JLabel("Buscar:");
         txtBuscarConsult = new JTextField(10);
@@ -60,8 +56,6 @@ public class PanelReporte extends JPanel {
 
         pnlCabeceraConsult.add(lblConsltPor);
         pnlCabeceraConsult.add(cbxConsulta);
-        pnlCabeceraConsult.add(lblFechaInicioConsult);
-        pnlCabeceraConsult.add(spnFechaInicioConsult);
         pnlCabeceraConsult.add(lblBuscarConsult);
         pnlCabeceraConsult.add(txtBuscarConsult);
         pnlCabeceraConsult.add(btnFiltroConsulta);

@@ -1,8 +1,6 @@
 package views.panelesinicio;
 import java.awt.*;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import utils.Conexion;
@@ -50,19 +48,14 @@ public class PanelInicio extends JPanel {
         // Limpiar tabla
         modeloTabla.setRowCount(0);
         
-        Connection conn = null;
         CallableStatement stmt = null;
         ResultSet rs = null;
         
         try {
-            conn = Conexion.getConnection();
-            if (conn == null) {
-                mostrarError("No se pudo establecer conexión con la base de datos");
-                return;
-            }
+    
 
             // Llamar al procedimiento almacenado
-            stmt = conn.prepareCall("{call PA_CRUD_CitasPendientes}");
+            stmt = Conexion.getConnection().prepareCall("{call PA_CRUD_CitasPendientes}");
             rs = stmt.executeQuery();
 
             // Procesar resultados
