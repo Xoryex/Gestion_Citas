@@ -140,6 +140,16 @@ public class PanelConfiguracion extends JPanel {
             }
         });
 
+        txtContrasenaNuevaConf.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent evt) {
+                // Limitar a caracteres alfanuméricos y longitud máxima de 20 caracteres
+                if (txtConfirmarContrasenaConf.getText().length() >= 20 || evt.getKeyChar() == ' ') {
+                    evt.consume();
+                }
+            }
+        });
+
         txtConfirmarContrasenaConf.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent evt) {
@@ -171,8 +181,34 @@ public class PanelConfiguracion extends JPanel {
 
         });
 
-        btnAceptarConf.addActionListener(e -> {
-            
+        btnAceptarConf.addActionListener( new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                if(!(txtContrasenaActual.getText().equals(usuario_actual.getContraseña()) && txtContrasenaActual.getText().length()!=0) ){
+                    JOptionPane.showMessageDialog(null,"Contraseña actual ingresado no es igual a tu contraseña");
+                    txtContrasenaActual.setText("");
+                }else if (!(txtContrasenaNuevaConf.getText().equals(txtConfirmarContrasenaConf.getText()) && (txtContrasenaNuevaConf.getText().length()!=0 || txtConfirmarContrasenaConf.getText().length()!=0))){
+                    JOptionPane.showMessageDialog(null,"Contraseñas no coinciden");
+                    txtContrasenaNuevaConf.setText("");
+                    txtConfirmarContrasenaConf.setText("");
+                }else{
+                    usuario_actual.setNombre(txtNombreConf.getText());
+                    usuario_actual.setApellido(txtApellidoConf.getText());
+                    usuario_actual.setTlf(Integer.parseInt(txtTelefConf.getText()));
+                    if(txtContrasenaNuevaConf.getText().length()!=0){
+                        usuario_actual.setContraseña(txtContrasenaNuevaConf.getText());
+                    }
+                
+                    queryuser.actualizar(usuario_actual);
+
+
+
+                }
+            txtApellidoConf.setText(usuario_actual.getApellido());
+            txtNombreConf.setText(usuario_actual.getNombre());
+            txtTelefConf.setText(String.valueOf(usuario_actual.getTlf()));
+            }
 
 
         });
