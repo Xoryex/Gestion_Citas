@@ -469,17 +469,49 @@ BEGIN
 END
 GO
 --LISTAR recepcionistas con filtro
-CREATE OR ALTER PROCEDURE PA_CRUD_ListarRecepcionistaConFiltro
-(@Filtro VARCHAR(150))
+CREATE OR ALTER PROCEDURE PA_CRUD_ListarRecepcionistaConFiltro 
+    @FiltroTexto NVARCHAR(100) = NULL
 AS
 BEGIN
-    SELECT * FROM Vw_ListarRecepcionista
+    SET NOCOUNT ON;
+    
+    SELECT 
+        r.DniRecep AS [DNI],
+        r.NomRecep AS [Nombre],
+        r.ApellRecep AS [Apellido],
+        r.TelfRecep AS [Teléfono],
+        -- Conteo de citas programadas
+        (SELECT COUNT(*) 
+         FROM dbo.Cita c 
+         WHERE c.DniRecep = r.DniRecep 
+         AND c.IdEstadoCita = (SELECT IdEstadoCita FROM dbo.EstadoCita WHERE EstadoCita = 'Programada')
+        ) AS [Citas Programadas],
+        -- Conteo de citas anuladas
+        (SELECT COUNT(*) 
+         FROM dbo.Cita c 
+         WHERE c.DniRecep = r.DniRecep 
+         AND c.IdEstadoCita = (SELECT IdEstadoCita FROM dbo.EstadoCita WHERE EstadoCita = 'Anulada')
+        ) AS [Citas Anuladas],
+        r.EsAdmin AS [Admin]
+    FROM dbo.Recepcionista r
     WHERE 
-        CAST(DNI AS VARint) LIKE '%' + @Filtro + '%' OR 
-        Nombres LIKE '%' + @Filtro + '%' OR
-        Apellidos LIKE '%' + @Filtro + '%';
+        (@FiltroTexto IS NULL OR @FiltroTexto = '') OR
+        (
+            r.DniRecep LIKE '%' + @FiltroTexto + '%' OR
+            r.NomRecep LIKE '%' + @FiltroTexto + '%' OR
+            r.ApellRecep LIKE '%' + @FiltroTexto + '%' OR
+            r.TelfRecep LIKE '%' + @FiltroTexto + '%' OR
+            r.Contrasena LIKE '%' + @FiltroTexto + '%' OR
+            CASE 
+                WHEN r.EsAdmin = 1 THEN 'Sí'
+                ELSE 'No'
+            END LIKE '%' + @FiltroTexto + '%'
+        )
+    ORDER BY 
+        r.NomRecep, 
+        r.ApellRecep;
 END
-GO
+go
 
 --------------------------------------------------------------------------
 /*CRUD PACIENTE*/

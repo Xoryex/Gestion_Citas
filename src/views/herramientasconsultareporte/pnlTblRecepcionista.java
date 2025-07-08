@@ -80,13 +80,13 @@ public class pnlTblRecepcionista extends JPanel {
             // Cargar datos del ResultSet
             while (rs.next()) {
                 Object[] fila = new Object[7];
-                fila[0] = rs.getString("dni");
-                fila[1] = rs.getString("nombre");
-                fila[2] = rs.getString("apellido");
-                fila[3] = rs.getString("telefono");
-                fila[4] = rs.getInt("citas_programadas");
-                fila[5] = rs.getInt("citas_anuladas");
-                fila[6] = rs.getString("admin");
+                fila[0] = rs.getString("DNI");
+                fila[1] = rs.getString("Nombre");
+                fila[2] = rs.getString("Apellido");
+                fila[3] = rs.getString("Teléfono");
+                fila[4] = rs.getInt("Citas Programadas");
+                fila[5] = rs.getInt("Citas Anuladas");
+                fila[6] = rs.getString("Admin");
                 
                 modelo.addRow(fila);
             }
