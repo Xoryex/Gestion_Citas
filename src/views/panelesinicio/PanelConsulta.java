@@ -205,7 +205,7 @@ public class PanelConsulta extends JPanel {
     }
 
     private void cargarDatosCita(Connection conn, String filtro) throws SQLException {
-        String sql = "{CALL sp_ConsultarCitas(?)}";
+        String sql = "{CALL PA_CRUD_ListarCitasConFiltro(?)}";
         try (CallableStatement cs = conn.prepareCall(sql)) {
             cs.setString(1, filtro);
             ResultSet rs = cs.executeQuery();
@@ -215,7 +215,7 @@ public class PanelConsulta extends JPanel {
     }
 
     private void cargarDatosRecepcionista(Connection conn, String filtro) throws SQLException {
-        String sql = "{CALL sp_ConsultarRecepcionistas(?)}";
+        String sql = "{CALL PA_CRUD_ListarRecepcionistaConFiltro(?)}";
         try (CallableStatement cs = conn.prepareCall(sql)) {
             cs.setString(1, filtro);
             ResultSet rs = cs.executeQuery();
@@ -225,7 +225,7 @@ public class PanelConsulta extends JPanel {
     }
 
     private void cargarDatosDoctor(Connection conn, String filtro) throws SQLException {
-        String sql = "{CALL sp_ConsultarDoctores(?)}";
+        String sql = "{CALL PA_ListarDoctoresConFiltro(?)}";
         try (CallableStatement cs = conn.prepareCall(sql)) {
             cs.setString(1, filtro);
             ResultSet rs = cs.executeQuery();
@@ -235,7 +235,7 @@ public class PanelConsulta extends JPanel {
     }
 
     private void cargarDatosPaciente(Connection conn, String filtro) throws SQLException {
-        String sql = "{CALL sp_ConsultarPacientes(?)}";
+        String sql = "{CALL PA_CRUD_ListarPacienteConFiltro(?)}";
         try (CallableStatement cs = conn.prepareCall(sql)) {
             cs.setString(1, filtro);
             ResultSet rs = cs.executeQuery();
@@ -245,7 +245,7 @@ public class PanelConsulta extends JPanel {
     }
 
     private void cargarDatosHorario(Connection conn, String filtro) throws SQLException {
-        String sql = "{CALL sp_ConsultarHorarios(?)}";
+        String sql = "{CALL PA_CRUD_ListarHorarioConFiltro(?)}";
         try (CallableStatement cs = conn.prepareCall(sql)) {
             cs.setString(1, filtro);
             ResultSet rs = cs.executeQuery();
