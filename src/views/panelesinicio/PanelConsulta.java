@@ -225,7 +225,7 @@ public class PanelConsulta extends JPanel {
     }
 
     private void cargarDatosDoctor(Connection conn, String filtro) throws SQLException {
-        String sql = "{CALL PA_ListarDoctoresConFiltro(?)}";
+        String sql = "{CALL PA_CRUD_ListarDoctorConFiltro(?)}";
         try (CallableStatement cs = conn.prepareCall(sql)) {
             cs.setString(1, filtro);
             ResultSet rs = cs.executeQuery();
