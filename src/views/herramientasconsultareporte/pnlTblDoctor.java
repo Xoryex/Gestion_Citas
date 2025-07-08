@@ -85,11 +85,11 @@ public class pnlTblDoctor extends JPanel {
                 fila[1] = rs.getString("Nombre");
                 fila[2] = rs.getString("Especialidad");
                 fila[3] = rs.getString("Estado");
-                fila[4] = rs.getInt("citas_pendientes");
-                fila[5] = rs.getInt("citas_atendidas");
-                fila[6] = rs.getString("consultorio");
-                fila[7] = rs.getString("correo");
-                fila[8] = rs.getString("telefono");
+                fila[4] = rs.getInt("Citas Pendientes");
+                fila[5] = rs.getInt("Citas Atendidas");
+                fila[6] = rs.getString("Consultorio");
+                fila[7] = rs.getString("Correo");
+                fila[8] = rs.getString("Teléfono");
                 
                 modelo.addRow(fila);
             }
