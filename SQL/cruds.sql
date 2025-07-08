@@ -362,8 +362,8 @@ GO
 CREATE OR ALTER PROCEDURE PA_CRUD_InsertarRecepcionista
 (
     @DniRecep int,
-    @NomRecep VARCHAR(80),
-    @ApellRecep VARCHAR(80),
+    @NomRecep VARCHAR(50),
+    @ApellRecep VARCHAR(50),
     @TelfRecep numeric (9),
     @Contrasena VARCHAR(20),
     @EsAdmin BIT
