@@ -1,43 +1,41 @@
 package views.ventanasmantenimiento;
 import java.awt.*;
+import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.sql.*;
 import utils.Conexion;
 
 public class pnlRecepcionistaMant extends JPanel {
     private JTable tblRecepcionista;
     private DefaultTableModel modelRecepcionista;
-    
     private Connection conn = Conexion.getConnection();
 
     public pnlRecepcionistaMant() {
         initComponents();
     }
-    
+
     private void initComponents() {
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createTitledBorder("Mantenimiento de Recepcionistas"));
-        
+
         String[] columnas = {"DNI", "Nombre", "Apellido", "Teléfono", "Admin"};
         modelRecepcionista = new DefaultTableModel(columnas, 0);
         tblRecepcionista = new JTable(modelRecepcionista);
-        
+
         JScrollPane scrollPane = new JScrollPane(tblRecepcionista);
         scrollPane.setPreferredSize(new Dimension(800, 400));
-        
+
         add(scrollPane, BorderLayout.CENTER);
     }
-    
+
     public JTable getTabla() {
         return tblRecepcionista;
     }
-    
+
     public DefaultTableModel getModelo() {
         return modelRecepcionista;
     }
-
 
     public void agregar() {
         JTextField txtDNI = new JTextField();
@@ -71,11 +69,11 @@ public class pnlRecepcionistaMant extends JPanel {
             try {
                 if (conn != null) {
                     CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_InsertarRecepcionista(?, ?, ?, ?, ?)}");
-                    stmt.setString(1, dni);
-                    stmt.setString(2, nombre);
-                    stmt.setString(3, apellido);
-                    stmt.setString(4, telefono);
-                    stmt.setString(5, admin);
+                    stmt.setString(1, dni);         // DniRecep
+                    stmt.setString(2, nombre);      // NomRecep
+                    stmt.setString(3, apellido);    // ApellRecep
+                    stmt.setString(4, telefono);    // TelfRecep
+                    stmt.setString(5, admin);       // EsAdmin
 
                     stmt.execute();
 
@@ -134,12 +132,12 @@ public class pnlRecepcionistaMant extends JPanel {
 
             try {
                 if (conn != null) {
-                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_ActualizarRecepcionista(?, ?, ?, ?, ?)}");
-                    stmt.setString(1, dniActual);
-                    stmt.setString(2, nombre);
-                    stmt.setString(3, apellido);
-                    stmt.setString(4, telefono);
-                    stmt.setString(5, admin);
+                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_ModificarRecepcionista(?, ?, ?, ?, ?)}");
+                    stmt.setString(1, dniActual);   // DniRecep
+                    stmt.setString(2, nombre);      // NomRecep
+                    stmt.setString(3, apellido);    // ApellRecep
+                    stmt.setString(4, telefono);    // TelfRecep
+                    stmt.setString(5, admin);       // EsAdmin
 
                     stmt.execute();
 
@@ -172,7 +170,7 @@ public class pnlRecepcionistaMant extends JPanel {
             try {
                 if (conn != null) {
                     CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_EliminarRecepcionista(?)}");
-                    stmt.setString(1, dni);
+                    stmt.setString(1, dni); // DniRecep
                     stmt.execute();
 
                     JOptionPane.showMessageDialog(this, "Recepcionista eliminado correctamente.");
@@ -192,14 +190,14 @@ public class pnlRecepcionistaMant extends JPanel {
         modelRecepcionista.setRowCount(0); // Limpiar la tabla
         try {
             if (conn != null) {
-                CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_MostrarRecepcionistas()}");
+                CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_ListarRecepcionista()}");
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
-                    String dni = rs.getString("DNI");
-                    String nombre = rs.getString("Nombre");
-                    String apellido = rs.getString("Apellido");
-                    String telefono = rs.getString("Telefono");
-                    String admin = rs.getString("Admin");
+                    String dni = rs.getString("DniRecep");
+                    String nombre = rs.getString("NomRecep");
+                    String apellido = rs.getString("ApellRecep");
+                    String telefono = rs.getString("TelfRecep");
+                    String admin = rs.getString("EsAdmin");
 
                     modelRecepcionista.addRow(new Object[]{dni, nombre, apellido, telefono, admin});
                 }

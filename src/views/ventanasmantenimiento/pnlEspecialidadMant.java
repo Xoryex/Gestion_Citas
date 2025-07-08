@@ -50,20 +50,19 @@ public class pnlEspecialidadMant extends JPanel {
         int opcion = JOptionPane.showConfirmDialog(this, mensaje, "Agregar Especialidad", JOptionPane.OK_CANCEL_OPTION);
 
         if (opcion == JOptionPane.OK_OPTION) {
-            String codigo = txtCodigo.getText().trim();
-            String nombre = txtNombre.getText().trim();
+            String codEspecia = txtCodigo.getText().trim();
+            String especialidad = txtNombre.getText().trim();
 
-            if (codigo.isEmpty() || nombre.isEmpty()) {
+            if (codEspecia.isEmpty() || especialidad.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.");
                 return;
             }
 
             try {
-                
                 if (conn != null) {
                     CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_InsertarEspecialidad(?, ?)}");
-                    stmt.setString(1, codigo);
-                    stmt.setString(2, nombre);
+                    stmt.setString(1, codEspecia);      // CodEspecia
+                    stmt.setString(2, especialidad);    // Especialidad
 
                     stmt.execute();
 
@@ -89,36 +88,36 @@ public class pnlEspecialidadMant extends JPanel {
             return;
         }
 
-        String codigoActual = modelEspecialidad.getValueAt(filaSeleccionada, 0).toString();
-        String nombreActual = modelEspecialidad.getValueAt(filaSeleccionada, 1).toString();
+        String codEspecia = modelEspecialidad.getValueAt(filaSeleccionada, 0).toString();
+        String especialidadActual = modelEspecialidad.getValueAt(filaSeleccionada, 1).toString();
 
-        JTextField txtNuevoNombre = new JTextField(nombreActual);
+        JTextField txtNuevoNombre = new JTextField(especialidadActual);
 
         Object[] mensaje = {
-            "Código (no editable): " + codigoActual,
+            "Código (no editable): " + codEspecia,
             "Nuevo nombre:", txtNuevoNombre
         };
 
         int opcion = JOptionPane.showConfirmDialog(this, mensaje, "Actualizar Especialidad", JOptionPane.OK_CANCEL_OPTION);
 
         if (opcion == JOptionPane.OK_OPTION) {
-            String nuevoNombre = txtNuevoNombre.getText().trim();
+            String nuevaEspecialidad = txtNuevoNombre.getText().trim();
 
-            if (nuevoNombre.isEmpty() ) {
+            if (nuevaEspecialidad.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "El nombre no puede estar vacío.");
                 return;
             }
 
             try {
                 if (conn != null) {
-                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_ActualizarEspecialidad(?, ?)}");
-                    stmt.setString(1, codigoActual);
-                    stmt.setString(2, nuevoNombre);
+                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_ModificarEspecialidad(?, ?)}");
+                    stmt.setString(1, codEspecia);         // CodEspecia
+                    stmt.setString(2, nuevaEspecialidad);  // Especialidad
                     stmt.execute();
 
-                    JOptionPane.showMessageDialog(this, "Especialidad actualizada correctamente."); // Recargar datos después de actualizar
+                    JOptionPane.showMessageDialog(this, "Especialidad actualizada correctamente.");
                     stmt.close();
-                    cargarDatos(); // Recargar datos después de actualizar
+                    cargarDatos();
                 } else {
                     JOptionPane.showMessageDialog(this, "Error al conectar con la base de datos.");
                 }
@@ -137,20 +136,20 @@ public class pnlEspecialidadMant extends JPanel {
             return;
         }
 
-        String codigo = modelEspecialidad.getValueAt(filaSeleccionada, 0).toString();
+        String codEspecia = modelEspecialidad.getValueAt(filaSeleccionada, 0).toString();
 
-        int confirmacion = JOptionPane.showConfirmDialog(this, "¿Eliminar la especialidad con código: " + codigo + "?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+        int confirmacion = JOptionPane.showConfirmDialog(this, "¿Eliminar la especialidad con código: " + codEspecia + "?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
 
         if (confirmacion == JOptionPane.YES_OPTION) {
             try {
                 if (conn != null) {
-                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRU_EliminarEspecialidad(?)}");
-                    stmt.setString(1, codigo);
+                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_EliminarEspecialidad(?)}");
+                    stmt.setString(1, codEspecia); // CodEspecia
                     stmt.execute();
 
                     JOptionPane.showMessageDialog(this, "Especialidad eliminada correctamente.");
                     stmt.close();
-                    cargarDatos(); // Recargar datos después de eliminar
+                    cargarDatos();
                 } else {
                     JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.");
                 }
@@ -165,12 +164,12 @@ public class pnlEspecialidadMant extends JPanel {
         modelEspecialidad.setRowCount(0); // Limpiar la tabla
         try {
             if (conn != null) {
-                CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_MostrarEspecialidades()}");
+                CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_ListarEspecialidad()}");
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
-                    String codigo = rs.getString("Codigo");
-                    String nombre = rs.getString("Especialidad");
-                    modelEspecialidad.addRow(new Object[]{codigo, nombre});
+                    String codEspecia = rs.getString("CodEspecia");
+                    String especialidad = rs.getString("Especialidad");
+                    modelEspecialidad.addRow(new Object[]{codEspecia, especialidad});
                 }
                 rs.close();
                 stmt.close();

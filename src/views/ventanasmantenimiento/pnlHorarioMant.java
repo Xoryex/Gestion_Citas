@@ -39,38 +39,34 @@ public class pnlHorarioMant extends JPanel {
         return modelHorario;
     }
     
-    
     public void agregar() {
-        JTextField txtID = new JTextField();
+        JTextField txtCodHorario = new JTextField();
         JTextField txtDia = new JTextField();
         JTextField txtHoraInicio = new JTextField();
         JTextField txtHoraFin = new JTextField();
-        JTextField txtLimitePacientes = new JTextField();
-        JTextField txtEstado = new JTextField();
-        
+        JTextField txtLimitPct = new JTextField();
+        JTextField txtEstadoHorario = new JTextField();
 
         Object[] mensaje = {
-            "ID Horario:", txtID,
+            "ID Horario:", txtCodHorario,
             "Día:", txtDia,
             "Hora Inicio:", txtHoraInicio,
             "Hora Fin:", txtHoraFin,
-            "Límite de Pacientes:", txtLimitePacientes,
-            "Estado del Horario:", txtEstado
-            
+            "Límite de Pacientes:", txtLimitPct,
+            "Estado del Horario:", txtEstadoHorario
         };
 
         int opcion = JOptionPane.showConfirmDialog(this, mensaje, "Agregar Horario", JOptionPane.OK_CANCEL_OPTION);
 
         if (opcion == JOptionPane.OK_OPTION) {
-            String id = txtID.getText().trim();
+            String codHorario = txtCodHorario.getText().trim();
             String dia = txtDia.getText().trim();
             String horaInicio = txtHoraInicio.getText().trim();
             String horaFin = txtHoraFin.getText().trim();
-            String limite = txtLimitePacientes.getText().trim();
-            String estado = txtEstado.getText().trim();
-            
+            String limitPct = txtLimitPct.getText().trim();
+            String estadoHorario = txtEstadoHorario.getText().trim();
 
-            if (id.isEmpty() || dia.isEmpty() || horaInicio.isEmpty() || horaFin.isEmpty() || limite.isEmpty() || estado.isEmpty()) {
+            if (codHorario.isEmpty() || dia.isEmpty() || horaInicio.isEmpty() || horaFin.isEmpty() || limitPct.isEmpty() || estadoHorario.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.");
                 return;
             }
@@ -78,13 +74,12 @@ public class pnlHorarioMant extends JPanel {
             try {
                 if (conn != null) {
                     CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_InsertarHorario(?, ?, ?, ?, ?, ?)}");
-                    stmt.setString(1, id);
-                    stmt.setString(2, dia);
-                    stmt.setString(3, horaInicio);
-                    stmt.setString(4, horaFin);
-                    stmt.setString(5, limite);
-                    stmt.setString(6, estado);
-                    
+                    stmt.setString(1, codHorario);      // CodHorario
+                    stmt.setString(2, dia);            // Dia
+                    stmt.setString(3, horaInicio);     // HoraInicio
+                    stmt.setString(4, horaFin);        // HoraFin
+                    stmt.setString(5, limitPct);       // LimitPct
+                    stmt.setString(6, estadoHorario);  // EstadoHorario
 
                     stmt.execute();
 
@@ -109,28 +104,26 @@ public class pnlHorarioMant extends JPanel {
             return;
         }
 
-        String idActual = modelHorario.getValueAt(filaSeleccionada, 0).toString();
+        String codHorario = modelHorario.getValueAt(filaSeleccionada, 0).toString();
         String diaActual = modelHorario.getValueAt(filaSeleccionada, 1).toString();
         String horaInicioActual = modelHorario.getValueAt(filaSeleccionada, 2).toString();
         String horaFinActual = modelHorario.getValueAt(filaSeleccionada, 3).toString();
-        String limiteActual = modelHorario.getValueAt(filaSeleccionada, 4).toString();
-        String estadoActual = modelHorario.getValueAt(filaSeleccionada, 5).toString();
-        
+        String limitPctActual = modelHorario.getValueAt(filaSeleccionada, 4).toString();
+        String estadoHorarioActual = modelHorario.getValueAt(filaSeleccionada, 5).toString();
 
         JTextField txtDia = new JTextField(diaActual);
         JTextField txtHoraInicio = new JTextField(horaInicioActual);
         JTextField txtHoraFin = new JTextField(horaFinActual);
-        JTextField txtLimitePacientes = new JTextField(limiteActual);
-        JTextField txtEstado = new JTextField(estadoActual);
-       
+        JTextField txtLimitPct = new JTextField(limitPctActual);
+        JTextField txtEstadoHorario = new JTextField(estadoHorarioActual);
 
         Object[] mensaje = {
-            "ID Horario (no editable): " + idActual,
+            "ID Horario (no editable): " + codHorario,
             "Día:", txtDia,
             "Hora Inicio:", txtHoraInicio,
             "Hora Fin:", txtHoraFin,
-            "Límite de Pacientes:", txtLimitePacientes,
-            "Estado del Horario:", txtEstado
+            "Límite de Pacientes:", txtLimitPct,
+            "Estado del Horario:", txtEstadoHorario
         };
 
         int opcion = JOptionPane.showConfirmDialog(this, mensaje, "Actualizar Horario", JOptionPane.OK_CANCEL_OPTION);
@@ -139,25 +132,23 @@ public class pnlHorarioMant extends JPanel {
             String dia = txtDia.getText().trim();
             String horaInicio = txtHoraInicio.getText().trim();
             String horaFin = txtHoraFin.getText().trim();
-            String limite = txtLimitePacientes.getText().trim();
-            String estado = txtEstado.getText().trim();
-            
+            String limitPct = txtLimitPct.getText().trim();
+            String estadoHorario = txtEstadoHorario.getText().trim();
 
-            if (dia.isEmpty() || horaInicio.isEmpty() || horaFin.isEmpty() || limite.isEmpty() || estado.isEmpty() ) {
+            if (dia.isEmpty() || horaInicio.isEmpty() || horaFin.isEmpty() || limitPct.isEmpty() || estadoHorario.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.");
                 return;
             }
 
             try {
                 if (conn != null) {
-                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_ActualizarHorario(?, ?, ?, ?, ?, ?)}");
-                    stmt.setString(1, idActual);
-                    stmt.setString(2, dia);
-                    stmt.setString(3, horaInicio);
-                    stmt.setString(4, horaFin);
-                    stmt.setString(5, limite);
-                    stmt.setString(6, estado);
-                    
+                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_ModificarHorario(?, ?, ?, ?, ?, ?)}");
+                    stmt.setString(1, codHorario);      // CodHorario
+                    stmt.setString(2, dia);            // Dia
+                    stmt.setString(3, horaInicio);     // HoraInicio
+                    stmt.setString(4, horaFin);        // HoraFin
+                    stmt.setString(5, limitPct);       // LimitPct
+                    stmt.setString(6, estadoHorario);  // EstadoHorario
 
                     stmt.execute();
 
@@ -182,15 +173,15 @@ public class pnlHorarioMant extends JPanel {
             return;
         }
 
-        String id = modelHorario.getValueAt(filaSeleccionada, 0).toString();
+        String codHorario = modelHorario.getValueAt(filaSeleccionada, 0).toString();
 
-        int confirmacion = JOptionPane.showConfirmDialog(this, "¿Eliminar el horario con ID: " + id + "?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+        int confirmacion = JOptionPane.showConfirmDialog(this, "¿Eliminar el horario con ID: " + codHorario + "?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
 
         if (confirmacion == JOptionPane.YES_OPTION) {
             try {
                 if (conn != null) {
                     CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_EliminarHorario(?)}");
-                    stmt.setString(1, id);
+                    stmt.setString(1, codHorario); // CodHorario
                     stmt.execute();
 
                     JOptionPane.showMessageDialog(this, "Horario eliminado correctamente.");
@@ -210,17 +201,17 @@ public class pnlHorarioMant extends JPanel {
         modelHorario.setRowCount(0); // Limpiar la tabla
         try {
             if (conn != null) {
-                CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_MostrarHorarios()}");
+                CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_ListarHorario()}");
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
-                    String id = rs.getString("ID_Horario");
+                    String codHorario = rs.getString("CodHorario");
                     String dia = rs.getString("Dia");
                     String horaInicio = rs.getString("HoraInicio");
                     String horaFin = rs.getString("HoraFin");
-                    String limite = rs.getString("LimitePacientes");
-                    String estado = rs.getString("EstadoHorario");
-                    
-                    modelHorario.addRow(new Object[]{id, dia, horaInicio, horaFin, limite, estado});
+                    String limitPct = rs.getString("LimitPct");
+                    String estadoHorario = rs.getString("EstadoHorario");
+
+                    modelHorario.addRow(new Object[]{codHorario, dia, horaInicio, horaFin, limitPct, estadoHorario});
                 }
                 rs.close();
                 stmt.close();

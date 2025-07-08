@@ -3,9 +3,8 @@ package views;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
-import views.panelesinicio.*;
 import static querys.QueryUser.usuario_actual;
+import views.panelesinicio.*;
 
 public class Programa extends JFrame {
     private JLabel lblNomRecepc;
@@ -62,7 +61,7 @@ public class Programa extends JFrame {
         //tbdpnInicio.addTab("INICIO", new PanelInicio());
         //tbdpnInicio.addTab("CITAS MEDICAS", new PanelCitasMedicas());
         tbdpnInicio.addTab("CONFIGURACIÓN", new PanelConfiguracion());
-        //tbdpnInicio.addTab("MANTENIMIENTO", new PanelMantenimiento());
+        tbdpnInicio.addTab("MANTENIMIENTO", new PanelMantenimiento());
         //tbdpnInicio.addTab("CONSULTAS", new PanelConsulta());
         //tbdpnInicio.addTab("REPORTE", new PanelReporte());
 

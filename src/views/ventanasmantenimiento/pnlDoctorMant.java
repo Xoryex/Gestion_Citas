@@ -74,7 +74,7 @@ public class pnlDoctorMant extends JPanel {
 
             try {
                 if (conn != null) {
-                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_InsertarDoctor(?, ?, ?, ?, ?, ?)}");
+                    CallableStatement stmt = conn.prepareCall("{CALL PA_insert_Doctor(?, ?, ?, ?, ?, ?)}");
                     stmt.setString(1, dni);
                     stmt.setString(2, nombre);
                     stmt.setString(3, especialidad);
@@ -144,7 +144,7 @@ public class pnlDoctorMant extends JPanel {
 
             try {
                 if (conn != null) {
-                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_ActualizarDoctor(?, ?, ?, ?, ?, ?)}");
+                    CallableStatement stmt = conn.prepareCall("{CALL PA_actualizacion_Doctor(?, ?, ?, ?, ?, ?)}");
                     stmt.setString(1, dniActual);
                     stmt.setString(2, nombre);
                     stmt.setString(3, especialidad);
@@ -183,7 +183,7 @@ public class pnlDoctorMant extends JPanel {
         if (confirmacion == JOptionPane.YES_OPTION) {
             try {
                 if (conn != null) {
-                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_EliminarDoctor(?)}");
+                    CallableStatement stmt = conn.prepareCall("{CALL PA_delete_Doctor(?)}");
                     stmt.setString(1, dni);
                     stmt.execute();
 
@@ -205,16 +205,16 @@ public class pnlDoctorMant extends JPanel {
         modelDoctor.setRowCount(0);
         try {
             if (conn != null) {
-                CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_MostrarDoctores()}");
+                CallableStatement stmt = conn.prepareCall("{CALL PA_ListarDoctores()}");
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
-                    String dni = rs.getString("DNI");
-                    String nombre = rs.getString("NombreCompleto");
-                    String especialidad = rs.getString("Especialidad");
-                    String codConsultorio = rs.getString("CodigoConsultorio");
-                    String correo = rs.getString("Correo");
-                    String telefono = rs.getString("Telefono");
-                    modelDoctor.addRow(new Object[]{dni, nombre, especialidad, codConsultorio, correo, telefono});
+                    String dni = rs.getString("DniDoc");
+                    String nombre = rs.getString("NomDoc");
+                    String apellido = rs.getString("ApellDoc");
+                    String codConsultorio = rs.getString("CodConst");
+                    String correo = rs.getString("CorreoDoctor");
+                    String telefono = rs.getString("TelfDoctor");
+                    modelDoctor.addRow(new Object[]{dni, nombre, apellido, codConsultorio, correo, telefono});
                 }
                 rs.close();
                 stmt.close();

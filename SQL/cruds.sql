@@ -140,22 +140,9 @@ GO
 
 
 ----------------------------------------------------------------------------------------
-EXECUTE PA_CRUD_InsertarConsultorio 1111,'CARDIOLOGIA', 'Medicina General'
-EXEC PA_CRUD_ModificarConsultorio 3333, 'Nuevo Nombre Consultorio', 'Medicina General'
-EXEC PA_CRUD_EliminarConsultorio 3333
-EXEC PA_CRUD_ListarConsultaConFiltro '1111'
-select * from Vw_ListarConsulta
-
-EXEC PA_CRUD_ListarConsultaConFiltro 'cardio'
-
-
-
-
-
 ----------------------------------------------------------------------
 -- CRUD: TABLA HORARIO
 ----------------------------------------------------------------------
-select * from Horario;
 
 -- INSERTAR
 CREATE OR ALTER PROCEDURE PA_CRUD_InsertarHorario
@@ -350,24 +337,6 @@ GO
 
 
 -------------------------------------------------------------------------------------------
-select * from Horario;
-EXEC PA_CRUD_InsertarHorario 12,'09:00','12:00','Lunes', 20,1
-
-EXEC PA_CRUD_ModificarHorario 12, '14:30', 'Martes', 25, 1
-
-EXEC PA_CRUD_EliminarHorario 12
--- Listar todos los horarios
-EXEC PA_CRUD_ListarHorario;
-
--- Buscar por código o día
-EXEC PA_CRUD_ListarHorarioConFiltro 'Lunes';
-
-EXEC PA_CRUD_InsertarHorario '0010', '08:00:00', '12:00:00', 'Lunes', 10, 1;
-EXEC PA_CRUD_ListarHorario;
-
--- Filtro por turno
-EXEC PA_CRUD_ListarHorarioConFiltro 'mañana';
-
 
 ------------------------------------------------------------------------
 -- CRUD: TABLA RECEPCIONISTA
@@ -772,26 +741,7 @@ GO
 
 
 
-
-
-select * from Paciente
-
-------------------------------
-EXECUTE PA_CRUD_InsertarPaciente '777777777', 'V','V', '942218870','M',
-		'','06/08/2005','Jr.','', '1', 'PE', '1', '', '', '1', '1' 
-
-EXECUTE PA_CRUD_ModificarPaciente '777777777', 'V','V', '942218870','F',
-		'','06/08/2004','Jr.','', '1', 'gg', '1', '', '', '1', '1'  
-
-EXEC PA_CRUD_EliminarPaciente '77777777';
-
-
-
-EXECUTE PA_CRUD_ListarPacienteConFiltro 'A+'
-------------------------------
-go
-
-
+--------------------------
 -----------------------------------
 --Tabla CITA                
 -----------------------------------
@@ -842,29 +792,52 @@ GO
 
 --Modificar
 
-CREATE PROCEDURE PA_CRUD_ModificarCita 
-(@DniRecep int,@CodCita varchar(50),@CodHorario int,@DniPct int,
-    @DniDoc int,@HoraInicio time(7),@HoraFin time(7),@FechaCita date,@EstadoCita int,
-    @TipoAtencion int,@FechaReprogra date,@FechaAnulacion date)
+CREATE OR ALTER PROCEDURE PA_CRUD_ModificarCita 
+(
+    @DniRecep INT,
+    @CodCita VARCHAR(50),
+    @CodHorario INT,
+    @DniPct INT,
+    @DniDoc INT,
+    @HoraInicio TIME(7),
+    @HoraFin TIME(7),
+    @FechaCita DATE,
+    @IdEstadoCita INT,
+    @IdTipoAtencion INT,
+    @FechaReprogra DATE,
+    @FechaAnulacion DATE
+)
 AS
 BEGIN
+    -- Validación: Verificar si la cita existe
+    IF NOT EXISTS(SELECT 1 FROM Cita WHERE CodCita = @CodCita)
+    BEGIN
+        RAISERROR('Esta cita no existe.', 16, 1);
+        RETURN @@ERROR;
+    END
 
-	IF NOT EXISTS(SELECT * FROM Paciente WHERE DniPct=@DniPct)
-	BEGIN
-	RAISERROR('Esta cita no existe!!',16,1)
-	RETURN @@ERROR
-	END
-UPDATE dbo.Cita
-SET DniRecep=@DniRecep,CodCita=@CodCita,CodHorario=@CodHorario,DniPct=@DniPct,DniDoc=@DniDoc,
-HoraInicio=@HoraInicio,HoraFin=@HoraFin,FechaCita=@FechaCita,EstadoCita=@EstadoCita,
-TipoAtencion=@TipoAtencion,FechaReprogra=@FechaReprogra,FechaAnulacion=@FechaAnulacion
-WHERE DniPct=@DniPct
+    -- Actualización
+    UPDATE dbo.Cita
+    SET 
+        DniRecep = @DniRecep,
+        CodHorario = @CodHorario,
+        DniPct = @DniPct,
+        DniDoc = @DniDoc,
+        HoraInicio = @HoraInicio,
+        HoraFin = @HoraFin,
+        FechaCita = @FechaCita,
+        IdEstadoCita = @IdEstadoCita,
+        IdTipoAtencion = @IdTipoAtencion,
+        FechaReprogra = @FechaReprogra,
+        FechaAnulacion = @FechaAnulacion
+    WHERE CodCita = @CodCita
 END
 GO
 
+
 --Eliminar
 
-CREATE PROCEDURE PA_CRUD_EliminarCita
+CREATE or alter PROCEDURE PA_CRUD_EliminarCita
 (@DniRecep int,@CodCita varchar(50),@CodHorario int,@DniPct int,
     @DniDoc int,@HoraInicio time(7),@HoraFin time(7),@FechaCita date,@EstadoCita int,
     @TipoAtencion int,@FechaReprogra date,@FechaAnulacion date)
@@ -953,7 +926,7 @@ GO
 
 --INSERTAR
 
-CREATE PROCEDURE PA_CRUD_InsertarEspecialidadDoctor
+CREATE or alter  PROCEDURE PA_CRUD_InsertarEspecialidadDoctor
     @CodEspecia int, 
     @DniDoc int
 AS
@@ -986,7 +959,7 @@ END
 GO
 
 -- ELIMINAR
-CREATE PROCEDURE PA_CRUD_EliminarDoctorEspecialidad
+CREATE  or alter PROCEDURE PA_CRUD_EliminarDoctorEspecialidad
     @CodEspecia int,
     @DniDoc int
 AS
@@ -1051,17 +1024,13 @@ FROM
 GO
 
 -----------------------------------------------------------------------------------------
-SELECT * FROM Vw_ListarDoctorEspecialidad;
-EXEC PA_CRUD_ListarDoctorEspecialidad;
-EXEC PA_CRUD_ListarDoctorEspecialidadConFiltro @Filtro = 'cardiología';
-EXEC PA_CRUD_ListarDoctorEspecialidadConFiltro @Filtro = 'Carlos';
 -----------------------------------------------------------------------------------------
 
 /*ESPECIALIDAD*/
 ------------------------------------------------------------------------------------------
 --INSERTAR
 
-CREATE PROCEDURE PA_CRUD_InsertarEspecialidad
+CREATE or alter PROCEDURE PA_CRUD_InsertarEspecialidad
 (@CodEspecia AS INT, 
 @Especialidad AS Varchar(120))
 AS
@@ -1126,7 +1095,7 @@ END
 GO
 
 --LISTAR CON FILTRO
-CREATE PROCEDURE PA_CRUD_ListarEspecialidadConFiltro
+CREATE or alter PROCEDURE PA_CRUD_ListarEspecialidadConFiltro
 (@Filtro Varchar(150))
 AS
 BEGIN
@@ -1136,7 +1105,7 @@ END
 GO
 --CREAR VISTA
 
-CREATE VIEW Vw_ListarEspecialidad
+CREATE or alter VIEW Vw_ListarEspecialidad
 AS
 	SELECT CodEspecia AS 'Codigo', Especialidad AS 'Nombre Especialidad'
 	FROM Especialidad
@@ -1209,32 +1178,31 @@ END
 GO
 
 
---vista
+-- Vista
 CREATE OR ALTER VIEW Vw_ListarDoctores
 AS
 SELECT
-    d.DniDoc                  AS DNI,
-    d.NomDoc                 AS Nombre,
-    d.ApellDoc               AS Apellido,
-    e.Especialidad           AS Especialidad,
-    d.CodConst               AS CodConsultorio,
-    d.CorreoDoctor           AS Correo,
-    d.TelfDoctor             AS Telefono
+    d.DniDoc          AS DNI,
+    d.NomDoc          AS Nombre,
+    d.ApellDoc        AS Apellido,
+    e.Especialidad    AS Especialidad,
+    d.CodConst        AS CodConsultorio,
+    d.CorreoDoctor    AS Correo,
+    d.TelfDoctor      AS Telefono
 FROM Doctor d
 INNER JOIN Especialidad_Doctor ed ON d.DniDoc = ed.DniDoc
 INNER JOIN Especialidad e         ON ed.CodEspecia = e.CodEspecia;
 GO
 
-
---listar
---sin filtro
+-- Listar sin filtro
 CREATE OR ALTER PROCEDURE PA_ListarDoctores
 AS
 BEGIN
     SELECT * FROM Vw_ListarDoctores;
 END
 GO
---con filtro
+
+-- Listar con filtro
 CREATE OR ALTER PROCEDURE PA_ListarDoctoresConFiltro
 (
     @Filtro VARCHAR(150)
@@ -1244,7 +1212,7 @@ BEGIN
     SELECT *
     FROM Vw_ListarDoctores
     WHERE 
-        DNI LIKE '%' + @Filtro + '%' OR
+        CAST(DNI AS VARCHAR) LIKE '%' + @Filtro + '%' OR
         Nombre LIKE '%' + @Filtro + '%' OR
         Apellido LIKE '%' + @Filtro + '%' OR
         Especialidad LIKE '%' + @Filtro + '%' OR
@@ -1253,6 +1221,7 @@ BEGIN
         Telefono LIKE '%' + @Filtro + '%';
 END
 GO
+
 
 
 --modificar
@@ -1347,7 +1316,7 @@ GO
 
 
 -- ELIMINAR
-CREATE PROCEDURE PA_CRUD_EliminarDoctorEspecialidad
+CREATE or alter PROCEDURE PA_CRUD_EliminarDoctorEspecialidad
     @CodEspecia int,
     @DniDoc int
 AS
@@ -1462,7 +1431,7 @@ END
 GO
 
 --listar con filtro
-CREATE PROCEDURE PA_CRUD_ListarDoctorHorarioConFiltro
+CREATE or alter PROCEDURE PA_CRUD_ListarDoctorHorarioConFiltro
     @Filtro VARCHAR(100)
 AS
 BEGIN
