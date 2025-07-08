@@ -115,6 +115,7 @@ BEGIN
     WHERE 
         Codigo LIKE '%' + @Filtro + '%' OR
         NombreConsultorio LIKE '%' + @Filtro + '%'
+        
 END
 GO
 
@@ -1117,17 +1118,17 @@ GO
 --INSERT
 CREATE or alter PROCEDURE PA_insert_Doctor
 (
-    @dni            int,
-    @nombre         VARCHAR(50),
-    @apellido       VARCHAR(50),
-    @codconsultorio int,
-    @correo         VARCHAR(120),
-    @celular        numeric (9)
+    @DniDoc            int,
+    @NomDoc         VARCHAR(50),
+    @ApellDoc       VARCHAR(50),
+    @CodConst int,
+    @CorreoDoctor         VARCHAR(120),
+    @TelfDoctor        numeric (9)
 )
 AS
 BEGIN
     -- Verificar existencia del consultorio
-    IF NOT EXISTS (SELECT 1 FROM Consultorio WHERE CodConst = @codconsultorio)
+    IF NOT EXISTS (SELECT 1 FROM Consultorio WHERE CodConst = @CodConst)
     BEGIN
         RAISERROR('No se encontró el consultorio.', 16, 1);
         RETURN @@ERROR;
@@ -1138,7 +1139,7 @@ BEGIN
         DniDoc, NomDoc, ApellDoc, CodConst, CorreoDoctor, TelfDoctor
     )
     VALUES (
-        @dni, @nombre, @apellido, @codconsultorio, @correo, @celular
+        @DniDoc, @NomDoc, @ApellDoc, @CodConst, @CorreoDoctor, @TelfDoctor
     );
 
     RETURN 0;
@@ -1225,14 +1226,15 @@ GO
 
 
 --modificar
-CREATE or alter  PROCEDURE PA_actualizacion_Doctor
+CREATE OR ALTER PROCEDURE PA_actualizacion_Doctor
 (
     @dni INT,
     @nombre VARCHAR(50),
     @apellido VARCHAR(50),
-    @codconsultorio int,
+    @codconsultorio INT,
     @correo VARCHAR(120),
-    @celular numeric (9)
+    @celular NUMERIC(9),
+    @codEspecialidad INT  -- nuevo parámetro
 )
 AS
 BEGIN
@@ -1250,6 +1252,13 @@ BEGIN
         RETURN @@ERROR;
     END
 
+    -- Validar existencia de especialidad
+    IF NOT EXISTS (SELECT 1 FROM Especialidad WHERE CodEspecia = @codEspecialidad)
+    BEGIN
+        RAISERROR('No se encontró la especialidad.', 16, 1);
+        RETURN @@ERROR;
+    END
+
     -- Actualizar datos del doctor
     UPDATE Doctor
     SET 
@@ -1260,9 +1269,23 @@ BEGIN
         TelfDoctor = @celular
     WHERE DniDoc = @dni;
 
+    -- Actualizar o insertar la especialidad del doctor
+    IF EXISTS (SELECT 1 FROM Especialidad_Doctor WHERE DniDoc = @dni)
+    BEGIN
+        UPDATE Especialidad_Doctor
+        SET CodEspecia = @codEspecialidad
+        WHERE DniDoc = @dni;
+    END
+    ELSE
+    BEGIN
+        INSERT INTO Especialidad_Doctor (DniDoc, CodEspecia)
+        VALUES (@dni, @codEspecialidad);
+    END
+
     RETURN 0;
 END
 GO
+
 
 
 -----------------------------------------
@@ -1444,5 +1467,29 @@ BEGIN
         TelfDoctor LIKE '%' + @Filtro + '%' OR
         CAST(CodHorario AS VARCHAR) LIKE '%' + @Filtro + '%' OR
         Dia LIKE '%' + @Filtro + '%'
+END
+GO
+
+
+------------------------------------------------------------------
+CREATE OR ALTER PROCEDURE PA_CRUD_MostrarCitasPendientes
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    SELECT 
+        c.CodCita AS ID,
+        p.NomPct AS NombrePaciente,
+        p.ApellPct AS ApellidoPaciente,
+        c.FechaCita AS Fecha,
+        h.HoraInicio,
+        h.HoraFin,
+        c.IdEstadoCita AS Estado
+    FROM dbo.Cita c
+    INNER JOIN dbo.Paciente p ON c.DniPct = p.DniPct
+    INNER JOIN dbo.Horario h ON c.CodHorario = h.CodHorario
+    WHERE c.IdEstadoCita = 1  -- Solo citas pendientes/activas
+    ORDER BY c.FechaCita, h.HoraInicio;
+    
 END
 GO

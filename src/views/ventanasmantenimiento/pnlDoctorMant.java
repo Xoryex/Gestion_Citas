@@ -21,7 +21,7 @@ public class pnlDoctorMant extends JPanel {
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createTitledBorder("Mantenimiento de Doctores"));
 
-        String[] columnas = {"DNI", "Nombre Completo", "Especialidad", "Codigo de Consultorio", "Correo", "Teléfono"};
+        String[] columnas = {"DNI", "Nombre Completo", "Especialidad", "Código de Consultorio", "Correo", "Teléfono"};
         modelDoctor = new DefaultTableModel(columnas, 0);
         tblDoctor = new JTable(modelDoctor);
 
@@ -43,6 +43,7 @@ public class pnlDoctorMant extends JPanel {
     public void agregar() {
         JTextField txtDNI = new JTextField();
         JTextField txtNombre = new JTextField();
+        JTextField txtApellido = new JTextField();
         JTextField txtEspecialidad = new JTextField();
         JTextField txtCodConsultorio = new JTextField();
         JTextField txtCorreo = new JTextField();
@@ -50,8 +51,9 @@ public class pnlDoctorMant extends JPanel {
 
         Object[] mensaje = {
             "DNI:", txtDNI,
-            "Nombre Completo:", txtNombre,
-            "Especialidad:", txtEspecialidad,
+            "Nombre:", txtNombre,
+            "Apellido:", txtApellido,
+            "Especialidad (nombre):", txtEspecialidad,
             "Código de Consultorio:", txtCodConsultorio,
             "Correo:", txtCorreo,
             "Teléfono:", txtTelefono
@@ -62,30 +64,43 @@ public class pnlDoctorMant extends JPanel {
         if (opcion == JOptionPane.OK_OPTION) {
             String dni = txtDNI.getText().trim();
             String nombre = txtNombre.getText().trim();
-            String especialidad = txtEspecialidad.getText().trim();
+            String apellido = txtApellido.getText().trim();
+            String especialidadNombre = txtEspecialidad.getText().trim();
             String codConsultorio = txtCodConsultorio.getText().trim();
             String correo = txtCorreo.getText().trim();
             String telefono = txtTelefono.getText().trim();
 
-            if (dni.isEmpty() || nombre.isEmpty() || especialidad.isEmpty() || codConsultorio.isEmpty() || correo.isEmpty() || telefono.isEmpty()) {
+            if (dni.isEmpty() || nombre.isEmpty() || apellido.isEmpty() || especialidadNombre.isEmpty()
+                    || codConsultorio.isEmpty() || correo.isEmpty() || telefono.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.");
                 return;
             }
 
             try {
                 if (conn != null) {
+                    // Insertar doctor
                     CallableStatement stmt = conn.prepareCall("{CALL PA_insert_Doctor(?, ?, ?, ?, ?, ?)}");
                     stmt.setString(1, dni);
                     stmt.setString(2, nombre);
-                    stmt.setString(3, especialidad);
+                    stmt.setString(3, apellido);
                     stmt.setString(4, codConsultorio);
                     stmt.setString(5, correo);
                     stmt.setString(6, telefono);
-
                     stmt.execute();
+                    stmt.close();
+
+                    // Obtener código de especialidad
+                    int codEspecialidad = obtenerCodEspecialidad(especialidadNombre);
+                    if (codEspecialidad == -1) return;
+
+                    // Insertar en tabla intermedia
+                    PreparedStatement ps = conn.prepareStatement("INSERT INTO Especialidad_Doctor (DniDoc, CodEspecia) VALUES (?, ?)");
+                    ps.setString(1, dni);
+                    ps.setInt(2, codEspecialidad);
+                    ps.executeUpdate();
+                    ps.close();
 
                     JOptionPane.showMessageDialog(this, "Doctor agregado correctamente.");
-                    stmt.close();
                     cargarDatos();
                 } else {
                     JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.");
@@ -107,13 +122,18 @@ public class pnlDoctorMant extends JPanel {
         }
 
         String dniActual = modelDoctor.getValueAt(filaSeleccionada, 0).toString();
-        String nombreActual = modelDoctor.getValueAt(filaSeleccionada, 1).toString();
+        String nombreCompleto = modelDoctor.getValueAt(filaSeleccionada, 1).toString();
+        String[] partesNombre = nombreCompleto.split(" ", 2);
+        String nombreActual = partesNombre.length > 0 ? partesNombre[0] : "";
+        String apellidoActual = partesNombre.length > 1 ? partesNombre[1] : "";
+
         String especialidadActual = modelDoctor.getValueAt(filaSeleccionada, 2).toString();
         String codConsultorioActual = modelDoctor.getValueAt(filaSeleccionada, 3).toString();
         String correoActual = modelDoctor.getValueAt(filaSeleccionada, 4).toString();
         String telefonoActual = modelDoctor.getValueAt(filaSeleccionada, 5).toString();
 
         JTextField txtNombre = new JTextField(nombreActual);
+        JTextField txtApellido = new JTextField(apellidoActual);
         JTextField txtEspecialidad = new JTextField(especialidadActual);
         JTextField txtCodConsultorio = new JTextField(codConsultorioActual);
         JTextField txtCorreo = new JTextField(correoActual);
@@ -121,8 +141,9 @@ public class pnlDoctorMant extends JPanel {
 
         Object[] mensaje = {
             "DNI (no editable): " + dniActual,
-            "Nombre Completo:", txtNombre,
-            "Especialidad:", txtEspecialidad,
+            "Nombre:", txtNombre,
+            "Apellido:", txtApellido,
+            "Especialidad (nombre):", txtEspecialidad,
             "Código de Consultorio:", txtCodConsultorio,
             "Correo:", txtCorreo,
             "Teléfono:", txtTelefono
@@ -132,34 +153,36 @@ public class pnlDoctorMant extends JPanel {
 
         if (opcion == JOptionPane.OK_OPTION) {
             String nombre = txtNombre.getText().trim();
-            String especialidad = txtEspecialidad.getText().trim();
+            String apellido = txtApellido.getText().trim();
+            String especialidadNombre = txtEspecialidad.getText().trim();
             String codConsultorio = txtCodConsultorio.getText().trim();
             String correo = txtCorreo.getText().trim();
             String telefono = txtTelefono.getText().trim();
 
-            if (nombre.isEmpty() || especialidad.isEmpty() || codConsultorio.isEmpty() || correo.isEmpty() || telefono.isEmpty()) {
+            if (nombre.isEmpty() || apellido.isEmpty() || especialidadNombre.isEmpty()
+                    || codConsultorio.isEmpty() || correo.isEmpty() || telefono.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.");
                 return;
             }
 
             try {
-                if (conn != null) {
-                    CallableStatement stmt = conn.prepareCall("{CALL PA_actualizacion_Doctor(?, ?, ?, ?, ?, ?)}");
-                    stmt.setString(1, dniActual);
-                    stmt.setString(2, nombre);
-                    stmt.setString(3, especialidad);
-                    stmt.setString(4, codConsultorio);
-                    stmt.setString(5, correo);
-                    stmt.setString(6, telefono);
+                int codEspecialidad = obtenerCodEspecialidad(especialidadNombre);
+                if (codEspecialidad == -1) return;
 
-                    stmt.execute();
+                CallableStatement stmt = conn.prepareCall("{CALL PA_actualizacion_Doctor(?, ?, ?, ?, ?, ?, ?)}");
+                stmt.setString(1, dniActual);
+                stmt.setString(2, nombre);
+                stmt.setString(3, apellido);
+                stmt.setString(4, codConsultorio);
+                stmt.setString(5, correo);
+                stmt.setString(6, telefono);
+                stmt.setInt(7, codEspecialidad);
 
-                    JOptionPane.showMessageDialog(this, "Doctor actualizado correctamente.");
-                    stmt.close();
-                    cargarDatos();
-                } else {
-                    JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.");
-                }
+                stmt.execute();
+                stmt.close();
+
+                JOptionPane.showMessageDialog(this, "Doctor actualizado correctamente.");
+                cargarDatos();
             } catch (SQLException e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Error al actualizar: " + e.getMessage());
@@ -186,9 +209,9 @@ public class pnlDoctorMant extends JPanel {
                     CallableStatement stmt = conn.prepareCall("{CALL PA_delete_Doctor(?)}");
                     stmt.setString(1, dni);
                     stmt.execute();
+                    stmt.close();
 
                     JOptionPane.showMessageDialog(this, "Doctor eliminado correctamente.");
-                    stmt.close();
                     cargarDatos();
                 } else {
                     JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.");
@@ -208,13 +231,14 @@ public class pnlDoctorMant extends JPanel {
                 CallableStatement stmt = conn.prepareCall("{CALL PA_ListarDoctores()}");
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
-                    String dni = rs.getString("DniDoc");
-                    String nombre = rs.getString("NomDoc");
-                    String apellido = rs.getString("ApellDoc");
-                    String codConsultorio = rs.getString("CodConst");
-                    String correo = rs.getString("CorreoDoctor");
-                    String telefono = rs.getString("TelfDoctor");
-                    modelDoctor.addRow(new Object[]{dni, nombre, apellido, codConsultorio, correo, telefono});
+                    String dni = rs.getString("DNI");
+                    String nombre = rs.getString("Nombre");
+                    String apellido = rs.getString("Apellido");
+                    String especialidad = rs.getString("Especialidad");
+                    String codConsultorio = rs.getString("CodConsultorio");
+                    String correo = rs.getString("Correo");
+                    String telefono = rs.getString("Telefono");
+                    modelDoctor.addRow(new Object[]{dni, nombre + " " + apellido, especialidad, codConsultorio, correo, telefono});
                 }
                 rs.close();
                 stmt.close();
@@ -224,6 +248,26 @@ public class pnlDoctorMant extends JPanel {
         } catch (SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error al cargar datos: " + e.getMessage());
+        }
+    }
+
+    // Buscar código de especialidad por nombre
+    private int obtenerCodEspecialidad(String nombreEspecialidad) {
+        try (PreparedStatement ps = conn.prepareStatement("SELECT CodEspecia FROM Especialidad WHERE Especialidad = ?")) {
+            ps.setString(1, nombreEspecialidad);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                int codigo = rs.getInt("CodEspecia");
+                rs.close();
+                return codigo;
+            } else {
+                JOptionPane.showMessageDialog(this, "Especialidad no encontrada.");
+                return -1;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al buscar la especialidad: " + e.getMessage());
+            return -1;
         }
     }
 }
