@@ -5,15 +5,15 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import views.panelesinicio.*;
-import static querys.QueryUser.usuario_actual;;
+import static querys.QueryUser.usuario_actual;
 
-public class APLICACION extends JFrame {
+public class Programa extends JFrame {
     private JLabel lblNomRecepc;
     private JLabel lblFuncion;
     private JLabel lblNombre;
     private JTabbedPane tbdpnInicio;
 
-    public APLICACION() {
+    public Programa() {
         setTitle("GESTION DE CITAS");
         setSize(1220, 663);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -59,14 +59,16 @@ public class APLICACION extends JFrame {
 
         // TABBED PANE
         tbdpnInicio = new JTabbedPane();
-        tbdpnInicio.addTab("INICIO", new PanelInicio());
-        tbdpnInicio.addTab("CITAS MEDICAS", new PanelCitasMedicas());
+        //tbdpnInicio.addTab("INICIO", new PanelInicio());
+        //tbdpnInicio.addTab("CITAS MEDICAS", new PanelCitasMedicas());
         tbdpnInicio.addTab("CONFIGURACIÓN", new PanelConfiguracion());
-        tbdpnInicio.addTab("MANTENIMIENTO", new PanelMantenimiento());
-        tbdpnInicio.addTab("CONSULTAS", new PanelConsulta());
-        tbdpnInicio.addTab("REPORTE", new PanelReporte());
+        //tbdpnInicio.addTab("MANTENIMIENTO", new PanelMantenimiento());
+        //tbdpnInicio.addTab("CONSULTAS", new PanelConsulta());
+        //tbdpnInicio.addTab("REPORTE", new PanelReporte());
 
         pnlRelleno.add(tbdpnInicio, BorderLayout.CENTER);
         add(pnlRelleno, BorderLayout.CENTER);
+
+        setVisible(true);
     }
 }

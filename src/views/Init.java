@@ -125,7 +125,7 @@ public class Init extends JFrame {
                     }
                     String contraseña = new String(txtcontraseña.getPassword());
                     if (queryuser.IniciarSesion(dni, contraseña)) {
-                        new APLICACION();
+                        new Programa();
                         dispose();
                     }
                 }

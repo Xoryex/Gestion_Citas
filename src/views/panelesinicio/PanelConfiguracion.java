@@ -62,8 +62,8 @@ public class PanelConfiguracion extends JPanel {
         txtDNIConf.setText(String.valueOf(usuario_actual.getDni()));
         txtApellidoConf.setText(usuario_actual.getApellido());
         txtNombreConf.setText(usuario_actual.getNombre());
+        txtTelefConf.setText(String.valueOf(usuario_actual.getTlf()));
 
-        eventos();
         // Añadir componentes al panel cabecera
         pnlCabeceraConf.add(lblDNIConf);
         pnlCabeceraConf.add(txtDNIConf);
@@ -88,6 +88,8 @@ public class PanelConfiguracion extends JPanel {
 
         pnlBotonConf.add(btnEliminarUsuario);
         pnlBotonConf.add(btnAceptarConf);
+
+        eventos();
 
         add(pnlCabeceraConf, BorderLayout.NORTH);
         add(pnlBotonConf, BorderLayout.CENTER);
@@ -156,21 +158,14 @@ public class PanelConfiguracion extends JPanel {
                     // Mostrar mensaje de error
                     JOptionPane.showMessageDialog(null, "La contraseña actual es incorrecta.", "Error",
                             JOptionPane.ERROR_MESSAGE);
+                    
                 } else {
-                    // Eliminar usuario
-                    try {
-                        CallableStatement cstm = Conexion.getConnection()
-                                .prepareCall("{call  PA_CRUD_EliminarRecepcionista ? }");
-                        cstm.setInt(1, usuario_actual.getDni());
-                        cstm.executeUpdate();
+                    
 
-                    } catch (SQLException ex) {
-                        // TODO: handle exception
-                        JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
 
-                    Window ventana = SwingUtilities.getWindowAncestor(btnEliminarUsuario);
+                    
+
+                    Window ventana = SwingUtilities.getWindowAncestor(btnElimiwnarUsuario);
                     new Init();
                     ventana.dispose();
                 }
@@ -180,7 +175,9 @@ public class PanelConfiguracion extends JPanel {
         });
 
         btnAceptarConf.addActionListener(e -> {
-            // Acción al aceptar cambios
+            
+
+
         });
 
     }

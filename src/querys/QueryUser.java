@@ -43,8 +43,27 @@ public class QueryUser implements Query<Recepcionista> {
    }
 
    @Override
-   public void Eliminar(String indice) {
-
+   public void Eliminar(int indice) {
+                        CallableStatement cstm=null;
+      try {
+                        cstm = Conexion.getConnection()
+                                .prepareCall("{call  PA_CRUD_EliminarRecepcionista ? }");
+                        cstm.setInt(1,indice);
+                        cstm.executeUpdate();
+                        JOptionPane.showMessageDialog(null, "Usuario eliminado");
+                    } catch (SQLException ex) {
+                       
+                        JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }finally{
+                        try {
+                           if(cstm != null) cstm.close(); 
+                        } catch (Exception exel) {
+                            JOptionPane.showMessageDialog(null,exel.getMessage());
+                            
+                        }
+                        
+                    }
    }
 
    public boolean IniciarSesion(int dni, String contraseña) {
