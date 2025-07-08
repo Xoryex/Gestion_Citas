@@ -1,5 +1,5 @@
 ﻿/*CRUDS PARA RECEPCINISTA-usuario*/
-create procedure paSelectRecepcionista
+create or alter procedure PA_LoginRecepcionista
 (
 	@dni numeric(8),
 	@contrasena varchar(20)
@@ -19,7 +19,7 @@ begin
 end
 go
 
-create procedure paInsertRecepcionista
+create or alter procedure paInsertRecepcionista
 (
 	@dni numeric(8),
 	@nombre varchar(50),
@@ -42,7 +42,7 @@ begin
 end
 go
 
-
+select * from Recepcionista
 
 
 ----------------------------------------------------------------------
@@ -180,6 +180,8 @@ EXECUTE PA_CRUD_InsertarConsultorio 1111,'CARDIOLOGIA', 'Medicina General'
 EXEC PA_CRUD_ModificarConsultorio 3333, 'Nuevo Nombre Consultorio', 'Medicina General'
 EXEC PA_CRUD_EliminarConsultorio 3333
 EXEC PA_CRUD_ListarConsultaConFiltro '1111'
+select * from Vw_ListarConsulta
+
 EXEC PA_CRUD_ListarConsultaConFiltro 'cardio'
 
 
@@ -194,7 +196,7 @@ select * from Horario;
 -- INSERTAR
 CREATE OR ALTER PROCEDURE PA_CRUD_InsertarHorario
 (
-    @CodHorario     CHAR(8),
+    @CodHorario     int,
     @HoraInicio     TIME,
     @HoraFin        TIME,
     @Dia            VARCHAR(10),
@@ -250,7 +252,7 @@ GO
 -- MODIFICAR
 CREATE OR ALTER PROCEDURE PA_CRUD_ModificarHorario
 (
-    @CodHorario     CHAR(8),
+    @CodHorario     int,
     @HoraInicio     TIME,
     @Dia            VARCHAR(10),
     @LimitPct       INT,
@@ -301,7 +303,7 @@ GO
 -- ELIMINAR
 CREATE OR ALTER PROCEDURE PA_CRUD_EliminarHorario
 (
-    @CodHorario CHAR(8)
+    @CodHorario int
 )
 AS
 BEGIN
@@ -426,10 +428,10 @@ GO
 
 CREATE OR ALTER PROCEDURE PA_CRUD_InsertarRecepcionista
 (
-    @DniRecep CHAR(8),
+    @DniRecep int,
     @NomRecep VARCHAR(80),
     @ApellRecep VARCHAR(80),
-    @TelfRecep CHAR(9),
+    @TelfRecep numeric (9),
     @Contrasena VARCHAR(20),
     @EsAdmin BIT
 )
@@ -437,7 +439,7 @@ AS
 BEGIN
     IF EXISTS(SELECT 1 FROM Recepcionista WHERE DniRecep = @DniRecep)
     BEGIN
-        RAISERROR('Error: El DNI ya existe en la tabla Recepcionista.', 16, 1);
+        RAISERROR('Error: El Recepcionista ya existe.', 16, 1);
     END
     ELSE
     BEGIN
@@ -451,10 +453,10 @@ GO
 --MODIFICAR un recepcionista existente
 CREATE OR ALTER PROCEDURE PA_CRUD_ModificarRecepcionista
 (
-    @DniRecep CHAR(8),
+    @DniRecep int,
     @NomRecep VARCHAR(80),
     @ApellRecep VARCHAR(80),
-    @TelfRecep CHAR(9),
+    @TelfRecep numeric (9),
     @Contrasena VARCHAR(20),
     @EsAdmin BIT
 )
@@ -462,7 +464,7 @@ AS
 BEGIN
     IF NOT EXISTS(SELECT 1 FROM Recepcionista WHERE DniRecep = @DniRecep)
     BEGIN
-        RAISERROR('Error: El DNI no existe en la tabla Recepcionista.', 16, 1);
+        RAISERROR('Error: El Recepcionista no existe.', 16, 1);
     END
     ELSE
     BEGIN
@@ -481,12 +483,12 @@ GO
 
 --ELIMINAR recepcionista
 CREATE OR ALTER PROCEDURE PA_CRUD_EliminarRecepcionista
-(@DniRecep AS Char(8))
+(@DniRecep AS int)
 AS
 BEGIN
     IF NOT EXISTS(SELECT 1 FROM Recepcionista WHERE DniRecep = @DniRecep)
     BEGIN
-        RAISERROR('Error: El DNI no existe en la tabla Recepcionista.', 16, 1);
+        RAISERROR('Error: El Recepcionista no existe.', 16, 1);
     END
 
     ELSE IF EXISTS(SELECT 1 FROM Cita WHERE DniRecep = @DniRecep)
@@ -502,21 +504,21 @@ BEGIN
 END
 GO
 
---LISTAR recepcionistas con filtro
+--LISTAR recepcionistas 
 CREATE OR ALTER PROCEDURE PA_CRUD_ListarRecepcionista
 AS
 BEGIN
     SELECT * FROM Vw_ListarRecepcionista;
 END
 GO
-
+--LISTAR recepcionistas con filtro
 CREATE OR ALTER PROCEDURE PA_CRUD_ListarRecepcionistaConFiltro
 (@Filtro VARCHAR(150))
 AS
 BEGIN
     SELECT * FROM Vw_ListarRecepcionista
     WHERE 
-        CAST(DNI AS VARCHAR(8)) LIKE '%' + @Filtro + '%' OR 
+        CAST(DNI AS VARint) LIKE '%' + @Filtro + '%' OR 
         Nombres LIKE '%' + @Filtro + '%' OR
         Apellidos LIKE '%' + @Filtro + '%';
 END
@@ -530,10 +532,10 @@ GO
 
 CREATE OR ALTER PROCEDURE PA_CRUD_InsertarPaciente
 (
-    @DniPct         CHAR(8),
+    @DniPct         int,
     @NomPct         VARCHAR(80),
     @ApellPct       VARCHAR(80),
-    @TlfPct         CHAR(9),
+    @TlfPct         numeric (9),
     @GeneroPct      CHAR(1), -- 'M' o 'F'
     @EmailPct       VARCHAR(50),
     @FechNaciPct    DATETIME,
@@ -611,10 +613,10 @@ GO
 
 CREATE OR ALTER PROCEDURE PA_CRUD_ModificarPaciente
 (
-    @DniPct         CHAR(8),
+    @DniPct         int,
     @NomPct         VARCHAR(80),
     @ApellPct       VARCHAR(80),
-    @TlfPct         CHAR(9),
+    @TlfPct         numeric (9),
     @GeneroPct      CHAR(1), -- 'M' o 'F'
     @EmailPct       VARCHAR(50),
     @FechNaciPct    DATETIME,
@@ -702,7 +704,7 @@ GO
 
 CREATE OR ALTER PROCEDURE PA_CRUD_EliminarPaciente
 (
-    @DniPct CHAR(8)
+    @DniPct int
 )
 AS
 BEGIN
@@ -833,11 +835,11 @@ go
 --Insertar
 CREATE OR ALTER PROCEDURE PA_CRUD_InsertarCita
 (
-    @DniRecep        CHAR(8),
+    @DniRecep        int,
     @CodCita         VARCHAR(50),
-    @CodHorario      CHAR(8),
-    @DniPct          CHAR(8),
-    @DniDoc          CHAR(8),
+    @CodHorario      int,
+    @DniPct          int,
+    @DniDoc          int,
     @HoraInicio      TIME(7),
     @HoraFin         TIME(7),
     @FechaCita       DATE,
@@ -877,8 +879,8 @@ GO
 --Modificar
 
 CREATE PROCEDURE PA_CRUD_ModificarCita 
-(@DniRecep char(8),@CodCita varchar(50),@CodHorario char(8),@DniPct char(8),
-    @DniDoc char(8),@HoraInicio time(7),@HoraFin time(7),@FechaCita date,@EstadoCita int,
+(@DniRecep int,@CodCita varchar(50),@CodHorario int,@DniPct int,
+    @DniDoc int,@HoraInicio time(7),@HoraFin time(7),@FechaCita date,@EstadoCita int,
     @TipoAtencion int,@FechaReprogra date,@FechaAnulacion date)
 AS
 BEGIN
@@ -899,8 +901,8 @@ GO
 --Eliminar
 
 CREATE PROCEDURE PA_CRUD_EliminarCita
-(@DniRecep char(8),@CodCita varchar(50),@CodHorario char(8),@DniPct char(8),
-    @DniDoc char(8),@HoraInicio time(7),@HoraFin time(7),@FechaCita date,@EstadoCita int,
+(@DniRecep int,@CodCita varchar(50),@CodHorario int,@DniPct int,
+    @DniDoc int,@HoraInicio time(7),@HoraFin time(7),@FechaCita date,@EstadoCita int,
     @TipoAtencion int,@FechaReprogra date,@FechaAnulacion date)
  AS
  BEGIN
@@ -988,8 +990,8 @@ GO
 --INSERTAR
 
 CREATE PROCEDURE PA_CRUD_InsertarEspecialidadDoctor
-    @CodEspecia CHAR(8), 
-    @DniDoc CHAR(8)
+    @CodEspecia int, 
+    @DniDoc int
 AS
 BEGIN
     IF EXISTS (
@@ -1021,8 +1023,8 @@ GO
 
 -- ELIMINAR
 CREATE PROCEDURE PA_CRUD_EliminarDoctorEspecialidad
-    @CodEspecia CHAR(8),
-    @DniDoc CHAR(8)
+    @CodEspecia int,
+    @DniDoc int
 AS
 BEGIN
     IF NOT EXISTS (
@@ -1089,5 +1091,425 @@ SELECT * FROM Vw_ListarDoctorEspecialidad;
 EXEC PA_CRUD_ListarDoctorEspecialidad;
 EXEC PA_CRUD_ListarDoctorEspecialidadConFiltro @Filtro = 'cardiología';
 EXEC PA_CRUD_ListarDoctorEspecialidadConFiltro @Filtro = 'Carlos';
+-----------------------------------------------------------------------------------------
 
---------------------------------------------------------------------------------------------
+/*ESPECIALIDAD*/
+------------------------------------------------------------------------------------------
+--INSERTAR
+
+CREATE PROCEDURE PA_CRUD_InsertarEspecialidad
+(@CodEspecia AS INT, 
+@Especialidad AS Varchar(120))
+AS
+BEGIN
+
+IF EXISTS(SELECT * FROM Especialidad WHERE CodEspecia=@CodEspecia) BEGIN
+	RAISERROR('Codigo YA Existe en la Tabla Especialidad',16,1)
+	RETURN @@ERROR
+END
+
+INSERT INTO dbo.Especialidad(CodEspecia,Especialidad)
+VALUES (@CodEspecia,@Especialidad)
+END
+GO
+
+--MODIFICAR
+CREATE OR ALTER PROCEDURE PA_CRUD_ModificarEspecialidad
+(@CodEspecia AS INT, 
+@Especialidad AS Varchar(120))
+AS
+BEGIN
+
+IF NOT EXISTS(SELECT * FROM Especialidad WHERE CodEspecia=@CodEspecia) BEGIN
+	RAISERROR('Codigo NO Existe en la Tabla Especialidad',16,1)
+	RETURN @@ERROR
+END
+
+UPDATE dbo.Especialidad
+   SET Especialidad = @Especialidad
+WHERE CodEspecia=@CodEspecia
+
+END
+GO
+
+--ELIMINAR
+CREATE OR ALTER PROCEDURE PA_CRUD_EliminarEspecialidad
+(@CodEspecia AS int)
+AS
+BEGIN
+
+IF NOT EXISTS(SELECT * FROM Especialidad WHERE CodEspecia=@CodEspecia) BEGIN
+	RAISERROR('Codigo NO Existe en la Tabla Especialidad',16,1)
+	RETURN @@ERROR
+END
+
+IF EXISTS(SELECT * FROM Especialidad_Doctor WHERE CodEspecia=@CodEspecia) BEGIN
+	RAISERROR('No se puede Eliminar por que ya esta relacionado con los Doctores',16,1)
+	RETURN @@ERROR
+END
+
+DELETE FROM Especialidad
+WHERE CodEspecia=@CodEspecia
+END
+GO
+
+--LISTAR SIN FILTRO
+CREATE OR ALTER PROCEDURE PA_CRUD_ListarEspecialidad
+AS
+BEGIN
+SELECT * FROM Vw_ListarEspecialidad
+END
+GO
+
+--LISTAR CON FILTRO
+CREATE PROCEDURE PA_CRUD_ListarEspecialidadConFiltro
+(@Filtro Varchar(150))
+AS
+BEGIN
+SELECT * FROM Vw_ListarEspecialidad
+WHERE [Codigo]+[Nombre Especialidad] LIKE '%'+@Filtro+'%'
+END
+GO
+--CREAR VISTA
+
+CREATE VIEW Vw_ListarEspecialidad
+AS
+	SELECT CodEspecia AS 'Codigo', Especialidad AS 'Nombre Especialidad'
+	FROM Especialidad
+GO
+
+-------------------------------------------------------------------------------------
+/*DOCTOR */
+------------------------------------------------------------------------------------
+--INSERT
+CREATE or alter PROCEDURE PA_insert_Doctor
+(
+    @dni            int,
+    @nombre         VARCHAR(50),
+    @apellido       VARCHAR(50),
+    @codconsultorio int,
+    @correo         VARCHAR(120),
+    @celular        numeric (9)
+)
+AS
+BEGIN
+    -- Verificar existencia del consultorio
+    IF NOT EXISTS (SELECT 1 FROM Consultorio WHERE CodConst = @codconsultorio)
+    BEGIN
+        RAISERROR('No se encontró el consultorio.', 16, 1);
+        RETURN @@ERROR;
+    END
+
+    -- Insertar doctor
+    INSERT INTO Doctor (
+        DniDoc, NomDoc, ApellDoc, CodConst, CorreoDoctor, TelfDoctor
+    )
+    VALUES (
+        @dni, @nombre, @apellido, @codconsultorio, @correo, @celular
+    );
+
+    RETURN 0;
+END
+GO
+
+
+
+--ELIMINAR
+
+CREATE OR ALTER PROCEDURE PA_delete_Doctor
+(
+    @dni int
+)
+AS
+BEGIN
+    -- Validación: si el doctor está referenciado en Doctor_Horario, no permitir eliminar
+    IF EXISTS (SELECT 1 FROM Doctor_Horario WHERE DniDoc = @dni)
+    BEGIN
+        RAISERROR('El doctor está siendo usado en Doctor_Horario', 16, 1);
+        RETURN @@ERROR;
+    END
+
+    -- Validación opcional: si no existe el doctor
+    IF NOT EXISTS (SELECT 1 FROM Doctor WHERE DniDoc = @dni)
+    BEGIN
+        RAISERROR('El doctor no existe', 16, 1);
+        RETURN @@ERROR;
+    END
+
+    -- Eliminación
+    DELETE FROM Doctor
+    WHERE DniDoc = @dni;
+
+    RETURN 0;
+END
+GO
+
+
+--vista
+CREATE OR ALTER VIEW Vw_ListarDoctores
+AS
+SELECT
+    d.DniDoc                  AS DNI,
+    d.NomDoc                 AS Nombre,
+    d.ApellDoc               AS Apellido,
+    e.Especialidad           AS Especialidad,
+    d.CodConst               AS CodConsultorio,
+    d.CorreoDoctor           AS Correo,
+    d.TelfDoctor             AS Telefono
+FROM Doctor d
+INNER JOIN Especialidad_Doctor ed ON d.DniDoc = ed.DniDoc
+INNER JOIN Especialidad e         ON ed.CodEspecia = e.CodEspecia;
+GO
+
+
+--listar
+--sin filtro
+CREATE OR ALTER PROCEDURE PA_ListarDoctores
+AS
+BEGIN
+    SELECT * FROM Vw_ListarDoctores;
+END
+GO
+--con filtro
+CREATE OR ALTER PROCEDURE PA_ListarDoctoresConFiltro
+(
+    @Filtro VARCHAR(150)
+)
+AS
+BEGIN
+    SELECT *
+    FROM Vw_ListarDoctores
+    WHERE 
+        DNI LIKE '%' + @Filtro + '%' OR
+        Nombre LIKE '%' + @Filtro + '%' OR
+        Apellido LIKE '%' + @Filtro + '%' OR
+        Especialidad LIKE '%' + @Filtro + '%' OR
+        CodConsultorio LIKE '%' + @Filtro + '%' OR
+        Correo LIKE '%' + @Filtro + '%' OR
+        Telefono LIKE '%' + @Filtro + '%';
+END
+GO
+
+
+--modificar
+CREATE or alter  PROCEDURE PA_actualizacion_Doctor
+(
+    @dni INT,
+    @nombre VARCHAR(50),
+    @apellido VARCHAR(50),
+    @codconsultorio int,
+    @correo VARCHAR(120),
+    @celular numeric (9)
+)
+AS
+BEGIN
+    -- Validar existencia del doctor
+    IF NOT EXISTS (SELECT 1 FROM Doctor WHERE DniDoc = @dni)
+    BEGIN
+        RAISERROR('El doctor no existe.', 16, 1);
+        RETURN @@ERROR;
+    END
+
+    -- Validar existencia del consultorio
+    IF NOT EXISTS (SELECT 1 FROM Consultorio WHERE CodConst = @codconsultorio)
+    BEGIN
+        RAISERROR('No se encontró el consultorio.', 16, 1);
+        RETURN @@ERROR;
+    END
+
+    -- Actualizar datos del doctor
+    UPDATE Doctor
+    SET 
+        NomDoc = @nombre,
+        ApellDoc = @apellido,
+        CodConst = @codconsultorio,
+        CorreoDoctor = @correo,
+        TelfDoctor = @celular
+    WHERE DniDoc = @dni;
+
+    RETURN 0;
+END
+GO
+
+
+-----------------------------------------
+--CRUD HORARIO_DOCTOR
+-----------------------------------
+
+--INSERTAR
+CREATE OR ALTER PROCEDURE PA_CRUD_InsertarDoctorHorario
+    @CodHorario INT, 
+    @DniDoc INT
+AS
+BEGIN
+    -- Validar si ya existe la relación
+    IF EXISTS (
+        SELECT 1
+        FROM Doctor_Horario 
+        WHERE CodHorario = @CodHorario AND DniDoc = @DniDoc
+    )
+    BEGIN
+        RAISERROR('Esta relación entre doctor y horario ya existe.', 16, 1);
+        RETURN @@ERROR;
+    END
+
+    -- Validar existencia del horario
+    IF NOT EXISTS (
+        SELECT 1
+        FROM Horario 
+        WHERE CodHorario = @CodHorario
+    )
+    BEGIN
+        RAISERROR('El horario no existe.', 16, 1);
+        RETURN @@ERROR;
+    END
+
+    -- Validar existencia del doctor
+    IF NOT EXISTS (
+        SELECT 1
+        FROM Doctor 
+        WHERE DniDoc = @DniDoc
+    )
+    BEGIN
+        RAISERROR('El doctor no existe.', 16, 1);
+        RETURN @@ERROR;
+    END
+
+    -- Insertar relación
+    INSERT INTO Doctor_Horario (CodHorario, DniDoc)
+    VALUES (@CodHorario, @DniDoc);
+END
+GO
+
+
+-- ELIMINAR
+CREATE PROCEDURE PA_CRUD_EliminarDoctorEspecialidad
+    @CodEspecia int,
+    @DniDoc int
+AS
+BEGIN
+    IF NOT EXISTS (
+        SELECT * 
+        FROM Especialidad_Doctor 
+        WHERE CodEspecia = @CodEspecia AND DniDoc = @DniDoc
+    )
+    BEGIN
+        RAISERROR('Esta relación no existe.', 16, 1)
+        RETURN @@ERROR
+    END
+
+    DELETE FROM Especialidad_Doctor
+    WHERE CodEspecia = @CodEspecia AND DniDoc = @DniDoc
+END
+GO
+
+
+
+--LISTAR
+--SIN FILTRO
+
+CREATE OR ALTER PROCEDURE PA_CRUD_ListarDoctorEspecialidad
+AS
+BEGIN
+    SELECT * 
+    FROM Vw_ListarDoctorEspecialidad;
+END
+GO
+--CON FILTRO
+CREATE OR ALTER PROCEDURE PA_CRUD_ListarDoctorEspecialidadConFiltro
+    @Filtro VARCHAR(150)
+AS
+BEGIN
+    SELECT * 
+    FROM Vw_ListarDoctorEspecialidad
+    WHERE 
+        [ID especialidad] LIKE '%' + @Filtro + '%' OR
+        [Especialidad] LIKE '%' + @Filtro + '%' OR
+        [DNI del Doctor] LIKE '%' + @Filtro + '%' OR
+        [Nombre del Doctor] LIKE '%' + @Filtro + '%';
+END
+GO
+
+
+
+
+--CREAR LA VISTA
+CREATE OR ALTER VIEW Vw_ListarDoctorEspecialidad
+AS
+SELECT 
+    ed.CodEspecia             AS [ID especialidad],
+    e.Especialidad            AS [Especialidad],
+    d.DniDoc                  AS [DNI del Doctor],
+    d.NomDoc + ' ' + d.ApellDoc AS [Nombre del Doctor]
+FROM 
+    Especialidad_Doctor ed
+    INNER JOIN Especialidad e ON ed.CodEspecia = e.CodEspecia
+    INNER JOIN Doctor d       ON ed.DniDoc = d.DniDoc;
+GO
+
+--eliminar
+CREATE or alter PROCEDURE PA_CRUD_EliminarDoctorHorario
+    @DniDoc INT,
+    @CodHorario INT
+AS
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM Doctor_Horario
+        WHERE DniDoc = @DniDoc AND CodHorario = @CodHorario
+    )
+    BEGIN
+        RAISERROR('La relación doctor-horario no existe.', 16, 1)
+        RETURN @@ERROR
+    END
+
+    DELETE FROM Doctor_Horario
+    WHERE DniDoc = @DniDoc AND CodHorario = @CodHorario
+END
+GO
+
+--vistas
+CREATe OR ALTER VIEW Vw_ListarDoctorHorario
+AS
+SELECT 
+    dh.DniDoc,
+    d.NomDoc + ' ' + d.ApellDoc AS NombreDoctor,
+    d.CorreoDoctor,
+    d.TelfDoctor,
+    h.CodHorario,
+    h.Dia,
+    h.HoraInicio,
+    h.HoraFin,
+    h.LimitPct,
+    h.IdTurnoHorario,
+    h.EstadoHorario
+FROM 
+    Doctor_Horario dh
+    INNER JOIN Doctor d ON dh.DniDoc = d.DniDoc
+    INNER JOIN Horario h ON dh.CodHorario = h.CodHorario
+GO
+
+--listar sin filtro
+
+CREATE or alter PROCEDURE PA_CRUD_ListarDoctorHorario
+AS
+BEGIN
+    SELECT * FROM Vw_ListarDoctorHorario
+END
+GO
+
+--listar con filtro
+CREATE PROCEDURE PA_CRUD_ListarDoctorHorarioConFiltro
+    @Filtro VARCHAR(100)
+AS
+BEGIN
+    SELECT * 
+    FROM Vw_ListarDoctorHorario
+    WHERE 
+        CAST(DniDoc AS VARCHAR) LIKE '%' + @Filtro + '%' OR
+        NombreDoctor LIKE '%' + @Filtro + '%' OR
+        CorreoDoctor LIKE '%' + @Filtro + '%' OR
+        TelfDoctor LIKE '%' + @Filtro + '%' OR
+        CAST(CodHorario AS VARCHAR) LIKE '%' + @Filtro + '%' OR
+        Dia LIKE '%' + @Filtro + '%'
+END
+GO
