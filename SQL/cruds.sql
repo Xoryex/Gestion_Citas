@@ -149,7 +149,7 @@ END
 GO
 
 
---LISTAR
+--LISTAR con filtro
 CREATE OR ALTER PROCEDURE PA_CRUD_ListarConsultaConFiltro
 (
     @Filtro VARCHAR(150)
@@ -161,6 +161,16 @@ BEGIN
     WHERE 
         Codigo LIKE '%' + @Filtro + '%' OR
         NombreConsultorio LIKE '%' + @Filtro + '%'
+END
+GO
+
+
+--filtrar sin filtro
+CREATE OR ALTER PROCEDURE PA_CRUD_ListarConsulta
+AS
+BEGIN
+    SELECT * 
+    FROM Vw_ListarConsulta
 END
 GO
 
@@ -197,9 +207,9 @@ select * from Horario;
 CREATE OR ALTER PROCEDURE PA_CRUD_InsertarHorario
 (
     @CodHorario     int,
+    @Dia            VARCHAR(10),
     @HoraInicio     TIME,
     @HoraFin        TIME,
-    @Dia            VARCHAR(10),
     @LimitPct       INT,
     @EstadoHorario  BIT
 )

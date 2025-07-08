@@ -3,10 +3,8 @@ import java.awt.*;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-
 import utils.Conexion;
 
 public class pnlPacienteMant extends JPanel {
@@ -115,7 +113,7 @@ public class pnlPacienteMant extends JPanel {
 
             try {
                 if (conn != null) {
-                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_InsertarPaciente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_InsertarPaciente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
                     stmt.setString(1, dni);
                     stmt.setString(2, nombre);
                     stmt.setString(3, apellido);

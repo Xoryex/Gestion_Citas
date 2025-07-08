@@ -21,7 +21,7 @@ public class pnlHorarioMant extends JPanel {
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createTitledBorder("Mantenimiento de Horarios"));
         
-        String[] columnas = {"ID Horario", "Día", "Hora Inicio", "Hora Fin", "Límite de Pacientes", "Estado del Horario", "Turno"};
+        String[] columnas = {"ID Horario", "Día", "Hora Inicio", "Hora Fin", "Límite de Pacientes", "Estado del Horario"};
         modelHorario = new DefaultTableModel(columnas, 0);
         tblHorario = new JTable(modelHorario);
         
@@ -47,7 +47,7 @@ public class pnlHorarioMant extends JPanel {
         JTextField txtHoraFin = new JTextField();
         JTextField txtLimitePacientes = new JTextField();
         JTextField txtEstado = new JTextField();
-        JTextField txtTurno = new JTextField();
+        
 
         Object[] mensaje = {
             "ID Horario:", txtID,
@@ -55,8 +55,8 @@ public class pnlHorarioMant extends JPanel {
             "Hora Inicio:", txtHoraInicio,
             "Hora Fin:", txtHoraFin,
             "Límite de Pacientes:", txtLimitePacientes,
-            "Estado del Horario:", txtEstado,
-            "Turno:", txtTurno
+            "Estado del Horario:", txtEstado
+            
         };
 
         int opcion = JOptionPane.showConfirmDialog(this, mensaje, "Agregar Horario", JOptionPane.OK_CANCEL_OPTION);
@@ -68,23 +68,23 @@ public class pnlHorarioMant extends JPanel {
             String horaFin = txtHoraFin.getText().trim();
             String limite = txtLimitePacientes.getText().trim();
             String estado = txtEstado.getText().trim();
-            String turno = txtTurno.getText().trim();
+            
 
-            if (id.isEmpty() || dia.isEmpty() || horaInicio.isEmpty() || horaFin.isEmpty() || limite.isEmpty() || estado.isEmpty() || turno.isEmpty()) {
+            if (id.isEmpty() || dia.isEmpty() || horaInicio.isEmpty() || horaFin.isEmpty() || limite.isEmpty() || estado.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.");
                 return;
             }
 
             try {
                 if (conn != null) {
-                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_InsertarHorario(?, ?, ?, ?, ?, ?, ?)}");
+                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_InsertarHorario(?, ?, ?, ?, ?, ?)}");
                     stmt.setString(1, id);
                     stmt.setString(2, dia);
                     stmt.setString(3, horaInicio);
                     stmt.setString(4, horaFin);
                     stmt.setString(5, limite);
                     stmt.setString(6, estado);
-                    stmt.setString(7, turno);
+                    
 
                     stmt.execute();
 
@@ -115,14 +115,14 @@ public class pnlHorarioMant extends JPanel {
         String horaFinActual = modelHorario.getValueAt(filaSeleccionada, 3).toString();
         String limiteActual = modelHorario.getValueAt(filaSeleccionada, 4).toString();
         String estadoActual = modelHorario.getValueAt(filaSeleccionada, 5).toString();
-        String turnoActual = modelHorario.getValueAt(filaSeleccionada, 6).toString();
+        
 
         JTextField txtDia = new JTextField(diaActual);
         JTextField txtHoraInicio = new JTextField(horaInicioActual);
         JTextField txtHoraFin = new JTextField(horaFinActual);
         JTextField txtLimitePacientes = new JTextField(limiteActual);
         JTextField txtEstado = new JTextField(estadoActual);
-        JTextField txtTurno = new JTextField(turnoActual);
+       
 
         Object[] mensaje = {
             "ID Horario (no editable): " + idActual,
@@ -130,8 +130,7 @@ public class pnlHorarioMant extends JPanel {
             "Hora Inicio:", txtHoraInicio,
             "Hora Fin:", txtHoraFin,
             "Límite de Pacientes:", txtLimitePacientes,
-            "Estado del Horario:", txtEstado,
-            "Turno:", txtTurno
+            "Estado del Horario:", txtEstado
         };
 
         int opcion = JOptionPane.showConfirmDialog(this, mensaje, "Actualizar Horario", JOptionPane.OK_CANCEL_OPTION);
@@ -142,23 +141,23 @@ public class pnlHorarioMant extends JPanel {
             String horaFin = txtHoraFin.getText().trim();
             String limite = txtLimitePacientes.getText().trim();
             String estado = txtEstado.getText().trim();
-            String turno = txtTurno.getText().trim();
+            
 
-            if (dia.isEmpty() || horaInicio.isEmpty() || horaFin.isEmpty() || limite.isEmpty() || estado.isEmpty() || turno.isEmpty()) {
+            if (dia.isEmpty() || horaInicio.isEmpty() || horaFin.isEmpty() || limite.isEmpty() || estado.isEmpty() ) {
                 JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.");
                 return;
             }
 
             try {
                 if (conn != null) {
-                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_ActualizarHorario(?, ?, ?, ?, ?, ?, ?)}");
+                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_ActualizarHorario(?, ?, ?, ?, ?, ?)}");
                     stmt.setString(1, idActual);
                     stmt.setString(2, dia);
                     stmt.setString(3, horaInicio);
                     stmt.setString(4, horaFin);
                     stmt.setString(5, limite);
                     stmt.setString(6, estado);
-                    stmt.setString(7, turno);
+                    
 
                     stmt.execute();
 
@@ -220,8 +219,8 @@ public class pnlHorarioMant extends JPanel {
                     String horaFin = rs.getString("HoraFin");
                     String limite = rs.getString("LimitePacientes");
                     String estado = rs.getString("EstadoHorario");
-                    String turno = rs.getString("Turno");
-                    modelHorario.addRow(new Object[]{id, dia, horaInicio, horaFin, limite, estado, turno});
+                    
+                    modelHorario.addRow(new Object[]{id, dia, horaInicio, horaFin, limite, estado});
                 }
                 rs.close();
                 stmt.close();
