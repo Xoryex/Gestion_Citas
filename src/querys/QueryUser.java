@@ -18,7 +18,7 @@ public class QueryUser implements Query<Recepcionista> {
    @Override
    public void Insetar(Recepcionista persona) {
       try {
-         CallableStatement cstm = Conexion.getConnection().prepareCall("{call paInsertRecepcionista(?,?,?,?,?,?)}");
+         CallableStatement cstm = Conexion.getConnection().prepareCall("{call PA_CRUD_InsertarRecepcionista(?,?,?,?,?,?)}");
          cstm.setInt(1, persona.getDni());
          cstm.setString(2, persona.getNombre());
          cstm.setString(3, persona.getApellido());
@@ -50,7 +50,7 @@ public class QueryUser implements Query<Recepcionista> {
    public boolean IniciarSesion(int dni, String contraseña) {
       
          try {
-            CallableStatement cstm = Conexion.getConnection().prepareCall("{call paSelectRecepcionista(?,?)}");
+            CallableStatement cstm = Conexion.getConnection().prepareCall("{call PA_LoginRecepcionista(?,?)}");
             cstm.setInt(1, dni);
             cstm.setString(2, contraseña);
             ResultSet rs = cstm.executeQuery();

@@ -3,6 +3,7 @@ package views.panelesinicio;
 import views.herramientasconsultareporte.*;
 import java.awt.*;
 import javax.swing.*;
+import java.awt.event.*;
 
 public class PanelConsulta extends JPanel {
     // Paneles específicos para cada tipo de consulta
@@ -18,7 +19,8 @@ public class PanelConsulta extends JPanel {
 
     // Cabecera y botones
     private JPanel pnlCabeceraConsult;
-    private JPanel pnlBotonConsult;
+    
+   //private JPanel pnlBotonConsult;
 
     // Componentes de cabecera
     private JLabel lblConsltPor;
@@ -79,27 +81,31 @@ public class PanelConsulta extends JPanel {
         add(pnlVentanasConsultas, BorderLayout.CENTER);
 
         // 🎯 Manejador de evento para el ComboBox
-        cbxConsulta.addActionListener(e -> {
-            String seleccion = (String) cbxConsulta.getSelectedItem();
-            if (seleccion != null) {
-                tablaConsult.show(pnlVentanasConsultas, seleccion);
-                // Actualizar interfaz para evitar problemas de renderizado
-                SwingUtilities.updateComponentTreeUI(this);
-                this.repaint();
+        cbxConsulta.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String seleccion = (String) cbxConsulta.getSelectedItem();
+                if (seleccion != null) {
+                    tablaConsult.show(pnlVentanasConsultas, seleccion);
+                    // Actualizar interfaz para evitar problemas de renderizado
+                    SwingUtilities.updateComponentTreeUI(pnlVentanasConsultas);
+                
             }
-        });
+        }});
 
         // Agregar funcionalidad al botón filtrar
-        btnFiltroConsulta.addActionListener(e -> {
-            String textoBusqueda = txtBuscarConsult.getText().trim();
-            if (!textoBusqueda.isEmpty()) {
-                // Aquí puedes agregar la lógica de filtrado
-                JOptionPane.showMessageDialog(this, 
-                    "Buscando: " + textoBusqueda, 
+        btnFiltroConsulta.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String textoBusqueda = txtBuscarConsult.getText().trim();
+                if (!textoBusqueda.isEmpty()) {
+                    // Aquí puedes agregar la lógica de filtrado
+                    JOptionPane.showMessageDialog(null,
+                        "Buscando: " + textoBusqueda,
                     "Filtro", 
                     JOptionPane.INFORMATION_MESSAGE);
             }
-        });
+        }});
 
         // Mostrar por defecto
         tablaConsult.show(pnlVentanasConsultas, "Cita");
