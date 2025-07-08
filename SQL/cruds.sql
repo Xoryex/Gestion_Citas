@@ -319,22 +319,45 @@ GO
 
 
 -- LISTAR CON FILTRO
-CREATE OR ALTER PROCEDURE PA_CRUD_ListarHorarioConFiltro
-(
-    @Filtro VARCHAR(150)
-)
+CREATE OR ALTER PROCEDURE PA_CRUD_ListarHorarioConFiltro 
+    @FiltroTexto NVARCHAR(100) = NULL
 AS
 BEGIN
-    SELECT * 
-    FROM Vw_ListarHorario
+    SET NOCOUNT ON;
+    
+    SELECT 
+        h.CodHorario AS [ID Horario],
+        h.HoraInicio AS [Hora Inicio],
+        h.HoraFin AS [Hora Fin],
+        h.Dia AS [Día],
+        h.LimitPct AS [Límite de Pacientes],
+        h.EstadoHorario AS [Estado del Horario],
+        d.DniDoc AS [DNI del Doctor],
+        d.NomDoc AS [Nombre del Doctor],
+        c.NomConst AS [Consultorio]
+    FROM dbo.Horario h
+    LEFT JOIN dbo.Doctor_Horario dh ON h.CodHorario = dh.CodHorario
+    LEFT JOIN dbo.Doctor d ON dh.DniDoc = d.DniDoc
+    LEFT JOIN dbo.Consultorio c ON d.CodConst = c.CodConst
     WHERE 
-        Codigo LIKE '%' + @Filtro + '%' OR
-        Dia LIKE '%' + @Filtro + '%' OR
-        Turno LIKE '%' + @Filtro + '%' OR
-        HoraInicio LIKE '%' + @Filtro + '%' OR
-        HoraFin LIKE '%' + @Filtro + '%';
+        (@FiltroTexto IS NULL OR @FiltroTexto = '') OR
+        (
+            h.CodHorario LIKE '%' + @FiltroTexto + '%' OR
+            h.Dia LIKE '%' + @FiltroTexto + '%' OR
+            CAST(h.HoraInicio AS NVARCHAR) LIKE '%' + @FiltroTexto + '%' OR
+            CAST(h.HoraFin AS NVARCHAR) LIKE '%' + @FiltroTexto + '%' OR
+            CAST(h.LimitPct AS NVARCHAR) LIKE '%' + @FiltroTexto + '%' OR
+            h.EstadoHorario LIKE '%' + @FiltroTexto + '%' OR
+            d.DniDoc LIKE '%' + @FiltroTexto + '%' OR
+            d.NomDoc LIKE '%' + @FiltroTexto + '%' OR
+            c.NomConst LIKE '%' + @FiltroTexto + '%'
+        )
+    ORDER BY 
+        h.CodHorario, 
+        h.Dia, 
+        h.HoraInicio;
 END
-GO
+go
 
 
 -------------------------------------------------------------------------------------------

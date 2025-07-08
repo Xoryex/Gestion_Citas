@@ -82,15 +82,15 @@ public class pnlTblHorario extends JPanel {
             // Cargar datos del ResultSet
             while (rs.next()) {
                 Object[] fila = new Object[9];
-                fila[0] = rs.getString("id_horario");
-                fila[1] = rs.getString("hora_inicio");
-                fila[2] = rs.getString("hora_fin");
-                fila[3] = rs.getString("dia");
-                fila[4] = rs.getInt("limite_pacientes");
-                fila[5] = rs.getString("estado_horario");
-                fila[6] = rs.getString("dni_doctor");
-                fila[7] = rs.getString("nombre_doctor");
-                fila[8] = rs.getString("consultorio");
+                fila[0] = rs.getString("ID Horario");
+                fila[1] = rs.getString("Hora Inicio");
+                fila[2] = rs.getString("Hora Fin");
+                fila[3] = rs.getString("Día");
+                fila[4] = rs.getInt("Límite de Pacientes");
+                fila[5] = rs.getString("Estado del Horario");
+                fila[6] = rs.getString("DNI del Doctor");
+                fila[7] = rs.getString("Nombre del Doctor");
+                fila[8] = rs.getString("Consultorio");
                 
                 modelo.addRow(fila);
             }
