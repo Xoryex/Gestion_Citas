@@ -8,7 +8,7 @@ import java.sql.*;
 
 import static querys.QueryUser.usuario_actual;
 import utils.*;
-import views.APLICACION;
+
 import views.Init;
 
 public class PanelConfiguracion extends JPanel {
@@ -32,7 +32,7 @@ public class PanelConfiguracion extends JPanel {
     private JTextField txtConfirmarContrasenaConf;
 
     // Declaración de botones
-    private JButton btnCancelarConf;
+    
     private JButton btnEliminarUsuario;
     private JButton btnAceptarConf;
 
@@ -62,7 +62,7 @@ public class PanelConfiguracion extends JPanel {
         txtDNIConf.setText(String.valueOf(usuario_actual.getDni()));
         txtApellidoConf.setText(usuario_actual.getApellido());
         txtNombreConf.setText(usuario_actual.getNombre());
-        
+
         eventos();
         // Añadir componentes al panel cabecera
         pnlCabeceraConf.add(lblDNIConf);
@@ -86,7 +86,6 @@ public class PanelConfiguracion extends JPanel {
         btnEliminarUsuario = new JButton("Eliminar Usuario");
         btnAceptarConf = new JButton("Aceptar");
 
-        
         pnlBotonConf.add(btnEliminarUsuario);
         pnlBotonConf.add(btnAceptarConf);
 
@@ -96,9 +95,6 @@ public class PanelConfiguracion extends JPanel {
 
     public void eventos() {
         // Aquí puedes añadir los eventos de los botones
-        
-
-        
 
         txtNombreConf.addKeyListener(new KeyAdapter() {
             @Override
@@ -152,37 +148,40 @@ public class PanelConfiguracion extends JPanel {
             }
         });
 
+        btnEliminarUsuario.addActionListener(new ActionListener() {
 
-        btnEliminarUsuario.addActionListener( new ActionListener() {
-            
             @Override
-            
-            if(!txtContrasenaActual.getText().equals(usuario_actual.getContraseña())) {
-                // Mostrar mensaje de error
-                JOptionPane.showMessageDialog(this, "La contraseña actual es incorrecta.", "Error", JOptionPane.ERROR_MESSAGE);
-            } else {
-                // Eliminar usuario
-                try {
-                    CallableStatement cstm=Conexion.getConnection().prepareCall("{call  PA_CRUD_EliminarRecepcionista ? }");
-                    cstm.setInt(1,usuario_actual.getDni());
-                    cstm.executeUpdate();
-                    
+            public void actionPerformed(ActionEvent e) {
+                if (!txtContrasenaActual.getText().equals(usuario_actual.getContraseña())) {
+                    // Mostrar mensaje de error
+                    JOptionPane.showMessageDialog(null, "La contraseña actual es incorrecta.", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                } else {
+                    // Eliminar usuario
+                    try {
+                        CallableStatement cstm = Conexion.getConnection()
+                                .prepareCall("{call  PA_CRUD_EliminarRecepcionista ? }");
+                        cstm.setInt(1, usuario_actual.getDni());
+                        cstm.executeUpdate();
 
-                } catch (SQLException e) {
-                    // TODO: handle exception
-                    JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    return ;
+                    } catch (SQLException ex) {
+                        // TODO: handle exception
+                        JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    Window ventana = SwingUtilities.getWindowAncestor(btnEliminarUsuario);
+                    new Init();
+                    ventana.dispose();
                 }
 
-                Window ventana = SwingUtilities.getWindowAncestor(this);
-                new Init();
-                ventana.dispose();
             }
+
         });
 
         btnAceptarConf.addActionListener(e -> {
             // Acción al aceptar cambios
         });
 
-}
+    }
 }
