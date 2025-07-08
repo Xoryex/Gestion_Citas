@@ -1,4 +1,4 @@
-package PanelesInicio;
+package views.panelesinicio;
 import java.awt.*;
 import javax.swing.*;
 
@@ -14,8 +14,7 @@ public class PanelInicio extends JPanel {
         // Tabla con datos
         String[] columnas = {"ID", "Paciente", "Fecha", "Hora", "Estado"};
         Object[][] datos = {
-            {"1", "Juan Pérez", "2025-07-06", "09:00", "Pendiente"},
-            {"2", "Ana López", "2025-07-07", "10:30", "Confirmada"}
+            
         };
         JTable tablaInicio = new JTable(datos, columnas);
         JScrollPane scrollTabla = new JScrollPane(tablaInicio);

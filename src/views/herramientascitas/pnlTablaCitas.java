@@ -1,4 +1,4 @@
-package HerramientasCitas;
+package views.herramientascitas;
 
 import java.awt.*;
 import javax.swing.*;

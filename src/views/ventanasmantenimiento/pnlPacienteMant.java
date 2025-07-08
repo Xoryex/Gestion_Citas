@@ -1,4 +1,4 @@
-package ventanasmantenimiento;
+package views.ventanasmantenimiento;
 import java.awt.*;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-import src.utils.Conexion;
+import utils.Conexion;
 
 public class pnlPacienteMant extends JPanel {
     private JTable tblPaciente;
@@ -23,7 +23,7 @@ public class pnlPacienteMant extends JPanel {
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createTitledBorder("Mantenimiento de Pacientes"));
         
-        String[] columnas = {"DNI", "Nombre Comp.", "Teléfono", "Género", "Email", "Fecha de Nac.", 
+        String[] columnas = {"DNI", "Nombre Comp.", "Apellido" ,"Teléfono", "Género", "Email", "Fecha de Nac.", 
                            "Dirección", "Ocupación", "Grupo Sanguín.", "Procedencia", "Estado Civil", 
                            "Grupo Étnico", "Centro de trab.", "Grado de Instru.", "Hijos"};
         modelPaciente = new DefaultTableModel(columnas, 0);
@@ -51,6 +51,7 @@ public class pnlPacienteMant extends JPanel {
     public void agregar() {
         JTextField txtDNI = new JTextField();
         JTextField txtNombre = new JTextField();
+        JTextField txtApellido = new JTextField();
         JTextField txtTelefono = new JTextField();
         JTextField txtGenero = new JTextField();
         JTextField txtEmail = new JTextField();
@@ -68,6 +69,7 @@ public class pnlPacienteMant extends JPanel {
         Object[] mensaje = {
             "DNI:", txtDNI,
             "Nombre Comp.:", txtNombre,
+            "Apellido: ", txtApellido,
             "Teléfono:", txtTelefono,
             "Género:", txtGenero,
             "Email:", txtEmail,
@@ -88,6 +90,7 @@ public class pnlPacienteMant extends JPanel {
         if (opcion == JOptionPane.OK_OPTION) {
             String dni = txtDNI.getText().trim();
             String nombre = txtNombre.getText().trim();
+            String apellido = txtApellido.getText().trim();
             String telefono = txtTelefono.getText().trim();
             String genero = txtGenero.getText().trim();
             String email = txtEmail.getText().trim();
@@ -102,7 +105,7 @@ public class pnlPacienteMant extends JPanel {
             String gradoInstruccion = txtGradoInstruccion.getText().trim();
             String hijos = txtHijos.getText().trim();
 
-            if (dni.isEmpty() || nombre.isEmpty() || telefono.isEmpty() || genero.isEmpty() || email.isEmpty() ||
+            if (dni.isEmpty() || nombre.isEmpty() || apellido.isEmpty() || telefono.isEmpty() || genero.isEmpty() || email.isEmpty() ||
                 fechaNac.isEmpty() || direccion.isEmpty() || ocupacion.isEmpty() || grupoSang.isEmpty() ||
                 procedencia.isEmpty() || estadoCivil.isEmpty() || grupoEtnico.isEmpty() || centroTrabajo.isEmpty() ||
                 gradoInstruccion.isEmpty() || hijos.isEmpty()) {
@@ -115,19 +118,20 @@ public class pnlPacienteMant extends JPanel {
                     CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_InsertarPaciente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
                     stmt.setString(1, dni);
                     stmt.setString(2, nombre);
-                    stmt.setString(3, telefono);
-                    stmt.setString(4, genero);
-                    stmt.setString(5, email);
-                    stmt.setString(6, fechaNac);
-                    stmt.setString(7, direccion);
-                    stmt.setString(8, ocupacion);
-                    stmt.setString(9, grupoSang);
-                    stmt.setString(10, procedencia);
-                    stmt.setString(11, estadoCivil);
-                    stmt.setString(12, grupoEtnico);
-                    stmt.setString(13, centroTrabajo);
-                    stmt.setString(14, gradoInstruccion);
-                    stmt.setString(15, hijos);
+                    stmt.setString(3, apellido);
+                    stmt.setString(4, telefono);
+                    stmt.setString(5, genero);
+                    stmt.setString(6, email);
+                    stmt.setString(7, fechaNac);
+                    stmt.setString(8, direccion);
+                    stmt.setString(9, ocupacion);
+                    stmt.setString(10, grupoSang);
+                    stmt.setString(11, procedencia);
+                    stmt.setString(12, estadoCivil);
+                    stmt.setString(13, grupoEtnico);
+                    stmt.setString(14, centroTrabajo);
+                    stmt.setString(15, gradoInstruccion);
+                    stmt.setString(16, hijos);
 
                     stmt.execute();
 
@@ -153,21 +157,23 @@ public class pnlPacienteMant extends JPanel {
 
         String dniActual = modelPaciente.getValueAt(filaSeleccionada, 0).toString();
         String nombreActual = modelPaciente.getValueAt(filaSeleccionada, 1).toString();
-        String telefonoActual = modelPaciente.getValueAt(filaSeleccionada, 2).toString();
-        String generoActual = modelPaciente.getValueAt(filaSeleccionada, 3).toString();
-        String emailActual = modelPaciente.getValueAt(filaSeleccionada, 4).toString();
-        String fechaNacActual = modelPaciente.getValueAt(filaSeleccionada, 5).toString();
-        String direccionActual = modelPaciente.getValueAt(filaSeleccionada, 6).toString();
-        String ocupacionActual = modelPaciente.getValueAt(filaSeleccionada, 7).toString();
-        String grupoSangActual = modelPaciente.getValueAt(filaSeleccionada, 8).toString();
-        String procedenciaActual = modelPaciente.getValueAt(filaSeleccionada, 9).toString();
-        String estadoCivilActual = modelPaciente.getValueAt(filaSeleccionada, 10).toString();
-        String grupoEtnicoActual = modelPaciente.getValueAt(filaSeleccionada, 11).toString();
-        String centroTrabajoActual = modelPaciente.getValueAt(filaSeleccionada, 12).toString();
-        String gradoInstruccionActual = modelPaciente.getValueAt(filaSeleccionada, 13).toString();
-        String hijosActual = modelPaciente.getValueAt(filaSeleccionada, 14).toString();
+        Sring apellidoActual = modelPaciente.getValueAt(filaSeleccionada,2).toString();
+        String telefonoActual = modelPaciente.getValueAt(filaSeleccionada, 3).toString();
+        String generoActual = modelPaciente.getValueAt(filaSeleccionada, 4).toString();
+        String emailActual = modelPaciente.getValueAt(filaSeleccionada, 5).toString();
+        String fechaNacActual = modelPaciente.getValueAt(filaSeleccionada, 6).toString();
+        String direccionActual = modelPaciente.getValueAt(filaSeleccionada, 7).toString();
+        String ocupacionActual = modelPaciente.getValueAt(filaSeleccionada, 8).toString();
+        String grupoSangActual = modelPaciente.getValueAt(filaSeleccionada, 9).toString();
+        String procedenciaActual = modelPaciente.getValueAt(filaSeleccionada, 10).toString();
+        String estadoCivilActual = modelPaciente.getValueAt(filaSeleccionada, 11).toString();
+        String grupoEtnicoActual = modelPaciente.getValueAt(filaSeleccionada, 12).toString();
+        String centroTrabajoActual = modelPaciente.getValueAt(filaSeleccionada, 13).toString();
+        String gradoInstruccionActual = modelPaciente.getValueAt(filaSeleccionada, 14).toString();
+        String hijosActual = modelPaciente.getValueAt(filaSeleccionada, 15).toString();
 
         JTextField txtNombre = new JTextField(nombreActual);
+        JTextField textApellido = new JTextField()
         JTextField txtTelefono = new JTextField(telefonoActual);
         JTextField txtGenero = new JTextField(generoActual);
         JTextField txtEmail = new JTextField(emailActual);

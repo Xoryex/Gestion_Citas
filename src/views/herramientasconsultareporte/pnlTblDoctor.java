@@ -1,4 +1,4 @@
-package HerramientasConsultaReporte;
+package views.herramientasconsultareporte;
 
 import java.awt.*;
 import javax.swing.*;

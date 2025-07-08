@@ -1,10 +1,10 @@
-package PanelesInicio;
+package views.panelesinicio;
 
-import HerramientasConsultaReporte.*;
+import views.herramientasconsultareporte.*;
 import java.awt.*;
 import javax.swing.*;
 
-public class PanelConsulta extends JPanel {
+public class PanelReporte extends JPanel {
     // Paneles específicos para cada tipo de consulta
     private pnlTblCita consltCita = new pnlTblCita();
     private pnlTblRecepcionista consltRecepcionista = new pnlTblRecepcionista();
@@ -30,14 +30,14 @@ public class PanelConsulta extends JPanel {
     private JButton btnFiltroConsulta;
     private JComboBox<String> cbxOrdenConsult;
 
-    public PanelConsulta() {
+    public PanelReporte() {
         // ⚙️ Establecer layout principal
         setLayout(new BorderLayout());
 
         // 🔼 Cabecera
         pnlCabeceraConsult = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-        lblConsltPor = new JLabel("Consultar por:");
+        lblConsltPor = new JLabel("Reporde de:");
         cbxConsulta = new JComboBox<>(new String[] {
             "Cita", "Recepcionista", "Doctor", "Paciente", "Horario"
         });
@@ -74,8 +74,16 @@ public class PanelConsulta extends JPanel {
         pnlVentanasConsultas.add(consltPaciente, "Paciente");
         pnlVentanasConsultas.add(consltHorario, "Horario");
 
+        // 👇 Panel botones adicionales
+        pnlBotonConsult = new JPanel(new FlowLayout());
+        JButton btnExportar = new JButton("Exportar");
+        JButton btnImprimir = new JButton("Imprimir");
+        pnlBotonConsult.add(btnExportar);
+        pnlBotonConsult.add(btnImprimir);
+
         // ➕ Añadir todo al panel principal
         add(pnlCabeceraConsult, BorderLayout.NORTH);
+        add(pnlBotonConsult, BorderLayout.SOUTH);
         add(pnlVentanasConsultas, BorderLayout.CENTER);
 
         // 🎯 Manejador de evento para el ComboBox

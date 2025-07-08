@@ -1,60 +1,59 @@
-package ventanasmantenimiento;
+package views.ventanasmantenimiento;
 import java.awt.*;
 import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import src.utils.Conexion;
+import utils.Conexion;
 
-
-public class pnlConsultorioMant extends JPanel {
-    private JTable tblConsultorio;
-    private DefaultTableModel modelConsultorio;
+public class pnlEspecialidadMant extends JPanel {
+    private JTable tblEspecialidad;
+    private DefaultTableModel modelEspecialidad;
     private Connection conn = Conexion.getConnection();
-    
-    public pnlConsultorioMant() {
+
+    public pnlEspecialidadMant() {
         initComponents();
     }
-    
+
     private void initComponents() {
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
-        setBorder(BorderFactory.createTitledBorder("Mantenimiento de Consultorios"));
-        
-        String[] columnas = {"ID", "Nombre del Consultorio"};
-        modelConsultorio = new DefaultTableModel(columnas, 0);
-        tblConsultorio = new JTable(modelConsultorio);
-        
-        JScrollPane scrollPane = new JScrollPane(tblConsultorio);
+        setBorder(BorderFactory.createTitledBorder("Mantenimiento de Especialidades"));
+
+        String[] columnas = {"Código", "Especialidad"};
+        modelEspecialidad = new DefaultTableModel(columnas, 0);
+        tblEspecialidad = new JTable(modelEspecialidad);
+
+        JScrollPane scrollPane = new JScrollPane(tblEspecialidad);
         scrollPane.setPreferredSize(new Dimension(800, 400));
-        
+
         add(scrollPane, BorderLayout.CENTER);
     }
-    
+
     public JTable getTabla() {
-        return tblConsultorio;
+        return tblEspecialidad;
     }
-    
+
     public DefaultTableModel getModelo() {
-        return modelConsultorio;
+        return modelEspecialidad;
     }
-    
-    // Método para insertar un Consultorio usando un procedimiento almacenado
+
+    // Método para insertar una especialidad usando un procedimiento almacenado
     public void agregar() {
-        JTextField txtID = new JTextField();
+        JTextField txtCodigo = new JTextField();
         JTextField txtNombre = new JTextField();
 
         Object[] mensaje = {
-            "Código:", txtID,
+            "Código:", txtCodigo,
             "Especialidad:", txtNombre
         };
 
-        int opcion = JOptionPane.showConfirmDialog(this, mensaje, "Agregar Consultorio", JOptionPane.OK_CANCEL_OPTION);
+        int opcion = JOptionPane.showConfirmDialog(this, mensaje, "Agregar Especialidad", JOptionPane.OK_CANCEL_OPTION);
 
         if (opcion == JOptionPane.OK_OPTION) {
-            String ID = txtID.getText().trim();
+            String codigo = txtCodigo.getText().trim();
             String nombre = txtNombre.getText().trim();
 
-            if (ID.isEmpty() || nombre.isEmpty()) {
+            if (codigo.isEmpty() || nombre.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.");
                 return;
             }
@@ -62,15 +61,15 @@ public class pnlConsultorioMant extends JPanel {
             try {
                 
                 if (conn != null) {
-                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_InsertarConsultorio(?, ?)}");
-                    stmt.setString(1, ID);
+                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_InsertarEspecialidad(?, ?)}");
+                    stmt.setString(1, codigo);
                     stmt.setString(2, nombre);
 
                     stmt.execute();
 
-                    JOptionPane.showMessageDialog(this, "Consultorio agregado correctamente.");
+                    JOptionPane.showMessageDialog(this, "Especialidad agregada correctamente.");
                     stmt.close();
-                    cargarDatos();
+                    cargarDatos(); // Recargar datos después de agregar
                     conn.close();
                 } else {
                     JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.");
@@ -83,15 +82,15 @@ public class pnlConsultorioMant extends JPanel {
     }
 
     public void actualizar() {
-        int filaSeleccionada = tblConsultorio.getSelectedRow();
+        int filaSeleccionada = tblEspecialidad.getSelectedRow();
 
         if (filaSeleccionada == -1) {
             JOptionPane.showMessageDialog(this, "Selecciona una fila para actualizar.");
             return;
         }
 
-        String codigoActual = modelConsultorio.getValueAt(filaSeleccionada, 0).toString();
-        String nombreActual = modelConsultorio.getValueAt(filaSeleccionada, 1).toString();
+        String codigoActual = modelEspecialidad.getValueAt(filaSeleccionada, 0).toString();
+        String nombreActual = modelEspecialidad.getValueAt(filaSeleccionada, 1).toString();
 
         JTextField txtNuevoNombre = new JTextField(nombreActual);
 
@@ -100,7 +99,7 @@ public class pnlConsultorioMant extends JPanel {
             "Nuevo nombre:", txtNuevoNombre
         };
 
-        int opcion = JOptionPane.showConfirmDialog(this, mensaje, "Actualizar Consultorio", JOptionPane.OK_CANCEL_OPTION);
+        int opcion = JOptionPane.showConfirmDialog(this, mensaje, "Actualizar Especialidad", JOptionPane.OK_CANCEL_OPTION);
 
         if (opcion == JOptionPane.OK_OPTION) {
             String nuevoNombre = txtNuevoNombre.getText().trim();
@@ -112,15 +111,14 @@ public class pnlConsultorioMant extends JPanel {
 
             try {
                 if (conn != null) {
-                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_ActualizarConsultorio(?, ?)}");
+                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_ActualizarEspecialidad(?, ?)}");
                     stmt.setString(1, codigoActual);
                     stmt.setString(2, nuevoNombre);
                     stmt.execute();
 
-                    modelConsultorio.setValueAt(nuevoNombre, filaSeleccionada, 1);
-
-                    JOptionPane.showMessageDialog(this, "Consultorio actualizado correctamente.");
+                    JOptionPane.showMessageDialog(this, "Especialidad actualizada correctamente."); // Recargar datos después de actualizar
                     stmt.close();
+                    cargarDatos(); // Recargar datos después de actualizar
                 } else {
                     JOptionPane.showMessageDialog(this, "Error al conectar con la base de datos.");
                 }
@@ -132,28 +130,27 @@ public class pnlConsultorioMant extends JPanel {
     }
 
     public void eliminar() {
-        int filaSeleccionada = tblConsultorio.getSelectedRow();
+        int filaSeleccionada = tblEspecialidad.getSelectedRow();
 
         if (filaSeleccionada == -1) {
             JOptionPane.showMessageDialog(this, "Selecciona una fila para eliminar.");
             return;
         }
 
-        String ID = modelConsultorio.getValueAt(filaSeleccionada, 0).toString();
+        String codigo = modelEspecialidad.getValueAt(filaSeleccionada, 0).toString();
 
-        int confirmacion = JOptionPane.showConfirmDialog(this, "¿Eliminar el Consultorio con código: " + ID + "?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+        int confirmacion = JOptionPane.showConfirmDialog(this, "¿Eliminar la especialidad con código: " + codigo + "?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
 
         if (confirmacion == JOptionPane.YES_OPTION) {
             try {
                 if (conn != null) {
-                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRU_EliminarConsultorio(?)}");
-                    stmt.setString(1, ID);
+                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRU_EliminarEspecialidad(?)}");
+                    stmt.setString(1, codigo);
                     stmt.execute();
 
-                    modelConsultorio.removeRow(filaSeleccionada);
-
-                    JOptionPane.showMessageDialog(this, "Consultorio eliminado correctamente.");
+                    JOptionPane.showMessageDialog(this, "Especialidad eliminada correctamente.");
                     stmt.close();
+                    cargarDatos(); // Recargar datos después de eliminar
                 } else {
                     JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.");
                 }
@@ -165,16 +162,15 @@ public class pnlConsultorioMant extends JPanel {
     }
 
     public void cargarDatos() {
-        // Limpia la tabla
-        modelConsultorio.setRowCount(0);
+        modelEspecialidad.setRowCount(0); // Limpiar la tabla
         try {
             if (conn != null) {
-                CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_MostrarConsultorios()}");
+                CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_MostrarEspecialidades()}");
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
-                    String id = rs.getString("ID");
-                    String nombre = rs.getString("NombreConsultorio");
-                    modelConsultorio.addRow(new Object[]{id, nombre});
+                    String codigo = rs.getString("Codigo");
+                    String nombre = rs.getString("Especialidad");
+                    modelEspecialidad.addRow(new Object[]{codigo, nombre});
                 }
                 rs.close();
                 stmt.close();
@@ -186,5 +182,4 @@ public class pnlConsultorioMant extends JPanel {
             JOptionPane.showMessageDialog(this, "Error al cargar datos: " + e.getMessage());
         }
     }
-
 }

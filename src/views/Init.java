@@ -1,4 +1,4 @@
-package frames;
+package views;
 
 import javax.swing.*;
 import java.awt.*;
@@ -125,6 +125,7 @@ public class Init extends JFrame {
                     }
                     String contraseña = new String(txtcontraseña.getPassword());
                     if (queryuser.IniciarSesion(dni, contraseña)) {
+                        new APLICACION();
                         dispose();
                     }
                 }

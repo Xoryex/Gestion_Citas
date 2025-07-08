@@ -1,9 +1,9 @@
-package ventanasmantenimiento;
+package views.ventanasmantenimiento;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
-import src.utils.Conexion;
+import utils.Conexion;
 
 public class pnlRecepcionistaMant extends JPanel {
     private JTable tblRecepcionista;

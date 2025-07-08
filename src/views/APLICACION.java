@@ -1,14 +1,10 @@
-package frames;
+package views;
 
-import PanelesInicio.PanelCitasMedicas;
-import PanelesInicio.PanelConfiguracion;
-import PanelesInicio.PanelConsulta;
-import PanelesInicio.PanelInicio;
-import PanelesInicio.PanelMantenimiento;
-import PanelesInicio.PanelReporte;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import views.panelesinicio.*;
 
 
 public class APLICACION extends JFrame {

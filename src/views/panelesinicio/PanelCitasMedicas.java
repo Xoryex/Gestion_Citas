@@ -1,7 +1,6 @@
-package PanelesInicio;
-import HerramientasCitas.pnlDatosCita;
-import HerramientasCitas.pnlModificarDatosCita;
-import HerramientasCitas.pnlTablaCitas;
+package views.panelesinicio;
+
+import views.herramientascitas.*;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
@@ -67,14 +66,14 @@ public class PanelCitasMedicas extends JPanel {
         AgregarDatosCita.show(pnlTablaCitasMedicas, "Ver Tabla");
 
         // Acción del botón Agregar
-        btnAgregarCita.addActionListener(evt -> {
+        btnAgregarCita.addActionListener(e -> {
             AgregarDatosCita.show(pnlTablaCitasMedicas, "Agregar");
             SwingUtilities.updateComponentTreeUI(this);
             this.repaint();
         });
 
         // Acción del botón Reprogramar
-        btnReprogramarCita.addActionListener(evt -> {
+        btnReprogramarCita.addActionListener(e -> {
             AgregarDatosCita.show(pnlTablaCitasMedicas, "Reprogramar");
             SwingUtilities.updateComponentTreeUI(this);
             this.repaint();

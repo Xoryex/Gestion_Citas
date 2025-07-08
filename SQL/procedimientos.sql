@@ -11,7 +11,7 @@ begin
 	end
 	
 	if not exists (select DniRecep from Recepcionista where DniRecep = @dni and Contrasena=@contrasena)begin
-		raiserror('Constraseña incorrecta',16,1)
+		raiserror('Constraseï¿½a incorrecta',16,1)
 		return @@ERROR
 	end
 	select * from Recepcionista where DniRecep=@dni
@@ -84,5 +84,6 @@ begin
 		end
 end
 go
+
 
 

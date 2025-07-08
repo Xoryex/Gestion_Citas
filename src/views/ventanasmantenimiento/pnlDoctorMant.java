@@ -1,10 +1,10 @@
-package ventanasmantenimiento;
+package views.ventanasmantenimiento;
 
 import java.awt.*;
 import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import src.utils.Conexion;
+import utils.Conexion;
 
 public class pnlDoctorMant extends JPanel {
     private JTable tblDoctor;

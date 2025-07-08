@@ -1,9 +1,8 @@
-// Archivo: PanelesInicio/PanelMantenimiento.java
-package PanelesInicio;
+package views.panelesinicio;
 
 import javax.swing.*;
 
-import ventanasmantenimiento.*;
+import views.ventanasmantenimiento.*;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
