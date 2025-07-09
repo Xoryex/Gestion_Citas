@@ -1,10 +1,9 @@
 package views.panelesinicio;
 
-import views.herramientascitas.*;
-import querys.QueryCita;
 import java.awt.*;
 import javax.swing.*;
-import java.awt.event.*;
+import querys.QueryCita;
+import views.herramientascitas.*;
 
 
 public class PanelCitasMedicas extends JPanel {
@@ -35,7 +34,7 @@ public class PanelCitasMedicas extends JPanel {
     public PanelCitasMedicas() {
         queryCita = new QueryCita();
         initComponents();
-        configurarEventos();
+        //configurarEventos();
     }
     
     private void initComponents() {
@@ -77,7 +76,9 @@ public class PanelCitasMedicas extends JPanel {
         // Mostrar la tabla de citas al iniciar
         AgregarDatosCita.show(pnlTablaCitasMedicas, "Ver Tabla");
     }
-    
+}
+
+    /* 
     private void configurarEventos() {
         // Acción del botón Buscar
         btnBuscarCita.addActionListener(new ActionListener() {
@@ -86,6 +87,7 @@ public class PanelCitasMedicas extends JPanel {
                 buscarCitas();
             }
         });
+        
         
         // Permitir buscar con Enter en el campo de texto
         txtBuscarCita.addActionListener(new ActionListener() {
@@ -183,5 +185,5 @@ public class PanelCitasMedicas extends JPanel {
         VerCitas.actualizarTabla();
     }
 }
-
+*/
 

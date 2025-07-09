@@ -257,4 +257,7 @@ public class pnlTblPaciente extends JPanel {
     public JScrollPane getScrollTabla() {
         return scrollTabla;
     }
+    public JTable getTabla() {
+        return getTablaPacientes();
+    }
 }

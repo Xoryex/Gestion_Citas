@@ -140,7 +140,7 @@ FROM Consultorio
 GO
 
 
-----------------------------------------------------------------------------------------
+----------------------------------------------------------------------
 ----------------------------------------------------------------------
 -- CRUD: TABLA HORARIO
 ----------------------------------------------------------------------
@@ -840,48 +840,51 @@ go
 -----------------------------------
 
 --Insertar
+/*insertar recepcionista dni, paciente dni, la especialidad, fecha inicio, hora inicio, tipo de atencion,
+pero tambien que se ponga esa sita en un estado pendiente, */
 CREATE OR ALTER PROCEDURE PA_CRUD_InsertarCita
 (
     @DniRecep        int,
-    @CodCita         VARCHAR(50),
-    @CodHorario      int,
-    @DniPct          int,
-    @DniDoc          int,
-    @HoraInicio      TIME(7),
-    @HoraFin         TIME(7),
-    @FechaCita       DATE,
-    @IdEstadoCita    INT,
-    @IdTipoAtencion  INT,
-    @FechaReprogra   DATE = NULL,
-    @FechaAnulacion  DATE = NULL
+	@DniPct          int,
+	@Especialidad	 varchar(100),
+	@FechaCita       DATE,
+	@HoraInicio		 time (7),
+    @TipoAtencion	 varchar (40)
 )
 AS
 BEGIN 
-    -- Verifica si el paciente ya tiene una cita ACTIVA para esa fecha
-    IF EXISTS (
-        SELECT 1
-        FROM Cita
-        WHERE DniPct = @DniPct AND FechaCita = @FechaCita AND IdEstadoCita IN (1) -- Por ejemplo, 1 = activa
-    )
+	
+	declare @CodCita varchar (15)
+	declare @Prefijo varchar (3)
+	declare @Random varchar (5)
+	declare @Existe int = 1;
+	
+	set @Prefijo = left(@Especialidad, 3);
+	while @Existe = 1
+	begin
+		set @Random = CAST(CAST(RAND() * 90000 + 10000 AS INT) AS VARCHAR);
+		set @CodCita = 'CIT-' + @Prefijo + @Random;
+		-- Verificamos que no exista en la tabla
+		if not exists (SELECT * FROM Cita WHERE CodCita = @CodCita)
+		set @Existe = 0
+	end
+	--verificamos que el paciente tenga una cita en el mismo horario
+    IF EXISTS (SELECT * FROM Cita WHERE DniPct = @DniPct AND HoraInicio = @HoraInicio)
     BEGIN
-        RAISERROR('El paciente ya tiene una cita activa en esa fecha.', 16, 1);
+        RAISERROR('EL PACIENTE TIENE UNA CITA PENDIENTE DURANTE ESE HORARIO', 16, 1);
         RETURN @@ERROR;
     END
 
     -- Insertar nueva cita
-    INSERT INTO dbo.Cita (
-        DniRecep, CodCita, CodHorario, DniPct, DniDoc, HoraInicio, HoraFin,
-        FechaCita, IdEstadoCita, IdTipoAtencion, FechaReprogra, FechaAnulacion
-    )
+   /* INSERT INTO dbo.Cita (CodCita,DniRecep,DniPct,DniDoc,)
     VALUES (
-        @DniRecep, @CodCita, @CodHorario, @DniPct, @DniDoc, @HoraInicio, @HoraFin,
+        @DniRecep, @CodCita, @CodHorario, @DniPct, @DniDoc,
         @FechaCita, @IdEstadoCita, @IdTipoAtencion, @FechaReprogra, @FechaAnulacion
-    );
+    );*/
 
     RETURN 0;
 END
 GO
-
 
 --Modificar
 

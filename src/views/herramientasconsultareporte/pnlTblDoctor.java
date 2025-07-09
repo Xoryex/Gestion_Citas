@@ -210,4 +210,7 @@ public class pnlTblDoctor extends JPanel {
     public JScrollPane getScrollTabla() {
         return scrollTabla;
     }
+        public JTable getTabla() {
+        return getTablaDoctores();
+    }
 }

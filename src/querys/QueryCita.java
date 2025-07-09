@@ -1,14 +1,13 @@
 package querys;
 
-import models.Cita;
-import models.Doctor;
-import models.Paciente;
-import utils.Conexion;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import models.Cita;
+import models.Doctor;
+import models.Paciente;
+import utils.Conexion;
 
 public class QueryCita implements Query<Cita> {
 

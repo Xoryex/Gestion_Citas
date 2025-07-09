@@ -205,4 +205,7 @@ public class pnlTblHorario extends JPanel {
     public JScrollPane getScrollTabla() {
         return scrollTabla;
     }
+    public JTable getTabla() {
+        return getTablaHorario();
+    }
 }
