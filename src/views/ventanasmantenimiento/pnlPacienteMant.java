@@ -112,13 +112,15 @@ public class pnlPacienteMant extends JPanel {
                     return;
                 }
 
-                // Validar que DNI sea numérico
-                int dni = Integer.parseInt(dniPct);
+                // Validar DNI de exactamente 8 dígitos
+                if (!dniPct.matches("\\d{8}")) {
+                    JOptionPane.showMessageDialog(this, "El DNI debe tener exactamente 8 dígitos numéricos.");
+                    return;
+                }
                 
                 // Validar que teléfono sea numérico y tenga 9 dígitos
-                long telefono = Long.parseLong(tlfPct);
-                if (tlfPct.length() != 9) {
-                    JOptionPane.showMessageDialog(this, "El teléfono debe tener exactamente 9 dígitos.");
+                if (!tlfPct.matches("\\d{9}")) {
+                    JOptionPane.showMessageDialog(this, "El teléfono debe tener exactamente 9 dígitos numéricos.");
                     return;
                 }
 
@@ -128,7 +130,9 @@ public class pnlPacienteMant extends JPanel {
                 java.util.Date fecha = sdf.parse(fechNaciPct);
                 java.sql.Date sqlFecha = new java.sql.Date(fecha.getTime());
 
-                // Validar que grado instrucción e hijos sean numéricos
+                // Convertir valores numéricos
+                int dni = Integer.parseInt(dniPct);
+                long telefono = Long.parseLong(tlfPct);
                 int gradoInstr = Integer.parseInt(gradInstrPct);
                 int hijos = Integer.parseInt(hijosPct);
                 int estadoCivil = Integer.parseInt(estCivilPct);
