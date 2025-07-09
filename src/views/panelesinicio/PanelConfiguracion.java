@@ -161,25 +161,28 @@ public class PanelConfiguracion extends JPanel {
         });
 
         btnEliminarUsuario.addActionListener(new ActionListener() {
-
+            
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!txtContrasenaActual.getText().equals(usuario_actual.getContraseña())) {
+               
+               if (!txtContrasenaActual.getText().equals(usuario_actual.getContraseña())) {
                     // Mostrar mensaje de error
                     JOptionPane.showMessageDialog(null, "La contraseña actual es incorrecta.", "Error",
                             JOptionPane.ERROR_MESSAGE);
                     
                 } else {
+                    int respuesta = JOptionPane.showConfirmDialog(null, "¿Estás seguro de querer eliminar tu usuario?", "Eliminar Usuario", JOptionPane.YES_NO_OPTION);
+                    if (respuesta == JOptionPane.YES_OPTION) {
                     queryuser.Eliminar(usuario_actual.getDni());
 
                     Window ventana = SwingUtilities.getWindowAncestor(btnEliminarUsuario);
                     new Init();
-                    ventana.dispose();
+                    ventana.dispose();}
                 }
 
-            }
+            
 
-        });
+        }});
 
         btnAceptarConf.addActionListener( new ActionListener(){
             @Override
@@ -188,8 +191,8 @@ public class PanelConfiguracion extends JPanel {
                 if(!(txtContrasenaActual.getText().equals(usuario_actual.getContraseña()) && txtContrasenaActual.getText().length()!=0) ){
                     JOptionPane.showMessageDialog(null,"Contraseña actual ingresado no es igual a tu contraseña");
                     txtContrasenaActual.setText("");
-                }else if (!(txtContrasenaNuevaConf.getText().equals(txtConfirmarContrasenaConf.getText()) && (txtContrasenaNuevaConf.getText().length()!=0 || txtConfirmarContrasenaConf.getText().length()!=0))){
-                    JOptionPane.showMessageDialog(null,"Contraseñas no coinciden");
+                }else if ((txtContrasenaNuevaConf.getText().equals(txtConfirmarContrasenaConf.getText()) && (txtContrasenaNuevaConf.getText().length()!=0 || txtConfirmarContrasenaConf.getText().length()!=0))){
+                    JOptionPane.showMessageDialog(null,"Contraseñas nuevas no coinciden");
                     txtContrasenaNuevaConf.setText("");
                     txtConfirmarContrasenaConf.setText("");
                 }else{
@@ -201,8 +204,10 @@ public class PanelConfiguracion extends JPanel {
                     }
                 
                     queryuser.actualizar(usuario_actual);
-
-
+                    JOptionPane.showMessageDialog(null,"Usuario actualizado correctamente");
+                    txtContrasenaActual.setText("");
+                    txtContrasenaNuevaConf.setText("");
+                    txtConfirmarContrasenaConf.setText("");
 
                 }
             txtApellidoConf.setText(usuario_actual.getApellido());
