@@ -79,7 +79,6 @@ public class Cita {
     public LocalDate getFechaAnulacion() { return fechaAnulacion; }
     public void setFechaAnulacion(LocalDate fechaAnulacion) { this.fechaAnulacion = fechaAnulacion; }
 
-    // Campos adicionales para la vista
     public String getNombrePaciente() { return nombrePaciente; }
     public void setNombrePaciente(String nombrePaciente) { this.nombrePaciente = nombrePaciente; }
 
