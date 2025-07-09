@@ -33,7 +33,7 @@ public class PanelCitasMedicas extends JPanel {
 
     public PanelCitasMedicas() {
         initComponents();
-        configurarEventos();
+        //configurarEventos();
     }
     
     private void initComponents() {
@@ -71,12 +71,14 @@ public class PanelCitasMedicas extends JPanel {
 
         AgregarDatosCita.show(pnlTablaCitasMedicas, "Ver Tabla");
     }
-    
+}
+
+    /* 
     private void configurarEventos() {
     }
     
     
 
 }
-
+*/
 

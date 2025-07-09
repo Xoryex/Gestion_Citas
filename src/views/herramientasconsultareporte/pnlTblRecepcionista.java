@@ -279,4 +279,7 @@ public class pnlTblRecepcionista extends JPanel {
     public JScrollPane getScrollTabla() {
         return scrollTabla;
     }
+    public JTable getTabla() {
+        return getTablaRecepcionistas();
+    }
 }

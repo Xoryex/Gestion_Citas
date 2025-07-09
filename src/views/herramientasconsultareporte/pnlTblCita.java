@@ -180,4 +180,8 @@ public class pnlTblCita extends JPanel {
     public JScrollPane getScrollTabla() {
         return scrollTabla;
     }
+        public JTable getTabla() {
+        return getTablaCitas();
+    }
+
 }
