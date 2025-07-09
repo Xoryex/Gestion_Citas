@@ -2,7 +2,9 @@ package querys;
 
 import models.Cita;
 import models.Doctor;
+import models.Especialidad;
 import models.Paciente;
+import models.TipoAtencion;
 import utils.Conexion;
 
 import java.sql.*;
@@ -20,28 +22,15 @@ public class QueryCita implements Query<Cita> {
              CallableStatement stmt = con.prepareCall(sql)) {
             
             stmt.setInt(1, cita.getDniRecep());
-            stmt.setString(2, cita.getCodCita());
-            stmt.setInt(3, cita.getCodHorario());
-            stmt.setInt(4, cita.getDniPct());
-            stmt.setInt(5, cita.getDniDoc());
-            stmt.setTime(6, Time.valueOf(cita.getHoraInicio()));
-            stmt.setTime(7, Time.valueOf(cita.getHoraFin()));
-            stmt.setDate(8, Date.valueOf(cita.getFechaCita()));
-            stmt.setInt(9, cita.getIdEstadoCita());
-            stmt.setInt(10, cita.getIdTipoAtencion());
+            stmt.setInt(2, cita.getCodHorario());
+            stmt.setInt(3, cita.getDniPct());
+            stmt.setInt(4, cita.getDniDoc());
+            stmt.setTime(5, Time.valueOf(cita.getHoraInicio()));
+            stmt.setTime(6, Time.valueOf(cita.getHoraFin()));
+            stmt.setDate(7, Date.valueOf(cita.getFechaCita()));
+            stmt.setInt(9, cita.getIdTipoAtencion());
             
-            if (cita.getFechaReprogra() != null) {
-                stmt.setDate(11, Date.valueOf(cita.getFechaReprogra()));
-            } else {
-                stmt.setNull(11, Types.DATE);
-            }
-            
-            if (cita.getFechaAnulacion() != null) {
-                stmt.setDate(12, Date.valueOf(cita.getFechaAnulacion()));
-            } else {
-                stmt.setNull(12, Types.DATE);
-            }
-            
+        
             stmt.execute();
             JOptionPane.showMessageDialog(null, "Cita registrada exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             
@@ -51,23 +40,7 @@ public class QueryCita implements Query<Cita> {
     }
 
     @Override
-    public void Eliminar(int dniPaciente) {
-        String sql = "{CALL PA_CRUD_EliminarCita(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
-        
-        try (Connection con = Conexion.getConnection();
-             CallableStatement stmt = con.prepareCall(sql)) {
-            
-            // Para eliminar, necesitamos los datos de la cita a eliminar
-            // Por simplicidad, solo usamos el DNI del paciente para buscar la cita
-            stmt.setInt(4, dniPaciente); // DniPct
-            
-            stmt.execute();
-            JOptionPane.showMessageDialog(null, "Cita eliminada exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-            
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al eliminar la cita: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
+    public void Eliminar(int no) {}
 
     @Override
     public void actualizar(Cita cita) {
@@ -172,13 +145,12 @@ public class QueryCita implements Query<Cita> {
         return filas.toArray(new String[0][]);
     }
     
-    public List<Doctor> obtenerDoctores() {
+    public List<Doctor> getDoctoresFiltrados(Especialidad especialidad,String hora) {
         List<Doctor> doctores = new ArrayList<>();
-        String sql = "SELECT d.DniDoc, d.NomDoc, d.ApellDoc, d.TlfDoc, e.Especialidad, d.CodConst " +
-                    "FROM Doctor d INNER JOIN Especialidad e ON d.CodEspecia = e.CodEspecia";
+        String sql = "{CALL PA_ListarDoctoresFiltrados(?,?)}";
         
         try (Connection con = Conexion.getConnection();
-             Statement stmt = con.createStatement();
+             CallableStatement stmt = con.prepareCall(sql);
              ResultSet rs = stmt.executeQuery(sql)) {
             
             while (rs.next()) {
@@ -187,28 +159,31 @@ public class QueryCita implements Query<Cita> {
                 doctor.setNombre(rs.getString("NomDoc"));
                 doctor.setApellido(rs.getString("ApellDoc"));
                 doctor.setTlf(rs.getInt("TlfDoc"));
-                doctor.setEspecialidad(rs.getString("Especialidad"));
                 doctor.setCodConst(rs.getInt("CodConst"));
                 doctores.add(doctor);
             }
             
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al obtener doctores: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
         }
         
         return doctores;
     }
     
-    public List<String> obtenerEspecialidades() {
-        List<String> especialidades = new ArrayList<>();
-        String sql = "SELECT Especialidad FROM Especialidad";
+    public ArrayList<Especialidad> getEspecialidadesActivas() {
+        ArrayList<Especialidad> especialidades = new ArrayList<>();
         
-        try (Connection con = Conexion.getConnection();
-             Statement stmt = con.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        try {
+            Connection con = Conexion.getConnection();
+            // doctores con horarios activos y consultorios de la misma especialidad 
+            //falta crear ese procedimiento almacenado
+            String sql = "{CALL PA_ListarEspecialidadesActivas}"; 
+            CallableStatement stmt = con.prepareCall(sql);
+            ResultSet rs = stmt.executeQuery();
             
             while (rs.next()) {
-                especialidades.add(rs.getString("Especialidad"));
+                especialidades.add(new Especialidad(rs.getInt("IdEspecialidad"), rs.getString("NombreEspecialidad")));
             }
             
         } catch (SQLException e) {
@@ -218,16 +193,18 @@ public class QueryCita implements Query<Cita> {
         return especialidades;
     }
     
-    public List<String> obtenerTiposAtencion() {
-        List<String> tiposAtencion = new ArrayList<>();
-        String sql = "SELECT TipoAtencion FROM TipoAtencion";
+    public ArrayList<TipoAtencion> getTiposAtencion() {
+        ArrayList<TipoAtencion> tiposAtencion = new ArrayList<>();
+        //tipos de atenciones desde la misma tabla tipoatencion
+        //falta crear ese procedimiento almacenado
+        String sql = "{CALL PA_ListarTiposAtencion}";   
         
         try (Connection con = Conexion.getConnection();
-             Statement stmt = con.createStatement();
+             CallableStatement stmt = con.prepareCall(sql);
              ResultSet rs = stmt.executeQuery(sql)) {
             
             while (rs.next()) {
-                tiposAtencion.add(rs.getString("TipoAtencion"));
+                tiposAtencion.add(new TipoAtencion(rs.getInt("IdTipoAtencion"), rs.getString("TipoAtencion")));
             }
             
         } catch (SQLException e) {
@@ -237,11 +214,11 @@ public class QueryCita implements Query<Cita> {
         return tiposAtencion;
     }
     
-    public Paciente buscarPacientePorDni(int dni) {
-        String sql = "SELECT * FROM Paciente WHERE DniPct = ?";
+    public Paciente getPaciente(int dni) {
+        String sql = "{CALL PA_CRUD_SelectPaciente(?)}";
         
         try (Connection con = Conexion.getConnection();
-             PreparedStatement stmt = con.prepareStatement(sql)) {
+             CallableStatement stmt = con.prepareCall(sql)) {
             
             stmt.setInt(1, dni);
             ResultSet rs = stmt.executeQuery();
@@ -261,68 +238,49 @@ public class QueryCita implements Query<Cita> {
         
         return null;
     }
+
     
-    public String obtenerConsultorioPorDoctor(int dniDoctor) {
-        String sql = "SELECT c.NomConst FROM Doctor d INNER JOIN Consultorio c ON d.CodConst = c.CodConst WHERE d.DniDoc = ?";
+    public String getConsultorioPorDoctor(Doctor doctor) {
+        String sql = "{CALL PA_ConsultorioPorDoctor(?)}";
+
         
         try (Connection con = Conexion.getConnection();
-             PreparedStatement stmt = con.prepareStatement(sql)) {
+             CallableStatement  stmt = con.prepareCall(sql) ) {
             
-            stmt.setInt(1, dniDoctor);
+            stmt.setInt(1, doctor.getDni());
             ResultSet rs = stmt.executeQuery();
             
             if (rs.next()) {
                 return rs.getString("NomConst");
+            }else{
+                return null;
             }
             
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al obtener consultorio: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
         
-        return "-";
+        return null;
+        }
     }
     
-    public void anularCita(String codCita) {
-        String sql = "UPDATE Cita SET IdEstadoCita = 3, FechaAnulacion = GETDATE() WHERE CodCita = ?";
+    public void anularCita(Cita cita) {
+        String sql = "{CALL PA_CRUD_AnularCita(?)}";
         
         try (Connection con = Conexion.getConnection();
-             PreparedStatement stmt = con.prepareStatement(sql)) {
-            
+             CallableStatement stmt = con.prepareCall(sql)) {
             stmt.setString(1, codCita);
-            int filasAfectadas = stmt.executeUpdate();
+            stmt.execute();
             
-            if (filasAfectadas > 0) {
-                JOptionPane.showMessageDialog(null, "Cita anulada exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(null, "No se encontró la cita a anular", "Error", JOptionPane.ERROR_MESSAGE);
-            }
+            JOptionPane.showMessageDialog(null, "Cita anulada exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            
             
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al anular la cita: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     
-    public int obtenerIdTipoAtencionPorNombre(String nombreTipo) {
-        String sql = "SELECT IdTipoAtencion FROM TipoAtencion WHERE TipoAtencion = ?";
-        
-        try (Connection con = Conexion.getConnection();
-             PreparedStatement stmt = con.prepareStatement(sql)) {
-            
-            stmt.setString(1, nombreTipo);
-            ResultSet rs = stmt.executeQuery();
-            
-            if (rs.next()) {
-                return rs.getInt("IdTipoAtencion");
-            }
-            
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al obtener ID tipo atención: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        
-        return 1; // Valor por defecto
-    }
     
-    public String generarCodigoCita() {
-        return "CITA" + System.currentTimeMillis();
-    }
+    
+    
+   
 }

@@ -59,18 +59,15 @@ public class PanelConfiguracion extends JPanel {
         txtConfirmarContrasenaConf = new JTextField();
 
         txtDNIConf.setEnabled(false);
-        txtDNIConf.setText(String.valueOf(usuario_actual.getDni()));
-        txtApellidoConf.setText(usuario_actual.getApellido());
-        txtNombreConf.setText(usuario_actual.getNombre());
-        txtTelefConf.setText(String.valueOf(usuario_actual.getTlf()));
+        
 
         // Añadir componentes al panel cabecera
         pnlCabeceraConf.add(lblDNIConf);
         pnlCabeceraConf.add(txtDNIConf);
-        pnlCabeceraConf.add(lblApellidoConf);
-        pnlCabeceraConf.add(txtApellidoConf);
         pnlCabeceraConf.add(lblNombreConf);
         pnlCabeceraConf.add(txtNombreConf);
+        pnlCabeceraConf.add(lblApellidoConf);
+        pnlCabeceraConf.add(txtApellidoConf);
         pnlCabeceraConf.add(lblTelefConf);
         pnlCabeceraConf.add(txtTelefConf);
         pnlCabeceraConf.add(lblContrasenaActual);
@@ -84,7 +81,7 @@ public class PanelConfiguracion extends JPanel {
         pnlBotonConf = new JPanel(new FlowLayout());
 
         btnEliminarUsuario = new JButton("Eliminar Usuario");
-        btnAceptarConf = new JButton("Aceptar");
+        btnAceptarConf = new JButton("Guardar Cambios");
 
         pnlBotonConf.add(btnEliminarUsuario);
         pnlBotonConf.add(btnAceptarConf);
@@ -218,5 +215,15 @@ public class PanelConfiguracion extends JPanel {
 
         });
 
+    }
+
+    public void actualizarDatos() {
+        txtDNIConf.setText(String.valueOf(usuario_actual.getDni()));
+        txtApellidoConf.setText(usuario_actual.getApellido());
+        txtNombreConf.setText(usuario_actual.getNombre());
+        txtTelefConf.setText(String.valueOf(usuario_actual.getTlf()));
+        txtContrasenaActual.setText("");
+        txtContrasenaNuevaConf.setText("");
+        txtConfirmarContrasenaConf.setText("");
     }
 }
