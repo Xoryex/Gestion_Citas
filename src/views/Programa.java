@@ -21,7 +21,7 @@ public class Programa extends JFrame {
 
         // PANEL CABECERA DEL FRAME
         JPanel pnlCabecera = new JPanel(new BorderLayout());
-        pnlCabecera.setPreferredSize(new Dimension(1220, 100)); // Cambiado de 794 a 1220
+        pnlCabecera.setPreferredSize(new Dimension(1220, 100));
         pnlCabecera.setBackground(new Color(41, 75, 99));
         pnlCabecera.setBorder(new EmptyBorder(10, 20, 10, 20));
 
@@ -39,6 +39,17 @@ public class Programa extends JFrame {
         lblNombre.setForeground(Color.WHITE);
         lblNombre.setHorizontalAlignment(SwingConstants.RIGHT);
 
+        // Crear botón de cierre
+        JButton btnCerrar = new JButton("Cerrar");
+        btnCerrar.setFocusPainted(false);
+        btnCerrar.setBackground(Color.RED);
+        btnCerrar.setForeground(Color.WHITE);
+        btnCerrar.setFont(new Font("Arial", Font.BOLD, 14));
+        btnCerrar.setPreferredSize(new Dimension(90, 30));
+
+        // Acción para cerrar el programa
+        btnCerrar.addActionListener(e -> System.exit(0));
+
         // Panel interno para agrupar los labels de la izquierda
         JPanel panelIzquierdo = new JPanel();
         panelIzquierdo.setLayout(new BoxLayout(panelIzquierdo, BoxLayout.Y_AXIS));
@@ -46,20 +57,26 @@ public class Programa extends JFrame {
         panelIzquierdo.add(lblNomRecepc);
         panelIzquierdo.add(lblFuncion);
 
+        // Panel derecho que contiene el nombre y el botón de cerrar
+        JPanel panelDerecho = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 5));
+        panelDerecho.setBackground(new Color(41, 75, 99));
+        panelDerecho.add(lblNombre);
+        panelDerecho.add(btnCerrar);
+
         pnlCabecera.add(panelIzquierdo, BorderLayout.WEST);
-        pnlCabecera.add(lblNombre, BorderLayout.EAST);
+        pnlCabecera.add(panelDerecho, BorderLayout.EAST);
 
         add(pnlCabecera, BorderLayout.NORTH);
 
         lblNombre.setText(usuario_actual.getNombre() + " " + usuario_actual.getApellido());
+
         // PANEL RELLENO DEL FRAME
-        JPanel pnlRelleno;
-        pnlRelleno = new JPanel(new BorderLayout());
+        JPanel pnlRelleno = new JPanel(new BorderLayout());
 
         // TABBED PANE
         tbdpnInicio = new JTabbedPane();
         tbdpnInicio.addTab("INICIO", new PanelInicio());
-        //tbdpnInicio.addTab("CITAS MEDICAS", new PanelCitasMedicas());
+        // tbdpnInicio.addTab("CITAS MEDICAS", new PanelCitasMedicas());
         tbdpnInicio.addTab("MANTENIMIENTO", new PanelMantenimiento());
         tbdpnInicio.addTab("CONSULTAS", new PanelConsulta());
         tbdpnInicio.addTab("REPORTE", new PanelReporte());
@@ -67,7 +84,6 @@ public class Programa extends JFrame {
 
         pnlRelleno.add(tbdpnInicio, BorderLayout.CENTER);
         add(pnlRelleno, BorderLayout.CENTER);
-        
 
         setVisible(true);
     }
