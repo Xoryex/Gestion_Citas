@@ -13,7 +13,7 @@ public class pnlDoctorMant extends JPanel {
 
     public pnlDoctorMant() {
         initComponents();
-        cargarDatos(); // Mostrar datos al iniciar
+        cargarDatos();
     }
 
     private void initComponents() {
@@ -40,77 +40,77 @@ public class pnlDoctorMant extends JPanel {
     }
 
     public void agregar() {
-        JTextField txtDNI = new JTextField();
-        JTextField txtNombre = new JTextField();
-        JTextField txtApellido = new JTextField();
-        JComboBox<String> cbEspecialidades = new JComboBox<>();
-        JComboBox<String> cbConsultorios = new JComboBox<>();
-        JTextField txtCorreo = new JTextField();
-        JTextField txtTelefono = new JTextField();
+    JTextField txtDNI = new JTextField();
+    JTextField txtNombre = new JTextField();
+    JTextField txtApellido = new JTextField();
+    JComboBox<String> cbEspecialidades = new JComboBox<>();
+    JComboBox<String> cbConsultorios = new JComboBox<>();
+    JTextField txtCorreo = new JTextField();
+    JTextField txtTelefono = new JTextField();
 
-        cargarEspecialidades(cbEspecialidades);
-        cargarConsultorios(cbConsultorios);
+    cargarEspecialidades(cbEspecialidades);
+    cargarConsultorios(cbConsultorios);
 
-        Object[] mensaje = {
-            "DNI:", txtDNI,
-            "Nombre:", txtNombre,
-            "Apellido:", txtApellido,
-            "Especialidad:", cbEspecialidades,
-            "Consultorio:", cbConsultorios,
-            "Correo:", txtCorreo,
-            "Teléfono:", txtTelefono
-        };
+    Object[] mensaje = {
+        "DNI:", txtDNI,
+        "Nombre:", txtNombre,
+        "Apellido:", txtApellido,
+        "Especialidad:", cbEspecialidades,
+        "Consultorio:", cbConsultorios,
+        "Correo:", txtCorreo,
+        "Teléfono:", txtTelefono
+    };
 
-        int opcion = JOptionPane.showConfirmDialog(this, mensaje, "Agregar Doctor", JOptionPane.OK_CANCEL_OPTION);
+    int opcion = JOptionPane.showConfirmDialog(this, mensaje, "Agregar Doctor", JOptionPane.OK_CANCEL_OPTION);
 
-        if (opcion == JOptionPane.OK_OPTION) {
-            String dni = txtDNI.getText().trim();
-            String nombre = txtNombre.getText().trim();
-            String apellido = txtApellido.getText().trim();
-            String especialidadNombre = (String) cbEspecialidades.getSelectedItem();
-            String consultorioNombre = (String) cbConsultorios.getSelectedItem();
-            String correo = txtCorreo.getText().trim();
-            String telefono = txtTelefono.getText().trim();
+    if (opcion == JOptionPane.OK_OPTION) {
+        String dni = txtDNI.getText().trim();
+        String nombre = txtNombre.getText().trim();
+        String apellido = txtApellido.getText().trim();
+        String especialidadNombre = (String) cbEspecialidades.getSelectedItem();
+        String consultorioNombre = (String) cbConsultorios.getSelectedItem();
+        String correo = txtCorreo.getText().trim();
+        String telefono = txtTelefono.getText().trim();
 
-            if (dni.isEmpty() || nombre.isEmpty() || apellido.isEmpty() || especialidadNombre == null
-                    || consultorioNombre == null || correo.isEmpty() || telefono.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.");
-                return;
-            }
+        if (dni.isEmpty() || nombre.isEmpty() || apellido.isEmpty() || especialidadNombre == null
+                || consultorioNombre == null || correo.isEmpty() || telefono.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.");
+            return;
+        }
 
-            try {
-                if (conn != null) {
-                    String codConsultorio = obtenerCodConsultorioPorNombre(consultorioNombre);
-                    int codEspecialidad = obtenerCodEspecialidad(especialidadNombre);
-                    if (codConsultorio == null || codEspecialidad == -1) return;
+        try {
+            if (conn != null) {
+                String codConsultorio = obtenerCodConsultorioPorNombre(consultorioNombre);
+                int codEspecialidad = obtenerCodEspecialidad(especialidadNombre);
 
-                    CallableStatement stmt = conn.prepareCall("{CALL PA_insert_Doctor(?, ?, ?, ?, ?, ?)}");
-                    stmt.setString(1, dni);
-                    stmt.setString(2, nombre);
-                    stmt.setString(3, apellido);
-                    stmt.setString(4, codConsultorio);
-                    stmt.setString(5, correo);
-                    stmt.setString(6, telefono);
-                    stmt.execute();
-                    stmt.close();
-
-                    PreparedStatement ps = conn.prepareStatement("INSERT INTO Especialidad_Doctor (DniDoc, CodEspecia) VALUES (?, ?)");
-                    ps.setString(1, dni);
-                    ps.setInt(2, codEspecialidad);
-                    ps.executeUpdate();
-                    ps.close();
-
-                    JOptionPane.showMessageDialog(this, "Doctor agregado correctamente.");
-                    cargarDatos();
-                } else {
-                    JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.");
+                if (codConsultorio == null || codEspecialidad == -1) {
+                    JOptionPane.showMessageDialog(this, "Consultorio o especialidad no válidos.");
+                    return;
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error al insertar: " + e.getMessage());
+
+                CallableStatement stmt = conn.prepareCall("{CALL PA_insert_Doctor(?, ?, ?, ?, ?, ?, ?)}");
+                stmt.setString(1, dni);
+                stmt.setString(2, nombre);
+                stmt.setString(3, apellido);
+                stmt.setString(4, codConsultorio);
+                stmt.setString(5, correo);
+                stmt.setString(6, telefono);
+                stmt.setInt(7, codEspecialidad); // Ahora se pasa al procedimiento
+                stmt.execute();
+                stmt.close();
+
+                JOptionPane.showMessageDialog(this, "Doctor agregado correctamente.");
+                cargarDatos();
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.");
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al insertar: " + e.getMessage());
         }
     }
+}
+
 
     public void actualizar() {
         int filaSeleccionada = tblDoctor.getSelectedRow();

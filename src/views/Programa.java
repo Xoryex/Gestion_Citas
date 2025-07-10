@@ -2,7 +2,6 @@ package views;
 
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.event.*;
 import javax.swing.border.EmptyBorder;
 import static querys.QueryUser.usuario_actual;
 import views.panelesinicio.*;
@@ -11,9 +10,6 @@ public class Programa extends JFrame {
     private JLabel lblNomRecepc;
     private JLabel lblFuncion;
     private JLabel lblNombre;
-
-    private PanelConfiguracion panelconfiguracion=new PanelConfiguracion();
-
     private JTabbedPane tbdpnInicio;
 
     public Programa() {
@@ -80,10 +76,10 @@ public class Programa extends JFrame {
         // TABBED PANE
         tbdpnInicio = new JTabbedPane();
         tbdpnInicio.addTab("INICIO", new PanelInicio());
-        //tbdpnInicio.addTab("CITAS MEDICAS", new PanelCitasMedicas());
+        // tbdpnInicio.addTab("CITAS MEDICAS", new PanelCitasMedicas());
         tbdpnInicio.addTab("MANTENIMIENTO", new PanelMantenimiento());
         tbdpnInicio.addTab("CONSULTAS", new PanelConsulta());
-        tbdpnInicio.addTab("REPORTE", new PanelReporte());
+        //tbdpnInicio.addTab("REPORTE", new PanelReporte());
         tbdpnInicio.addTab("CONFIGURACIÓN", new PanelConfiguracion());
 
         pnlRelleno.add(tbdpnInicio, BorderLayout.CENTER);
@@ -91,30 +87,4 @@ public class Programa extends JFrame {
 
         setVisible(true);
     }
-    
-    private void oyentes(){
-        tbdpnInicio.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                String index = tbdpnInicio.getTitleAt(tbdpnInicio.getSelectedIndex());
-                switch (index) {
-                    case "INICIO":
-                        //
-                        break;
-                    case "CITAS MEDICAS":
-                        //
-                        break;
-                    case "MANTENIMIENTO":
-                        //
-                        break;
-                    case "CONSULTAS":
-                        //
-                        break;
-                    case "CONFIGURACIÓN":
-                        panelconfiguracion.actualizarDatos();
-                        break;
-                }
-            }
-        });
-    }   
 }

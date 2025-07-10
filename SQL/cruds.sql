@@ -1,5 +1,6 @@
-﻿use GESTION_CITA
---listar especialidad
+﻿SELECT * FROM Doctor
+WHERE DniDoc=787878
+
 create or alter procedure PA_ListarSoloEspecialidad
 as
 SELECT Especialidad
@@ -126,6 +127,15 @@ BEGIN
 END
 GO
 
+--CREAR LA VISTA
+CREATE OR ALTER VIEW Vw_ListarConsulta
+AS
+SELECT 
+    c.CodConst AS Codigo,
+    c.NomConst AS NombreConsultorio,
+    e.Especialidad as Especialidad
+FROM Consultorio c
+INNER JOIN Especialidad e ON c.CodEspecia = e.CodEspecia
 
 --LISTAR con filtro
 CREATE OR ALTER PROCEDURE PA_CRUD_ListarConsultaConFiltro
@@ -139,7 +149,7 @@ BEGIN
     WHERE 
         Codigo LIKE '%' + @Filtro + '%' OR
         NombreConsultorio LIKE '%' + @Filtro + '%'OR
-		e.Especialidad LIKE '%' + @Filtro + '%';
+		Especialidad LIKE '%' + @Filtro + '%';
         
 END
 GO
@@ -153,17 +163,6 @@ BEGIN
     FROM Vw_ListarConsulta
 END
 GO
-
-
---CREAR LA VISTA
-CREATE OR ALTER VIEW Vw_ListarConsulta
-AS
-SELECT 
-    c.CodConst AS Codigo,
-    c.NomConst AS NombreConsultorio,
-    e.Especialidad
-FROM Consultorio c
-INNER JOIN Especialidad e ON c.CodEspecia = e.CodEspecia
 
 
 ----------------------------------------------------------------------
@@ -1414,27 +1413,34 @@ GO
 
 -------------------------------------------------------------------------------------
 /*DOCTOR */
-------------------------------------------------------------------------------------
---INSERT
-CREATE or alter PROCEDURE PA_insert_Doctor
+----------------
+CREATE OR ALTER PROCEDURE PA_insert_Doctor
 (
-    @DniDoc            int,
-    @NomDoc         VARCHAR(50),
-    @ApellDoc       VARCHAR(50),
-    @CodConst int,
-    @CorreoDoctor         VARCHAR(120),
-    @TelfDoctor        numeric (9)
+    @DniDoc            INT,
+    @NomDoc            VARCHAR(50),
+    @ApellDoc          VARCHAR(50),
+    @CodConst          INT,
+    @CorreoDoctor      VARCHAR(120),
+    @TelfDoctor        NUMERIC(9),
+    @CodEspecialidad   INT
 )
 AS
 BEGIN
-    -- Verificar existencia del consultorio
-    IF NOT EXISTS (SELECT 1 FROM Consultorio WHERE CodConst = @CodConst)
+
+    IF NOT EXISTS (SELECT * FROM Consultorio WHERE CodConst = @CodConst)
     BEGIN
         RAISERROR('No se encontró el consultorio.', 16, 1);
-        RETURN @@ERROR;
+        RETURN;
     END
 
-    -- Insertar doctor
+
+    IF NOT EXISTS (SELECT * FROM Especialidad WHERE CodEspecia = @CodEspecialidad)
+    BEGIN
+        RAISERROR('No se encontró la especialidad.', 16, 1);
+        RETURN;
+    END
+
+
     INSERT INTO Doctor (
         DniDoc, NomDoc, ApellDoc, CodConst, CorreoDoctor, TelfDoctor
     )
@@ -1442,7 +1448,12 @@ BEGIN
         @DniDoc, @NomDoc, @ApellDoc, @CodConst, @CorreoDoctor, @TelfDoctor
     );
 
-    RETURN 0;
+    INSERT INTO Especialidad_Doctor (
+        DniDoc, CodEspecia
+    )
+    VALUES (
+        @DniDoc, @CodEspecialidad
+    );
 END
 GO
 
@@ -1457,14 +1468,14 @@ CREATE OR ALTER PROCEDURE PA_delete_Doctor
 AS
 BEGIN
     -- Validación: si el doctor está referenciado en Doctor_Horario, no permitir eliminar
-    IF EXISTS (SELECT 1 FROM Doctor_Horario WHERE DniDoc = @dni)
+    IF EXISTS (SELECT * FROM Doctor_Horario WHERE DniDoc = @dni)
     BEGIN
         RAISERROR('El doctor está siendo usado en Doctor_Horario', 16, 1);
         RETURN @@ERROR;
     END
 
     -- Validación opcional: si no existe el doctor
-    IF NOT EXISTS (SELECT 1 FROM Doctor WHERE DniDoc = @dni)
+    IF NOT EXISTS (SELECT * FROM Doctor WHERE DniDoc = @dni)
     BEGIN
         RAISERROR('El doctor no existe', 16, 1);
         RETURN @@ERROR;
@@ -1487,13 +1498,21 @@ SELECT
     d.NomDoc         AS Nombre,
     d.ApellDoc       AS Apellido,
     e.Especialidad   AS Especialidad,
+	h.EstadoHorario as Estado,
+	h.HoraInicio as HoraInicio,
+	h.HoraFin as HoraFin,
+	ec.EstadoCita as EstadoCita,
     c.NomConst       AS Consultorio,
     d.CorreoDoctor   AS Correo,
     d.TelfDoctor     AS Telefono
 FROM Doctor d
 INNER JOIN Especialidad_Doctor ed ON d.DniDoc = ed.DniDoc
 INNER JOIN Especialidad e         ON ed.CodEspecia = e.CodEspecia
-INNER JOIN Consultorio c          ON d.CodConst = c.CodConst;
+INNER JOIN Consultorio c          ON d.CodConst = c.CodConst
+INNER JOIN Doctor_Horario as hd on (hd.DniDoc=d.DniDoc)
+INNER JOIN Horario as h on (hd.CodHorario=h.CodHorario)
+INNER JOIN Cita as ct on (ct.DniDoc=d.DniDoc)
+INNER JOIN EstadoCita as ec on (ec.IdEstadoCita=ct.IdEstadoCita);
 GO
 
 -- Listar sin filtro
@@ -1516,13 +1535,13 @@ BEGIN
         Nombre       LIKE '%' + @Filtro + '%' OR
         Apellido     LIKE '%' + @Filtro + '%' OR
         Especialidad LIKE '%' + @Filtro + '%' OR
+		Inicia LIKE '%' + @Filtro + '%' OR
+		Finaliza LIKE '%' + @Filtro + '%' OR
         Consultorio  LIKE '%' + @Filtro + '%' OR
         Correo       LIKE '%' + @Filtro + '%' OR
         Telefono     LIKE '%' + @Filtro + '%';
 END;
 GO
-
-
 
 --modificar
 CREATE OR ALTER PROCEDURE PA_actualizacion_Doctor
@@ -1538,21 +1557,21 @@ CREATE OR ALTER PROCEDURE PA_actualizacion_Doctor
 AS
 BEGIN
     -- Validar existencia del doctor
-    IF NOT EXISTS (SELECT 1 FROM Doctor WHERE DniDoc = @dni)
+    IF NOT EXISTS (SELECT * FROM Doctor WHERE DniDoc = @dni)
     BEGIN
         RAISERROR('El doctor no existe.', 16, 1);
         RETURN @@ERROR;
     END
 
     -- Validar existencia del consultorio
-    IF NOT EXISTS (SELECT 1 FROM Consultorio WHERE CodConst = @codconsultorio)
+    IF NOT EXISTS (SELECT * FROM Consultorio WHERE CodConst = @codconsultorio)
     BEGIN
         RAISERROR('No se encontró el consultorio.', 16, 1);
         RETURN @@ERROR;
     END
 
     -- Validar existencia de especialidad
-    IF NOT EXISTS (SELECT 1 FROM Especialidad WHERE CodEspecia = @codEspecialidad)
+    IF NOT EXISTS (SELECT * FROM Especialidad WHERE CodEspecia = @codEspecialidad)
     BEGIN
         RAISERROR('No se encontró la especialidad.', 16, 1);
         RETURN @@ERROR;
@@ -1569,7 +1588,7 @@ BEGIN
     WHERE DniDoc = @dni;
 
     -- Actualizar o insertar la especialidad del doctor
-    IF EXISTS (SELECT 1 FROM Especialidad_Doctor WHERE DniDoc = @dni)
+    IF EXISTS (SELECT * FROM Especialidad_Doctor WHERE DniDoc = @dni)
     BEGIN
         UPDATE Especialidad_Doctor
         SET CodEspecia = @codEspecialidad

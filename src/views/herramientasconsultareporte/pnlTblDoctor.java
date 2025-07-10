@@ -20,13 +20,11 @@ public class pnlTblDoctor extends JPanel {
     }
 
     private void initComponents() {
-        // Definir columnas
         String[] columnas = {
             "DNI", "Nombre", "Especialidad", "Estado",
             "Citas Pendientes", "Citas Atendidas", "Consultorio", "Correo", "Teléfono"
         };
 
-        // Modelo de tabla sin datos iniciales
         modelo = new DefaultTableModel(null, columnas) {
             private final Class<?>[] columnTypes = new Class<?>[] {
                 String.class, String.class, String.class, String.class,
@@ -52,8 +50,7 @@ public class pnlTblDoctor extends JPanel {
         tablaDoctores.setFont(new Font("Roboto", Font.PLAIN, 14));
         tablaDoctores.getTableHeader().setResizingAllowed(false);
         tablaDoctores.getTableHeader().setReorderingAllowed(false);
-        
-        // Mejorar apariencia de la tabla
+
         tablaDoctores.setRowHeight(25);
         tablaDoctores.setSelectionBackground(new Color(184, 207, 229));
         tablaDoctores.setSelectionForeground(Color.BLACK);
@@ -65,83 +62,54 @@ public class pnlTblDoctor extends JPanel {
         scrollTabla = new JScrollPane(tablaDoctores);
         scrollTabla.setBackground(Color.WHITE);
         scrollTabla.getViewport().setBackground(Color.WHITE);
-        
+
         add(scrollTabla, BorderLayout.CENTER);
     }
 
-    /**
-     * Método para cargar datos desde un ResultSet
-     * @param rs ResultSet con los datos de los doctores
-     */
     public void cargarDatos(ResultSet rs) {
         try {
-            // Limpiar la tabla
             limpiarTabla();
-            
-            // Cargar datos del ResultSet
+
             while (rs.next()) {
                 Object[] fila = new Object[9];
                 fila[0] = rs.getString("DNI");
                 fila[1] = rs.getString("Nombre");
                 fila[2] = rs.getString("Especialidad");
                 fila[3] = rs.getString("Estado");
-                fila[4] = rs.getInt("Citas Pendientes");
-                fila[5] = rs.getInt("Citas Atendidas");
+                fila[4] = rs.getInt("CitasPendientes");
+                fila[5] = rs.getInt("CitasAtendidas");
                 fila[6] = rs.getString("Consultorio");
                 fila[7] = rs.getString("Correo");
-                fila[8] = rs.getString("Teléfono");
-                
+                fila[8] = rs.getString("Telefono"); // ← corregido aquí
+
                 modelo.addRow(fila);
             }
-            
-            // Actualizar la vista
+
             modelo.fireTableDataChanged();
-            
+
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, 
-                "Error al cargar datos de doctores: " + e.getMessage(), 
+            JOptionPane.showMessageDialog(this,
+                "Error al cargar datos de doctores: " + e.getMessage(),
                 "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    /**
-     * Método para limpiar todos los datos de la tabla
-     */
     public void limpiarTabla() {
-        // Remover todas las filas
         modelo.setRowCount(0);
     }
 
-    /**
-     * Método para obtener el número de filas en la tabla
-     * @return número de filas
-     */
     public int getNumeroFilas() {
         return modelo.getRowCount();
     }
 
-    /**
-     * Método para obtener la fila seleccionada
-     * @return índice de la fila seleccionada, -1 si no hay selección
-     */
     public int getFilaSeleccionada() {
         return tablaDoctores.getSelectedRow();
     }
 
-    /**
-     * Método para obtener el valor de una celda específica
-     * @param fila índice de la fila
-     * @param columna índice de la columna
-     * @return valor de la celda
-     */
     public Object getValorCelda(int fila, int columna) {
         return modelo.getValueAt(fila, columna);
     }
 
-    /**
-     * Método para obtener el DNI del doctor seleccionado
-     * @return DNI del doctor seleccionado, null si no hay selección
-     */
     public String getDniDoctorSeleccionado() {
         int filaSeleccionada = getFilaSeleccionada();
         if (filaSeleccionada != -1) {
@@ -150,10 +118,6 @@ public class pnlTblDoctor extends JPanel {
         return null;
     }
 
-    /**
-     * Método para obtener el nombre del doctor seleccionado
-     * @return nombre del doctor seleccionado, null si no hay selección
-     */
     public String getNombreDoctorSeleccionado() {
         int filaSeleccionada = getFilaSeleccionada();
         if (filaSeleccionada != -1) {
@@ -162,29 +126,16 @@ public class pnlTblDoctor extends JPanel {
         return null;
     }
 
-    /**
-     * Método para establecer un mensaje cuando no hay datos
-     */
     public void mostrarMensajeSinDatos() {
         limpiarTabla();
         Object[] fila = {"No hay datos disponibles", "", "", "", "", "", "", "", ""};
         modelo.addRow(fila);
     }
 
-    /**
-     * Método para actualizar los datos de la tabla
-     */
     public void actualizarTabla() {
         modelo.fireTableDataChanged();
     }
 
-  
-
-    /**
-     * Método para buscar un doctor por DNI
-     * @param dni DNI del doctor a buscar
-     * @return índice de la fila si se encuentra, -1 si no se encuentra
-     */
     public int buscarDoctorPorDni(String dni) {
         for (int i = 0; i < modelo.getRowCount(); i++) {
             if (dni.equals(modelo.getValueAt(i, 0))) {
@@ -194,7 +145,6 @@ public class pnlTblDoctor extends JPanel {
         return -1;
     }
 
-    // Getters originales y nuevos
     public JTable getTablaDoctores() {
         return tablaDoctores;
     }
@@ -210,7 +160,8 @@ public class pnlTblDoctor extends JPanel {
     public JScrollPane getScrollTabla() {
         return scrollTabla;
     }
-        public JTable getTabla() {
+
+    public JTable getTabla() {
         return getTablaDoctores();
     }
 }
