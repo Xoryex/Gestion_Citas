@@ -3,6 +3,7 @@ package views;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.*;
 import static querys.QueryUser.usuario_actual;
 import views.panelesinicio.*;
 
@@ -87,4 +88,30 @@ public class Programa extends JFrame {
 
         setVisible(true);
     }
+    
+    private void oyentes(){
+        tbdpnInicio.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                String index = tbdpnInicio.getTitleAt(tbdpnInicio.getSelectedIndex());
+                switch (index) {
+                    case "INICIO":
+                        //
+                        break;
+                    case "CITAS MEDICAS":
+                        //
+                        break;
+                    case "MANTENIMIENTO":
+                        //
+                        break;
+                    case "CONSULTAS":
+                        //
+                        break;
+                    case "CONFIGURACIÓN":
+                        panelconfiguracion.actualizarDatos();
+                        break;
+                }
+            }
+        });
+    }   
 }

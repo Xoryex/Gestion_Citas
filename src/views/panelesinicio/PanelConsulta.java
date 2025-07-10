@@ -33,12 +33,6 @@ public class PanelConsulta extends JPanel {
     private JButton btnBuscar;
     private JButton btnLimpiar;
 
-    private pnlTblDoctoresMasCitas consltDoctoresMasCitas = new pnlTblDoctoresMasCitas();
-    private pnlTblPacientesFrecuentes consltPacientesFrecuentes = new pnlTblPacientesFrecuentes();
-    private pnlTblResumenCitasEstado consltResumenCitasEstado = new pnlTblResumenCitasEstado();
-    private pnlTblConsultoriosMasUtilizados consltConsultoriosMasUtilizados =   new pnlTblConsultoriosMasUtilizados();  
-    private pnlTblHorariosMasOcupados consltHorariosMasOcupados = new pnlTblHorariosMasOcupados();
-    private pnlTblEspecialidadesMasSolicitadas consltEspecialidadesMasSolicitadas = new pnlTblEspecialidadesMasSolicitadas();   
 
 
 
@@ -203,24 +197,6 @@ public class PanelConsulta extends JPanel {
                     case "Horario":
                         cargarDatosHorario(conn, filtro);
                         break;
-                    case "Doctores con más citas":
-                        cargarDatosDoctoresMasCitas(conn, filtro);
-                        break;
-                    case "Pacientes frecuentes":
-                        cargarDatosPacientesFrecuentes(conn, filtro);
-                        break;  
-                    case "Resumen de citas por estado":
-                        cargarDatosResumenCitasEstado(conn, filtro);
-                        break;
-                    case "Consultorios más utilizados": 
-                        cargarDatosConsultoriosMasUtilizados(conn, filtro);
-                        break;
-                    case "Horarios más ocupados":
-                        cargarDatosHorariosMasOcupados(conn, filtro);
-                        break;
-                    case "Especialidades más solicitadas":  
-                        cargarDatosEspecialidadesMasSolicitadas(conn, filtro);
-                        break;
                 }
             }
         } catch (SQLException e) {
@@ -280,75 +256,7 @@ public class PanelConsulta extends JPanel {
         }
     }
 
-        // 1. Doctores con más citas
-    private void cargarDatosDoctoresMasCitas(Connection conn, String filtro) throws SQLException {
-        String sql = "{CALL PA_CRUD_ListarDoctoresMasCitasConFiltro(?)}";
-        try (CallableStatement cs = conn.prepareCall(sql)) {
-            cs.setString(1, filtro);
-            ResultSet rs = cs.executeQuery();
-            consltDoctoresMasCitas.cargarDatos(rs);
-            rs.close();
-        }
-    }
-
-    // 2. Pacientes frecuentes
-    private void cargarDatosPacientesFrecuentes(Connection conn, String filtro) throws SQLException {
-        String sql = "{CALL PA_CRUD_ListarPacientesFrecuentesConFiltro(?)}";
-        try (CallableStatement cs = conn.prepareCall(sql)) {
-            cs.setString(1, filtro);
-            ResultSet rs = cs.executeQuery();
-            consltPacientesFrecuentes.cargarDatos(rs);
-            rs.close();
-        }
-    }
-
-    // 3. Resumen de citas por estado
-    private void cargarDatosResumenCitasEstado(Connection conn, String filtro) throws SQLException {
-        String sql = "{CALL PA_CRUD_ListarResumenCitasPorEstadoConFiltro(?)}";
-        try (CallableStatement cs = conn.prepareCall(sql)) {
-            cs.setString(1, filtro);
-            ResultSet rs = cs.executeQuery();
-            consltResumenCitasEstado.cargarDatos(rs);
-            rs.close();
-        }
-    }
-
-    // 4. Consultorios más utilizados
-    private void cargarDatosConsultoriosMasUtilizados(Connection conn, String filtro) throws SQLException {
-        String sql = "{CALL PA_CRUD_ListarConsultoriosMasUtilizadosConFiltro(?)}";
-        try (CallableStatement cs = conn.prepareCall(sql)) {
-            cs.setString(1, filtro);
-            ResultSet rs = cs.executeQuery();
-            consltConsultoriosMasUtilizados.cargarDatos(rs);
-            rs.close();
-        }
-    }
-
-    // 5. Horarios más ocupados
-    private void cargarDatosHorariosMasOcupados(Connection conn, String filtro) throws SQLException {
-        String sql = "{CALL PA_CRUD_ListarHorariosMasOcupadosConFiltro(?)}";
-        try (CallableStatement cs = conn.prepareCall(sql)) {
-            cs.setString(1, filtro);
-            ResultSet rs = cs.executeQuery();
-            consltHorariosMasOcupados.cargarDatos(rs);
-            rs.close();
-        }
-    }
-
-    // 6. Especialidades más solicitadas
-    private void cargarDatosEspecialidadesMasSolicitadas(Connection conn, String filtro) throws SQLException {
-        String sql = "{CALL PA_CRUD_ListarEspecialidadesMasSolicitadasConFiltro(?)}";
-        try (CallableStatement cs = conn.prepareCall(sql)) {
-            cs.setString(1, filtro);
-            ResultSet rs = cs.executeQuery();
-            consltEspecialidadesMasSolicitadas.cargarDatos(rs);
-            rs.close();
-        }
-    }
-
-
-
-
+        
     // Método público para limpiar búsqueda
     public void limpiarBusqueda() {
         txtBuscarConsult.setText("");

@@ -44,7 +44,7 @@ BEGIN
     IF @CodEspecia IS NULL
     BEGIN
         RAISERROR('ESTA ESPECIALIDAD NO SE ENCUENTRA EN EL SISTEMA', 16, 1)
-        RETURN
+        RETURN @@ERROR
     END
 	-- Generamos el codigo para consultorio
 	WHILE @Existe = 1
@@ -111,14 +111,14 @@ BEGIN
     IF NOT EXISTS (SELECT 1 FROM Consultorio WHERE CodConst = @CodConst)
     BEGIN
         RAISERROR('Este consultorio no existe.', 16, 1)
-        RETURN
+        RETURN @@error
     END
 
     -- Verificar si hay relación con doctores
     IF EXISTS (SELECT 1 FROM Doctor WHERE CodConst = @CodConst)
     BEGIN
         RAISERROR('Este consultorio no puede ser eliminado porque está relacionado con doctores.', 16, 1)
-        RETURN
+        RETURN @@error
     END
 
     -- Eliminar el consultorio
@@ -469,7 +469,7 @@ BEGIN
     IF @GeneroBit IS NULL
     BEGIN
         RAISERROR('Género no válido. Use M o F.', 16, 1)
-        RETURN
+        RETURN @@ERROR
     END
 
     -- Grupo sanguíneo
@@ -485,7 +485,7 @@ BEGIN
     IF @GrupSangPct IS NULL
     BEGIN
         RAISERROR('Grupo sanguíneo no válido.', 16, 1)
-        RETURN
+        RETURN @@ERROR
     END
 
     -- Estado Civil (nombre a número)
@@ -501,7 +501,7 @@ BEGIN
     IF @EstCivilPct IS NULL
     BEGIN
         RAISERROR('Estado civil no válido.', 16, 1)
-        RETURN
+        RETURN @@ERROR
     END
 
     -- Grado de instrucción (nombre a número)
@@ -521,13 +521,13 @@ BEGIN
     IF @GradInstrPct IS NULL
     BEGIN
         RAISERROR('Grado de instrucción no válido.', 16, 1)
-        RETURN
+        RETURN @@ERROR
     END
 
     IF EXISTS (SELECT 1 FROM Paciente WHERE DniPct = @DniPct)
     BEGIN
         RAISERROR('Este paciente ya existe!!', 16, 1)
-        RETURN
+        RETURN @@ERROR
     END
 
     INSERT INTO dbo.Paciente (
@@ -583,7 +583,7 @@ BEGIN
     IF @GeneroBit IS NULL
     BEGIN
         RAISERROR('Género no válido. Use M o F.', 16, 1)
-        RETURN
+        RETURN @@ERROR
     END
 
     -- Grupo sanguíneo
@@ -599,7 +599,7 @@ BEGIN
     IF @GrupSangPct IS NULL
     BEGIN
         RAISERROR('Grupo sanguíneo no válido.', 16, 1)
-        RETURN
+        RETURN @@ERROR
     END
 
     -- Estado civil
@@ -615,7 +615,7 @@ BEGIN
     IF @EstCivilPct IS NULL
     BEGIN
         RAISERROR('Estado civil no válido.', 16, 1)
-        RETURN
+        RETURN @@ERROR
     END
 
     -- Grado de instrucción
@@ -635,13 +635,13 @@ BEGIN
     IF @GradInstrPct IS NULL
     BEGIN
         RAISERROR('Grado de instrucción no válido.', 16, 1)
-        RETURN
+        RETURN @@ERROR
     END
 
     IF NOT EXISTS (SELECT 1 FROM Paciente WHERE DniPct = @DniPct)
     BEGIN
         RAISERROR('Este paciente no existe!!', 16, 1)
-        RETURN
+        RETURN  @@ERROR
     END
 
     UPDATE dbo.Paciente
@@ -839,7 +839,7 @@ BEGIN
     IF @HoraInicio >= @HoraFin
     BEGIN
         RAISERROR('La hora de inicio debe ser menor que la hora de fin.', 16, 1)
-        RETURN
+        RETURN @@ERROR
     END
 
     -- Generar código único para el nuevo horario
@@ -864,7 +864,7 @@ BEGIN
     IF @IdTurnoHorario IS NULL
     BEGIN
         RAISERROR('No se encontró el turno correspondiente en la tabla TurnoHorario.', 16, 1)
-        RETURN
+        RETURN @@ERROR
     END
 
     -- Insertar el nuevo horario
@@ -896,7 +896,7 @@ BEGIN
     IF NOT EXISTS (SELECT 1 FROM Horario WHERE CodHorario = @CodHorario)
     BEGIN
         RAISERROR('Código NO existe en la tabla Horario', 16, 1)
-        RETURN
+        RETURN @@ERROR
     END
 
     -- Determinar el nombre del turno usando HoraInicio
@@ -913,7 +913,7 @@ BEGIN
     IF @IdTurnoHorario IS NULL
     BEGIN
         RAISERROR('No se encontró el turno correspondiente en la tabla TurnoHorario', 16, 1)
-        RETURN
+        RETURN @@ERROR
     END
 
     -- Actualizar el horario
@@ -940,21 +940,21 @@ BEGIN
     IF NOT EXISTS (SELECT 1 FROM Horario WHERE CodHorario = @CodHorario)
     BEGIN
         RAISERROR('Código NO existe en la tabla Horario.', 16, 1)
-        RETURN
+        RETURN @@ERROR
     END
 
     -- Verificar si está relacionado con algún doctor
     IF EXISTS (SELECT 1 FROM Doctor_Horario WHERE CodHorario = @CodHorario)
     BEGIN
         RAISERROR('No se puede eliminar porque está relacionado con doctores.', 16, 1)
-        RETURN
+        RETURN @@ERROR
     END
 
     -- Verificar si está referenciado en citas
     IF EXISTS (SELECT 1 FROM Cita WHERE CodHorario = @CodHorario)
     BEGIN
         RAISERROR('No se puede eliminar porque está referenciado en una cita.', 16, 1)
-        RETURN
+        RETURN @@ERROR
     END
 
     -- Eliminar el horario
@@ -1898,7 +1898,7 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT 
-        e.EstadoCita      AS Estado,
+        e.EstadoCita      AS 'Estado',
         COUNT(c.CodCita)    AS 'Total Citas'
     FROM Cita AS c
     INNER JOIN EstadoCita AS e
@@ -1917,7 +1917,7 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT 
-        con.NomConst,
+        con.NomConst as 'Consultorio',
         COUNT(c.CodCita)              AS 'Veces Utilizado'
     FROM Cita AS c
     INNER JOIN Consultorio AS con
@@ -1937,7 +1937,7 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT 
-        h.EstadoHorario  AS Horario,
+        h.EstadoHorario  AS 'Estado Horario',
         COUNT(c.CodCita)  AS 'Total Citas'
     FROM Cita AS c
     INNER JOIN Horario AS h
@@ -1957,7 +1957,7 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT 
-        E.Especialidad,
+        E.Especialidad as 'Especialidad',
         COUNT(c.CodCita)          AS 'Total Solicitudes'
     FROM Cita AS c
     INNER JOIN Doctor AS d
