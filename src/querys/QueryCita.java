@@ -1,12 +1,11 @@
 package querys;
 
-import models.*;
-import utils.Conexion;
-
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
 import javax.swing.*;
+import models.*;
+import utils.Conexion;
 
 
 public class QueryCita implements Query<Cita> {
@@ -101,7 +100,7 @@ public class QueryCita implements Query<Cita> {
 
     public ArrayList<String[]> seleccionarConFiltro(String filtro) {
         Conexion.closeConnection();
-        String sql = "{CALL PA_CRUD_ListarCitasConFiltro(?)}";
+        String sql = "{CALL PA_CRUD_ListarCitasConFiltroCitas(?)}";
         ArrayList<String[]> filas = new ArrayList<>();
         
         try (Connection con = Conexion.getConnection();
@@ -273,6 +272,24 @@ public class QueryCita implements Query<Cita> {
             
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al anular la cita: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    final public void finalizarCita(String cita) {
+
+        String sql = "{CALL PA_CRUD_FINALIZAR(?)}";
+        
+        try {
+             CallableStatement stmt = Conexion.getConnection().prepareCall(sql) ;
+            stmt.setInt(1, Integer.parseInt(cita));
+            stmt.execute();
+            
+            JOptionPane.showMessageDialog(null, "Cita finalizada exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al finalizar la cita: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            Conexion.closeConnection();
         }
     }
     

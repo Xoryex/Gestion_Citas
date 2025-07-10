@@ -1,13 +1,11 @@
 package views.panelesinicio;
 
-import views.herramientascitas.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-
 import javax.swing.*;
-
 import querys.QueryCita;
+import views.herramientascitas.*;
 
 /**
  * Panel principal para la gestión de Citas Médicas.
@@ -126,8 +124,22 @@ public class PanelCitasMedicas extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 cardLayoutDatosCita.show(pnlContenidoCentral, "Reprogramar");
             }
-        });
+        }); 
         
+        
+
+        btnFinalizarCita.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                    
+                    int fila = TablaCitasPendientesReprogramadas.tablaCitas.getSelectedRow(); // Obtiene la fila seleccionada
+                    if (fila != -1) {
+                        Object valor = TablaCitasPendientesReprogramadas.tablaCitas.getValueAt(fila, 0); // Columna 0 = primer elemento
+                        String idCita = valor.toString(); // Convierte el valor a String
+                        queryCita.finalizarCita(idCita);}
+                }
+        });
+
         txtBuscarCita.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {

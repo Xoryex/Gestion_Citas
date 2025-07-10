@@ -40,46 +40,52 @@ public class pnlEspecialidadMant extends JPanel {
     }
 
     // Método para insertar una especialidad
-    public void agregar() {
-        JTextField txtNombre = new JTextField();
+    // Método para insertar una especialidad (versión modificada para recibir el código desde Java)
+public void agregar() {
+    JTextField txtCodigo = new JTextField();
+    JTextField txtNombre = new JTextField();
 
-        Object[] mensaje = {
-            "Especialidad:", txtNombre
-        };
+    Object[] mensaje = {
+        "Código (número):", txtCodigo,
+        "Especialidad:", txtNombre
+    };
 
-        int opcion = JOptionPane.showConfirmDialog(this, mensaje, "Agregar Especialidad", JOptionPane.OK_CANCEL_OPTION);
+    int opcion = JOptionPane.showConfirmDialog(this, mensaje, "Agregar Especialidad", JOptionPane.OK_CANCEL_OPTION);
 
-        if (opcion == JOptionPane.OK_OPTION) {
-            String especialidad = txtNombre.getText().trim();
+    if (opcion == JOptionPane.OK_OPTION) {
+        String codEspeciaStr = txtCodigo.getText().trim();
+        String especialidad = txtNombre.getText().trim();
 
-            if (especialidad.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "El nombre de la especialidad no puede estar vacío.");
-                return;
+        if (codEspeciaStr.isEmpty() || especialidad.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El código y la especialidad no pueden estar vacíos.");
+            return;
+        }
+
+        try {
+            int codEspecia = Integer.parseInt(codEspeciaStr);
+
+            if (conn != null) {
+                CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_InsertarEspecialidad(?, ?)}");
+                stmt.setInt(1, codEspecia);       // Código ingresado por el usuario
+                stmt.setString(2, especialidad);   // Especialidad ingresada
+
+                stmt.execute();
+
+                JOptionPane.showMessageDialog(this, "Especialidad agregada correctamente.");
+                stmt.close();
+                cargarDatos(); // Recargar datos después de agregar
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.");
             }
-
-            try {
-                if (conn != null) {
-                    CallableStatement stmt = conn.prepareCall("{CALL PA_CRUD_InsertarEspecialidad(?, ?)}");
-                    stmt.setString(1, especialidad);
-                    stmt.registerOutParameter(2, java.sql.Types.NUMERIC);
-
-                    stmt.execute();
-
-                    int codGenerado = stmt.getInt(2);
-                    JOptionPane.showMessageDialog(this, "Especialidad agregada correctamente. Código generado: " + codGenerado);
-
-                    stmt.close();
-                    cargarDatos(); // Recargar datos después de agregar
-                    conn.close();
-                } else {
-                    JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.");
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error al insertar: " + e.getMessage());
-            }
+        } catch (NumberFormatException nfe) {
+            JOptionPane.showMessageDialog(this, "El código debe ser un número entero.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al insertar: " + e.getMessage());
         }
     }
+}
+
 
     // Método para actualizar una especialidad
     public void actualizar() {

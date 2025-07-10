@@ -1,6 +1,4 @@
-﻿SELECT * FROM Doctor
-WHERE DniDoc=787878
-
+﻿
 create or alter procedure PA_ListarSoloEspecialidad
 as
 SELECT Especialidad
@@ -75,7 +73,7 @@ BEGIN
     DECLARE @CodEspecia NUMERIC(8,0)
 
     -- Verificar si el consultorio existe
-    IF NOT EXISTS(SELECT 1 FROM Consultorio WHERE CodConst = @CodConst)
+    IF NOT EXISTS( SELECT * FROM Consultorio WHERE CodConst = @CodConst)
     BEGIN
         RAISERROR('¡Este consultorio no existe!', 16, 1)
         RETURN @@ERROR
@@ -108,14 +106,14 @@ CREATE OR ALTER PROCEDURE PA_CRUD_EliminarConsultorio
 AS
 BEGIN
     -- Verificar si el consultorio existe
-    IF NOT EXISTS (SELECT 1 FROM Consultorio WHERE CodConst = @CodConst)
+    IF NOT EXISTS ( SELECT * FROM Consultorio WHERE CodConst = @CodConst)
     BEGIN
         RAISERROR('Este consultorio no existe.', 16, 1)
         RETURN
     END
 
     -- Verificar si hay relación con doctores
-    IF EXISTS (SELECT 1 FROM Doctor WHERE CodConst = @CodConst)
+    IF EXISTS ( SELECT * FROM Doctor WHERE CodConst = @CodConst)
     BEGIN
         RAISERROR('Este consultorio no puede ser eliminado porque está relacionado con doctores.', 16, 1)
         RETURN
@@ -172,32 +170,29 @@ GO
 
 CREATE OR ALTER PROCEDURE PA_CRUD_InsertarEspecialidad
 (
-    @Especialidad AS VARCHAR(120),
-    @CodEspecia AS NUMERIC(8,0) OUTPUT
+    @CodEspecia AS NUMERIC(8,0),      
+    @Especialidad AS VARCHAR(120)
 )
 AS
 BEGIN
-    DECLARE @Existe INT = 1
-	-- verificamos que no exista otra con el mismo nombre
-    IF EXISTS (SELECT 1 FROM Especialidad WHERE Especialidad = @Especialidad)
+    -- Verificamos que no exista otra con el mismo nombre
+    IF EXISTS (SELECT * FROM Especialidad WHERE Especialidad = @Especialidad)
     BEGIN
         RAISERROR('YA EXISTE ESTA ESPECIALIDAD, PRUEBA CON OTRO NOMBRE', 16, 1)
-        RETURN @@ERROR
+        RETURN
     END
 
-    -- Generar Codigo Unico
-    WHILE @Existe = 1
+    IF EXISTS (SELECT * FROM Especialidad WHERE CodEspecia = @CodEspecia)
     BEGIN
-        SET @CodEspecia = CAST(RAND() * 89999999 + 10000000 AS INT)
-        IF NOT EXISTS (SELECT 1 FROM Especialidad WHERE CodEspecia = @CodEspecia)
-            SET @Existe = 0
+        RAISERROR('YA EXISTE UN REGISTRO CON ESE CÓDIGO', 16, 1)
+        RETURN
     END
 
-   
     INSERT INTO dbo.Especialidad (CodEspecia, Especialidad)
     VALUES (@CodEspecia, @Especialidad)
 END
 GO
+
 
 --MODIFICAR
 CREATE OR ALTER PROCEDURE PA_CRUD_ModificarEspecialidad
@@ -207,13 +202,13 @@ CREATE OR ALTER PROCEDURE PA_CRUD_ModificarEspecialidad
 AS
 BEGIN
 
-    IF NOT EXISTS (SELECT 1 FROM Especialidad WHERE CodEspecia = @CodEspecia)
+    IF NOT EXISTS ( SELECT * FROM Especialidad WHERE CodEspecia = @CodEspecia)
     BEGIN
         RAISERROR('Código NO existe en la tabla Especialidad.', 16, 1)
         RETURN @@ERROR
     END
 
-    IF EXISTS (SELECT 1 FROM Especialidad WHERE Especialidad = @Especialidad AND CodEspecia <> @CodEspecia)
+    IF EXISTS ( SELECT * FROM Especialidad WHERE Especialidad = @Especialidad AND CodEspecia <> @CodEspecia)
     BEGIN
         RAISERROR('ESTA ESPECIALIDAD YA EXISTE, INTENTA CON OTRO NOMBRE', 16, 1)
         RETURN @@ERROR
@@ -233,14 +228,14 @@ CREATE OR ALTER PROCEDURE PA_CRUD_EliminarEspecialidad
 AS
 BEGIN
     -- Verificar existencia del código
-    IF NOT EXISTS (SELECT 1 FROM Especialidad WHERE CodEspecia = @CodEspecia)
+    IF NOT EXISTS ( SELECT * FROM Especialidad WHERE CodEspecia = @CodEspecia)
     BEGIN
         RAISERROR('El codigo no existe en la tabla Especialidad.', 16, 1);
         RETURN @@ERROR;
     END
 
     -- Relacion con tabla Especialidad_Doctor
-    IF EXISTS (SELECT 1 FROM Especialidad_Doctor WHERE CodEspecia = @CodEspecia)
+    IF EXISTS ( SELECT * FROM Especialidad_Doctor WHERE CodEspecia = @CodEspecia)
     BEGIN
         RAISERROR('No se puede eliminar porque esta relacionado con doctores.', 16, 1);
         RETURN @@ERROR;
@@ -260,14 +255,15 @@ END
 GO
 
 --LISTAR CON FILTRO
-CREATE or alter PROCEDURE PA_CRUD_ListarEspecialidadConFiltro
-(@Filtro Varchar(150))
+CREATE OR ALTER PROCEDURE PA_CRUD_ListarEspecialidadConFiltro
+(@Filtro VARCHAR(150))
 AS
 BEGIN
-SELECT * FROM Vw_ListarEspecialidad
-WHERE [Codigo]+[Nombre Especialidad] LIKE '%'+@Filtro+'%'
+    SELECT * FROM Vw_ListarEspecialidad
+    WHERE CAST([Codigo] AS VARCHAR) + [Nombre Especialidad] LIKE '%' + @Filtro + '%'
 END
 GO
+
 --CREAR VISTA
 
 CREATE or alter VIEW Vw_ListarEspecialidad
@@ -308,7 +304,7 @@ CREATE OR ALTER PROCEDURE PA_CRUD_InsertarRecepcionista
 )
 AS
 BEGIN
-    IF EXISTS(SELECT 1 FROM Recepcionista WHERE DniRecep = @DniRecep)
+    IF EXISTS( SELECT * FROM Recepcionista WHERE DniRecep = @DniRecep)
     BEGIN
         RAISERROR('Error: El Recepcionista ya existe.', 16, 1);
     END
@@ -333,7 +329,7 @@ CREATE OR ALTER PROCEDURE PA_CRUD_ModificarRecepcionista
 )
 AS
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM Recepcionista WHERE DniRecep = @DniRecep)
+    IF NOT EXISTS( SELECT * FROM Recepcionista WHERE DniRecep = @DniRecep)
     BEGIN
         RAISERROR('Error: El Recepcionista no existe.', 16, 1);
     END
@@ -357,12 +353,12 @@ CREATE OR ALTER PROCEDURE PA_CRUD_EliminarRecepcionista
 (@DniRecep AS int)
 AS
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM Recepcionista WHERE DniRecep = @DniRecep)
+    IF NOT EXISTS( SELECT * FROM Recepcionista WHERE DniRecep = @DniRecep)
     BEGIN
         RAISERROR('Error: El Recepcionista no existe.', 16, 1);
     END
 
-    ELSE IF EXISTS(SELECT 1 FROM Cita WHERE DniRecep = @DniRecep)
+    ELSE IF EXISTS( SELECT * FROM Cita WHERE DniRecep = @DniRecep)
     BEGIN
         RAISERROR('Error: No se puede eliminar el recepcionista porque está relacionado con una o más citas.', 16, 1);
     END
@@ -387,7 +383,7 @@ CREATE OR ALTER PROCEDURE PA_CRUD_ListarRecepcionistaConFiltro
     @FiltroTexto NVARCHAR(100) = NULL
 AS
 BEGIN
-    SET NOCOUNT ON;
+     
     
     SELECT 
         r.DniRecep AS [DNI],
@@ -524,7 +520,7 @@ BEGIN
         RETURN
     END
 
-    IF EXISTS (SELECT 1 FROM Paciente WHERE DniPct = @DniPct)
+    IF EXISTS ( SELECT * FROM Paciente WHERE DniPct = @DniPct)
     BEGIN
         RAISERROR('Este paciente ya existe!!', 16, 1)
         RETURN
@@ -638,7 +634,7 @@ BEGIN
         RETURN
     END
 
-    IF NOT EXISTS (SELECT 1 FROM Paciente WHERE DniPct = @DniPct)
+    IF NOT EXISTS ( SELECT * FROM Paciente WHERE DniPct = @DniPct)
     BEGIN
         RAISERROR('Este paciente no existe!!', 16, 1)
         RETURN
@@ -676,7 +672,7 @@ CREATE OR ALTER PROCEDURE PA_CRUD_EliminarPaciente
 AS
 BEGIN
     -- Verificar si el paciente existe
-    IF NOT EXISTS (SELECT 1 FROM Paciente WHERE DniPct = @DniPct)
+    IF NOT EXISTS ( SELECT * FROM Paciente WHERE DniPct = @DniPct)
     BEGIN
         RAISERROR('Este paciente no existe!!', 16, 1)
         RETURN @@ERROR
@@ -754,7 +750,7 @@ CREATE OR ALTER PROCEDURE PA_CRUD_ListarPacienteConFiltro
     @FiltroTexto NVARCHAR(100) = NULL
 AS
 BEGIN
-    SET NOCOUNT ON;
+     
     
     SELECT 
         p.DniPct AS [DNI],
@@ -846,7 +842,7 @@ BEGIN
     WHILE @Existe = 1
     BEGIN
         SET @CodHorario = CAST(RAND() * 89999999 + 10000000 AS INT)
-        IF NOT EXISTS (SELECT 1 FROM Horario WHERE CodHorario = @CodHorario)
+        IF NOT EXISTS ( SELECT * FROM Horario WHERE CodHorario = @CodHorario)
             SET @Existe = 0
     END
 
@@ -893,7 +889,7 @@ BEGIN
     DECLARE @IdTurnoHorario INT
 
     -- Validar si el horario existe
-    IF NOT EXISTS (SELECT 1 FROM Horario WHERE CodHorario = @CodHorario)
+    IF NOT EXISTS ( SELECT * FROM Horario WHERE CodHorario = @CodHorario)
     BEGIN
         RAISERROR('Código NO existe en la tabla Horario', 16, 1)
         RETURN
@@ -937,21 +933,21 @@ CREATE OR ALTER PROCEDURE PA_CRUD_EliminarHorario
 AS
 BEGIN
     -- Validar si el horario existe
-    IF NOT EXISTS (SELECT 1 FROM Horario WHERE CodHorario = @CodHorario)
+    IF NOT EXISTS ( SELECT * FROM Horario WHERE CodHorario = @CodHorario)
     BEGIN
         RAISERROR('Código NO existe en la tabla Horario.', 16, 1)
         RETURN
     END
 
     -- Verificar si está relacionado con algún doctor
-    IF EXISTS (SELECT 1 FROM Doctor_Horario WHERE CodHorario = @CodHorario)
+    IF EXISTS ( SELECT * FROM Doctor_Horario WHERE CodHorario = @CodHorario)
     BEGIN
         RAISERROR('No se puede eliminar porque está relacionado con doctores.', 16, 1)
         RETURN
     END
 
     -- Verificar si está referenciado en citas
-    IF EXISTS (SELECT 1 FROM Cita WHERE CodHorario = @CodHorario)
+    IF EXISTS ( SELECT * FROM Cita WHERE CodHorario = @CodHorario)
     BEGIN
         RAISERROR('No se puede eliminar porque está referenciado en una cita.', 16, 1)
         RETURN
@@ -1000,7 +996,7 @@ CREATE OR ALTER PROCEDURE PA_CRUD_ListarHorarioConFiltro
     @FiltroTexto NVARCHAR(100) = NULL
 AS
 BEGIN
-    SET NOCOUNT ON;
+     
     
     SELECT 
         h.CodHorario AS [ID Horario],
@@ -1038,187 +1034,6 @@ go
 
 
 -------------------------------------------------------------------------------------------
-
------------------------------------
---Tabla CITA                
------------------------------------
-
---Insertar
-/*insertar recepcionista dni, paciente dni, la especialidad, fecha inicio, hora inicio, tipo de atencion,
-pero tambien que se ponga esa sita en un estado pendiente, */
-CREATE OR ALTER PROCEDURE PA_CRUD_InsertarCita
-(
-    @DniRecep        int,
-	@DniPct          int,
-	@Especialidad	 varchar(100),
-	@FechaCita       DATE,
-	@HoraInicio		 time (7),
-    @TipoAtencion	 varchar (40)
-)
-AS
-BEGIN 
-	
-	declare @CodCita varchar (15)
-	declare @Prefijo varchar (3)
-	declare @Random varchar (5)
-	declare @Existe int = 1;
-	
-	set @Prefijo = left(@Especialidad, 3);
-	while @Existe = 1
-	begin
-		set @Random = CAST(CAST(RAND() * 90000 + 10000 AS INT) AS VARCHAR);
-		set @CodCita = 'CIT-' + @Prefijo + @Random;
-		-- Verificamos que no exista en la tabla
-		if not exists (SELECT * FROM Cita WHERE CodCita = @CodCita)
-		set @Existe = 0
-	end
-	--verificamos que el paciente tenga una cita en el mismo horario
-    IF EXISTS (SELECT * FROM Cita WHERE DniPct = @DniPct AND HoraInicio = @HoraInicio)
-    BEGIN
-        RAISERROR('EL PACIENTE TIENE UNA CITA PENDIENTE DURANTE ESE HORARIO', 16, 1);
-        RETURN @@ERROR;
-    END
-
-    -- Insertar nueva cita
-   /* INSERT INTO dbo.Cita (CodCita,DniRecep,DniPct,DniDoc,)
-    VALUES (
-        @DniRecep, @CodCita, @CodHorario, @DniPct, @DniDoc,
-        @FechaCita, @IdEstadoCita, @IdTipoAtencion, @FechaReprogra, @FechaAnulacion
-    );*/
-
-    RETURN 0;
-END
-GO
-
---Modificar
-
-CREATE OR ALTER PROCEDURE PA_CRUD_ModificarCita 
-(
-    @DniRecep INT,
-    @CodCita VARCHAR(50),
-    @CodHorario INT,
-    @DniPct INT,
-    @DniDoc INT,
-    @HoraInicio TIME(7),
-    @HoraFin TIME(7),
-    @FechaCita DATE,
-    @IdEstadoCita INT,
-    @IdTipoAtencion INT,
-    @FechaReprogra DATE,
-    @FechaAnulacion DATE
-)
-AS
-BEGIN
-    -- Validación: Verificar si la cita existe
-    IF NOT EXISTS(SELECT 1 FROM Cita WHERE CodCita = @CodCita)
-    BEGIN
-        RAISERROR('Esta cita no existe.', 16, 1);
-        RETURN @@ERROR;
-    END
-
-    -- Actualización
-    UPDATE dbo.Cita
-    SET 
-        DniRecep = @DniRecep,
-        CodHorario = @CodHorario,
-        DniPct = @DniPct,
-        DniDoc = @DniDoc,
-        HoraInicio = @HoraInicio,
-        HoraFin = @HoraFin,
-        FechaCita = @FechaCita,
-        IdEstadoCita = @IdEstadoCita,
-        IdTipoAtencion = @IdTipoAtencion,
-        FechaReprogra = @FechaReprogra,
-        FechaAnulacion = @FechaAnulacion
-    WHERE CodCita = @CodCita
-END
-GO
-
-
---Eliminar
-
-CREATE or alter PROCEDURE PA_CRUD_EliminarCita
-(@DniRecep int,@CodCita varchar(50),@CodHorario int,@DniPct int,
-    @DniDoc int,@HoraInicio time(7),@HoraFin time(7),@FechaCita date,@EstadoCita int,
-    @TipoAtencion int,@FechaReprogra date,@FechaAnulacion date)
- AS
- BEGIN
-
-	IF NOT EXISTS(SELECT * FROM Cita WHERE DniPct=@DniPct)
-	BEGIN
-	RAISERROR('Esta cita no existe!!',16,1)
-	RETURN @@ERROR
-	END
-
-delete from Cita
-	   where DniPct=@DniPct
- END
-GO
-
-
-
-
---Listar
-
--- Listar todas las citas
-CREATE OR ALTER PROCEDURE PA_CRUD_ListarCitas
-AS
-BEGIN
-    SELECT * FROM Vw_ListarCitas
-END
-GO
-
--- Listar con filtro 
-CREATE OR ALTER PROCEDURE PA_CRUD_ListarCitasConFiltro
-(
-    @Filtro VARCHAR(100)
-)
-AS
-BEGIN
-    SELECT * 
-    FROM Vw_ListarCitas
-    WHERE 
-        IdCita LIKE '%' + @Filtro + '%' OR
-        DniPaciente LIKE '%' + @Filtro + '%' OR
-        NombrePaciente LIKE '%' + @Filtro + '%' OR
-        Consultorio LIKE '%' + @Filtro + '%' OR
-        NombreDoctor LIKE '%' + @Filtro + '%' OR
-        CONVERT(VARCHAR, HoraInicio, 108) LIKE '%' + @Filtro + '%' OR
-        CONVERT(VARCHAR, HoraFin, 108) LIKE '%' + @Filtro + '%' OR
-        Atencion LIKE '%' + @Filtro + '%' OR
-        Estado LIKE '%' + @Filtro + '%' OR
-        NombreRecepcionista LIKE '%' + @Filtro + '%';
-END
-GO
-
-
-
---Vista para crud listar
-CREATE OR ALTER VIEW Vw_ListarCitas
-AS
-SELECT
-    c.CodCita                    AS IdCita,
-    p.DniPct                    AS DniPaciente,
-    (p.NomPct + ' ' + p.ApellPct) AS NombrePaciente,
-    con.NomConst             AS Consultorio,
-    (d.NomDoc + ' ' + d.ApellDoc) AS NombreDoctor,
-    c.HoraInicio,
-    c.HoraFin,
-    ta.TipoAtencion       AS Atencion,
-    ec.EstadoCita         AS Estado,
-    (r.NomRecep + ' ' + r.ApellRecep) AS NombreRecepcionista
-FROM
-    Cita c
-    INNER JOIN Paciente p        ON c.DniPct = p.DniPct
-    INNER JOIN Doctor d          ON c.DniDoc = d.DniDoc
-    INNER JOIN Recepcionista r   ON c.DniRecep = r.DniRecep
-    INNER JOIN Horario h         ON c.CodHorario = h.CodHorario
-    INNER JOIN Consultorio con   ON d.CodConst = con.CodConst
-    INNER JOIN EstadoCita ec     ON c.IdEstadoCita = ec.IdEstadoCita
-    INNER JOIN TipoAtencion ta   ON c.IdTipoAtencion = ta.IdTipoAtencion;
-GO
-
-
 
 -----------------------------------
 --CRUD Especialidad_Doctor        
@@ -1544,7 +1359,7 @@ CREATE OR ALTER PROCEDURE PA_CRUD_ListarDoctorConFiltro
     @FiltroTexto NVARCHAR(100) = NULL
 AS
 BEGIN
-    SET NOCOUNT ON;
+     
 
     SELECT *
     FROM Vw_ListarConsultaDoctores
@@ -1667,8 +1482,7 @@ AS
 BEGIN
     -- Validar si ya existe la relación
     IF EXISTS (
-        SELECT 1
-        FROM Doctor_Horario 
+         SELECT * FROM Doctor_Horario 
         WHERE CodHorario = @CodHorario AND DniDoc = @DniDoc
     )
     BEGIN
@@ -1734,8 +1548,7 @@ GO
 CREATE OR ALTER PROCEDURE PA_CRUD_ListarDoctorEspecialidad
 AS
 BEGIN
-    SELECT * 
-    FROM Vw_ListarDoctorEspecialidad;
+    SELECT * FROM Vw_ListarDoctorEspecialidad;
 END
 GO
 --CON FILTRO
@@ -1777,7 +1590,7 @@ CREATE or alter PROCEDURE PA_CRUD_EliminarDoctorHorario
 AS
 BEGIN
     IF NOT EXISTS (
-        SELECT 1 FROM Doctor_Horario
+        SELECT * FROM Doctor_Horario
         WHERE DniDoc = @DniDoc AND CodHorario = @CodHorario
     )
     BEGIN
@@ -1842,7 +1655,7 @@ GO
 CREATE OR ALTER PROCEDURE PA_CRUD_MostrarCitasPendientes
 AS
 BEGIN
-    SET NOCOUNT ON;
+     
     
     SELECT 
         c.CodCita AS ID,
@@ -1865,7 +1678,7 @@ CREATE OR ALTER PROCEDURE PA_CRUD_ListarHorarioConFiltro
     @FiltroTexto NVARCHAR(100) = NULL
 AS
 BEGIN
-    SET NOCOUNT ON;
+     
     
     SELECT 
         h.CodHorario AS [ID Horario],
@@ -1906,7 +1719,7 @@ CREATE or alter PROCEDURE PA_CRUD_ListarDoctoresMasCitasConFiltro
     @pFiltro NVARCHAR(100)
 AS
 BEGIN
-    SET NOCOUNT ON;
+     
 
     SELECT 
         d.NomDoc as 'Nombre Doctor',
@@ -1926,7 +1739,7 @@ CREATE or alter PROCEDURE PA_CRUD_ListarPacientesFrecuentesConFiltro
     @pFiltro NVARCHAR(100)
 AS
 BEGIN
-    SET NOCOUNT ON;
+     
 
     SELECT 
         p.NomPct as 'Nombre Paciente',
@@ -1944,7 +1757,7 @@ CREATE or alter PROCEDURE PA_CRUD_ListarResumenCitasPorEstadoConFiltro
     @pFiltro NVARCHAR(50)
 AS
 BEGIN
-    SET NOCOUNT ON;
+     
 
     SELECT 
         e.EstadoCita      AS Estado,
@@ -1963,10 +1776,10 @@ CREATE or alter PROCEDURE PA_CRUD_ListarConsultoriosMasUtilizadosConFiltro
     @pFiltro NVARCHAR(100)
 AS
 BEGIN
-    SET NOCOUNT ON;
+     
 
     SELECT 
-        con.NomConst,
+        con.NomConst as 'Consultorio',
         COUNT(c.CodCita)              AS 'Veces Utilizado'
     FROM Cita AS c
     INNER JOIN Consultorio AS con
@@ -1983,7 +1796,7 @@ CREATE or alter  PROCEDURE PA_CRUD_ListarHorariosMasOcupadosConFiltro
     @pFiltro NVARCHAR(50)
 AS
 BEGIN
-    SET NOCOUNT ON;
+     
 
     SELECT 
         h.EstadoHorario  AS Horario,
@@ -2003,7 +1816,7 @@ CREATE  or alter PROCEDURE PA_CRUD_ListarEspecialidadesMasSolicitadasConFiltro
     @pFiltro NVARCHAR(100)
 AS
 BEGIN
-    SET NOCOUNT ON;
+     
 
     SELECT 
         E.Especialidad,
@@ -2019,8 +1832,7 @@ BEGIN
     ORDER BY COUNT(c.CodCita) DESC;
 END;
 GO
-
----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
 create or alter procedure PA_CRUD_ListarCitasPendientesReprogramadas
 as
 begin 
@@ -2084,3 +1896,201 @@ begin
 	where h.EstadoHorario=1
 	group by e.CodEspecia,e.Especialidad
 end
+go
++--------------------------------------------
+
+create or alter procedure PA_CRUD_FINALIZAR
+(@idcita int)
+AS
+Begin
+if not exists (Select CodCita from Cita where CodCita=@idcita and IdEstadoCita in (1,2))
+Begin 
+  Raiserror('Estado ya esa anulado o finalizado',16,1)
+ Return @@error
+End
+
+Update Cita
+Set IdEstadoCita=4
+Where CodCita = @idcita
+End
+-----------------------
+cita
+-----------------------------------
+--Tabla CITA                
+-----------------------------------
+
+--Insertar
+/*insertar recepcionista dni, paciente dni, la especialidad, fecha inicio, hora inicio, tipo de atencion,
+pero tambien que se ponga esa sita en un estado pendiente, */
+CREATE OR ALTER PROCEDURE PA_CRUD_InsertarCita
+(
+    @DniRecep        int,
+	@DniPct          int,
+	@Especialidad	 varchar(100),
+	@FechaCita       DATE,
+	@HoraInicio		 time (7),
+    @TipoAtencion	 varchar (40)
+)
+AS
+BEGIN 
+	
+	declare @CodCita varchar (15)
+	declare @Prefijo varchar (3)
+	declare @Random varchar (5)
+	declare @Existe int = 1;
+	
+	set @Prefijo = left(@Especialidad, 3);
+	while @Existe = 1
+	begin
+		set @Random = CAST(CAST(RAND() * 90000 + 10000 AS INT) AS VARCHAR);
+		set @CodCita = 'CIT-' + @Prefijo + @Random;
+		-- Verificamos que no exista en la tabla
+		if not exists (SELECT * FROM Cita WHERE CodCita = @CodCita)
+		set @Existe = 0
+	end
+	--verificamos que el paciente tenga una cita en el mismo horario
+    IF EXISTS (SELECT * FROM Cita WHERE DniPct = @DniPct AND HoraInicio = @HoraInicio)
+    BEGIN
+        RAISERROR('EL PACIENTE TIENE UNA CITA PENDIENTE DURANTE ESE HORARIO', 16, 1);
+        RETURN @@ERROR;
+    END
+
+    -- Insertar nueva cita
+   /* INSERT INTO dbo.Cita (CodCita,DniRecep,DniPct,DniDoc,)
+    VALUES (
+        @DniRecep, @CodCita, @CodHorario, @DniPct, @DniDoc,
+        @FechaCita, @IdEstadoCita, @IdTipoAtencion, @FechaReprogra, @FechaAnulacion
+    );*/
+
+    RETURN 0;
+END
+GO
+
+--Modificar
+
+CREATE OR ALTER PROCEDURE PA_CRUD_ModificarCita 
+(
+    @DniRecep INT,
+    @CodCita VARCHAR(50),
+    @CodHorario INT,
+    @DniPct INT,
+    @DniDoc INT,
+    @HoraInicio TIME(7),
+    @HoraFin TIME(7),
+    @FechaCita DATE,
+    @IdEstadoCita INT,
+    @IdTipoAtencion INT,
+    @FechaReprogra DATE,
+    @FechaAnulacion DATE
+)
+AS
+BEGIN
+    -- Validación: Verificar si la cita existe
+    IF NOT EXISTS( SELECT * FROM Cita WHERE CodCita = @CodCita)
+    BEGIN
+        RAISERROR('Esta cita no existe.', 16, 1);
+        RETURN @@ERROR;
+    END
+
+    -- Actualización
+    UPDATE dbo.Cita
+    SET 
+        DniRecep = @DniRecep,
+        CodHorario = @CodHorario,
+        DniPct = @DniPct,
+        DniDoc = @DniDoc,
+        HoraInicio = @HoraInicio,
+        HoraFin = @HoraFin,
+        FechaCita = @FechaCita,
+        IdEstadoCita = @IdEstadoCita,
+        IdTipoAtencion = @IdTipoAtencion,
+        FechaReprogra = @FechaReprogra,
+        FechaAnulacion = @FechaAnulacion
+    WHERE CodCita = @CodCita
+END
+GO
+
+
+--Eliminar
+
+CREATE or alter PROCEDURE PA_CRUD_EliminarCita
+(@DniRecep int,@CodCita varchar(50),@CodHorario int,@DniPct int,
+    @DniDoc int,@HoraInicio time(7),@HoraFin time(7),@FechaCita date,@EstadoCita int,
+    @TipoAtencion int,@FechaReprogra date,@FechaAnulacion date)
+ AS
+ BEGIN
+
+	IF NOT EXISTS(SELECT * FROM Cita WHERE DniPct=@DniPct)
+	BEGIN
+	RAISERROR('Esta cita no existe!!',16,1)
+	RETURN @@ERROR
+	END
+
+delete from Cita
+	   where DniPct=@DniPct
+ END
+GO
+
+
+
+--Listar
+
+-- Listar todas las citas
+CREATE OR ALTER PROCEDURE PA_CRUD_ListarCitas
+AS
+BEGIN
+    SELECT * FROM Vw_ListarCitas
+END
+GO
+
+-- Listar con filtro 
+CREATE OR ALTER PROCEDURE PA_CRUD_ListarCitasConFiltro
+(
+    @Filtro VARCHAR(100)
+)
+AS
+BEGIN
+    SELECT * 
+    FROM Vw_ListarCitas
+    WHERE 
+        IdCita LIKE '%' + @Filtro + '%' OR
+        DniPaciente LIKE '%' + @Filtro + '%' OR
+        NombrePaciente LIKE '%' + @Filtro + '%' OR
+        Consultorio LIKE '%' + @Filtro + '%' OR
+        NombreDoctor LIKE '%' + @Filtro + '%' OR
+        CONVERT(VARCHAR, HoraInicio, 108) LIKE '%' + @Filtro + '%' OR
+        CONVERT(VARCHAR, HoraFin, 108) LIKE '%' + @Filtro + '%' OR
+        Atencion LIKE '%' + @Filtro + '%' OR
+        Estado LIKE '%' + @Filtro + '%' OR
+        NombreRecepcionista LIKE '%' + @Filtro + '%';
+END
+GO
+
+
+
+--Vista para crud listar
+CREATE OR ALTER VIEW Vw_ListarCitas
+AS
+SELECT
+    c.CodCita                    AS IdCita,
+    p.DniPct                    AS DniPaciente,
+    (p.NomPct + ' ' + p.ApellPct) AS NombrePaciente,
+    con.NomConst             AS Consultorio,
+    (d.NomDoc + ' ' + d.ApellDoc) AS NombreDoctor,
+    c.HoraInicio,
+    c.HoraFin,
+    ta.TipoAtencion       AS Atencion,
+    ec.EstadoCita         AS Estado,
+    (r.NomRecep + ' ' + r.ApellRecep) AS NombreRecepcionista
+FROM
+    Cita as c
+    INNER JOIN Paciente p        ON c.DniPct = p.DniPct
+    INNER JOIN Doctor d          ON c.DniDoc = d.DniDoc
+    INNER JOIN Recepcionista r   ON c.DniRecep = r.DniRecep
+    INNER JOIN Horario h         ON c.CodHorario = h.CodHorario
+    INNER JOIN Consultorio con   ON d.CodConst = con.CodConst
+    INNER JOIN EstadoCita ec     ON c.IdEstadoCita = ec.IdEstadoCita
+    INNER JOIN TipoAtencion ta   ON c.IdTipoAtencion = ta.IdTipoAtencion;
+GO
+
+

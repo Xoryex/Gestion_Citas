@@ -22,7 +22,7 @@ public class pnlTblCita extends JPanel {
     private void initComponents() {
         // Definir columnas
         String[] columnas = {
-            "ID de Cita", "DNI del Paciente", "Paciente", "Consultorio",
+            "IdCita", "DNI del Paciente", "Paciente", "Consultorio",
             "Doctor", "Hora Inicio", "Hora Fin", "Atención", "Estado", "Recepcionista"
         };
 
@@ -180,7 +180,8 @@ public class pnlTblCita extends JPanel {
     public JScrollPane getScrollTabla() {
         return scrollTabla;
     }
-        public JTable getTabla() {
+
+    public JTable getTabla() {
         return getTablaCitas();
     }
 
