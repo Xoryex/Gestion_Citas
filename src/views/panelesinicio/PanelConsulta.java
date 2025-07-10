@@ -34,6 +34,8 @@ public class PanelConsulta extends JPanel {
     private JButton btnLimpiar;
 
 
+
+
     public PanelConsulta() {
      
         // Configurar layout principal
@@ -254,6 +256,7 @@ public class PanelConsulta extends JPanel {
         }
     }
 
+        
     // Método público para limpiar búsqueda
     public void limpiarBusqueda() {
         txtBuscarConsult.setText("");

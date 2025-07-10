@@ -5,13 +5,13 @@ import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-public class pnlTblDoctor extends JPanel {
+public class pnlTblDoctoresMasCitas extends JPanel {
 
     private JTable tablaDoctores;
     private JScrollPane scrollTabla;
     private DefaultTableModel modelo;
 
-    public pnlTblDoctor() {
+    public pnlTblDoctoresMasCitas() {
         setBackground(new Color(57, 93, 129));
         setPreferredSize(new Dimension(1120, 473));
         setLayout(new BorderLayout());
@@ -20,19 +20,16 @@ public class pnlTblDoctor extends JPanel {
     }
 
     private void initComponents() {
-        String[] columnas = {
-            "DNI", "Nombre", "Especialidad", "Estado",
-            "Citas Pendientes", "Citas Atendidas", "Consultorio", "Correo", "Teléfono"
-        };
+        // Definir columnas
+        String[] columnas = { "Nombre Doctor", "Total Citas" };
 
+        // Modelo de tabla sin datos iniciales
         modelo = new DefaultTableModel(null, columnas) {
             private final Class<?>[] columnTypes = new Class<?>[] {
-                String.class, String.class, String.class, String.class,
-                Integer.class, Integer.class, String.class, String.class, String.class
+                String.class, Integer.class
             };
-
             private final boolean[] columnEditables = new boolean[] {
-                false, false, false, false, false, false, false, false, false
+                false, false
             };
 
             @Override
@@ -51,6 +48,7 @@ public class pnlTblDoctor extends JPanel {
         tablaDoctores.getTableHeader().setResizingAllowed(false);
         tablaDoctores.getTableHeader().setReorderingAllowed(false);
 
+        // Mejorar apariencia de la tabla
         tablaDoctores.setRowHeight(25);
         tablaDoctores.setSelectionBackground(new Color(184, 207, 229));
         tablaDoctores.setSelectionForeground(Color.BLACK);
@@ -66,25 +64,24 @@ public class pnlTblDoctor extends JPanel {
         add(scrollTabla, BorderLayout.CENTER);
     }
 
+    /**
+     * Método para cargar datos desde un ResultSet
+     * @param rs ResultSet con los datos de doctores
+     */
     public void cargarDatos(ResultSet rs) {
         try {
+            // Limpiar la tabla
             limpiarTabla();
 
+            // Cargar datos del ResultSet
             while (rs.next()) {
-                Object[] fila = new Object[9];
-                fila[0] = rs.getString("DNI");
-                fila[1] = rs.getString("Nombre");
-                fila[2] = rs.getString("Especialidad");
-                fila[3] = rs.getString("Estado");
-                fila[4] = rs.getInt("CitasPendientes");
-                fila[5] = rs.getInt("CitasAtendidas");
-                fila[6] = rs.getString("Consultorio");
-                fila[7] = rs.getString("Correo");
-                fila[8] = rs.getString("Telefono"); // ← corregido aquí
-
+                Object[] fila = new Object[2];
+                fila[0] = rs.getString("Nombre Doctor");
+                fila[1] = rs.getInt("Total Citas");
                 modelo.addRow(fila);
             }
 
+            // Actualizar la vista
             modelo.fireTableDataChanged();
 
         } catch (SQLException e) {
@@ -94,56 +91,79 @@ public class pnlTblDoctor extends JPanel {
         }
     }
 
+    /**
+     * Método para limpiar todos los datos de la tabla
+     */
     public void limpiarTabla() {
         modelo.setRowCount(0);
     }
 
+    /**
+     * Método para obtener el número de filas en la tabla
+     * @return número de filas
+     */
     public int getNumeroFilas() {
         return modelo.getRowCount();
     }
 
+    /**
+     * Método para obtener la fila seleccionada
+     * @return índice de la fila seleccionada, -1 si no hay selección
+     */
     public int getFilaSeleccionada() {
         return tablaDoctores.getSelectedRow();
     }
 
+    /**
+     * Método para obtener el valor de una celda específica
+     * @param fila índice de la fila
+     * @param columna índice de la columna
+     * @return valor de la celda
+     */
     public Object getValorCelda(int fila, int columna) {
         return modelo.getValueAt(fila, columna);
     }
 
-    public String getDniDoctorSeleccionado() {
-        int filaSeleccionada = getFilaSeleccionada();
-        if (filaSeleccionada != -1) {
-            return (String) getValorCelda(filaSeleccionada, 0);
-        }
-        return null;
+    /**
+     * Método para obtener el nombre del doctor seleccionado
+     * @return nombre del doctor seleccionado, null si no hay selección
+     */
+    public String getDoctorSeleccionado() {
+        int fila = getFilaSeleccionada();
+        return fila != -1 ? (String) getValorCelda(fila, 0) : null;
     }
 
-    public String getNombreDoctorSeleccionado() {
-        int filaSeleccionada = getFilaSeleccionada();
-        if (filaSeleccionada != -1) {
-            return (String) getValorCelda(filaSeleccionada, 1);
-        }
-        return null;
-    }
-
+    /**
+     * Método para establecer un mensaje cuando no hay datos
+     */
     public void mostrarMensajeSinDatos() {
         limpiarTabla();
-        Object[] fila = {"No hay datos disponibles", "", "", "", "", "", "", "", ""};
+        Object[] fila = { "No hay datos disponibles", "" };
         modelo.addRow(fila);
     }
 
+    /**
+     * Método para refrescar la vista de la tabla
+     */
     public void actualizarTabla() {
         modelo.fireTableDataChanged();
     }
 
-    public int buscarDoctorPorDni(String dni) {
+    /**
+     * Método para buscar un doctor por nombre
+     * @param nombre Nombre del doctor a buscar
+     * @return índice de la fila si se encuentra, -1 si no se encuentra
+     */
+    public int buscarDoctorPorNombre(String nombre) {
         for (int i = 0; i < modelo.getRowCount(); i++) {
-            if (dni.equals(modelo.getValueAt(i, 0))) {
+            if (nombre.equals(modelo.getValueAt(i, 0))) {
                 return i;
             }
         }
         return -1;
     }
+
+    // Getters de componentes
 
     public JTable getTablaDoctores() {
         return tablaDoctores;

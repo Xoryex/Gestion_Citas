@@ -15,34 +15,33 @@ public class pnlHorarioMant extends JPanel {
         initComponents();
         cargarDatos();  // Carga al inicio
     }
-    
+
     private void initComponents() {
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createTitledBorder("Mantenimiento de Horarios"));
-        
+
         String[] columnas = {
             "ID Horario", "Día", "Hora Inicio", "Hora Fin",
             "Turno", "Límite de Pacientes", "Estado"
         };
         modelHorario = new DefaultTableModel(columnas, 0);
         tblHorario = new JTable(modelHorario);
-        
+
         JScrollPane scrollPane = new JScrollPane(tblHorario);
         scrollPane.setPreferredSize(new Dimension(800, 400));
         add(scrollPane, BorderLayout.CENTER);
     }
-    
+
     public JTable getTabla() {
         return tblHorario;
     }
-    
+
     public DefaultTableModel getModelo() {
         return modelHorario;
     }
-    
+
     public void agregar() {
-        JTextField txtCodHorario   = new JTextField();
         JTextField txtDia          = new JTextField();
         JTextField txtHoraInicio   = new JTextField();
         JTextField txtHoraFin      = new JTextField();
@@ -50,7 +49,6 @@ public class pnlHorarioMant extends JPanel {
         JTextField txtEstadoHorario= new JTextField();
 
         Object[] mensaje = {
-            "ID Horario:", txtCodHorario,
             "Día:", txtDia,
             "Hora Inicio (HH:MM:SS):", txtHoraInicio,
             "Hora Fin (HH:MM:SS):", txtHoraFin,
@@ -64,12 +62,11 @@ public class pnlHorarioMant extends JPanel {
 
         if (opcion == JOptionPane.OK_OPTION) {
             try {
-                int codHorario    = Integer.parseInt(txtCodHorario.getText().trim());
-                String dia        = txtDia.getText().trim();
-                Time horaInicio   = Time.valueOf(txtHoraInicio.getText().trim());
-                Time horaFin      = Time.valueOf(txtHoraFin.getText().trim());
-                int limitPct      = Integer.parseInt(txtLimitPct.getText().trim());
-                boolean estado    = txtEstadoHorario.getText().trim().equals("1");
+                String dia         = txtDia.getText().trim();
+                Time horaInicio    = Time.valueOf(txtHoraInicio.getText().trim());
+                Time horaFin       = Time.valueOf(txtHoraFin.getText().trim());
+                int limitPct       = Integer.parseInt(txtLimitPct.getText().trim());
+                boolean estado     = txtEstadoHorario.getText().trim().equals("1");
 
                 if (dia.isEmpty()) {
                     JOptionPane.showMessageDialog(this, "El campo Día es obligatorio.");
@@ -79,16 +76,19 @@ public class pnlHorarioMant extends JPanel {
                 CallableStatement stmt = conn.prepareCall(
                     "{CALL PA_CRUD_InsertarHorario(?, ?, ?, ?, ?, ?)}"
                 );
-                stmt.setInt(1, codHorario);
-                stmt.setString(2, dia);
-                stmt.setTime(3, horaInicio);
-                stmt.setTime(4, horaFin);
-                stmt.setInt(5, limitPct);
-                stmt.setBoolean(6, estado);
+                stmt.setString(1, dia);
+                stmt.setTime(2, horaInicio);
+                stmt.setTime(3, horaFin);
+                stmt.setInt(4, limitPct);
+                stmt.setBoolean(5, estado);
+                stmt.registerOutParameter(6, Types.INTEGER);  // CodHorario OUTPUT
 
                 stmt.execute();
+
+                int codHorarioGenerado = stmt.getInt(6);
                 stmt.close();
-                JOptionPane.showMessageDialog(this, "Horario agregado correctamente.");
+
+                JOptionPane.showMessageDialog(this, "Horario agregado correctamente. Código generado: " + codHorarioGenerado);
                 cargarDatos();
 
             } catch (NumberFormatException nfe) {
@@ -96,9 +96,7 @@ public class pnlHorarioMant extends JPanel {
             } catch (IllegalArgumentException ie) {
                 JOptionPane.showMessageDialog(this, "Formato de hora inválido.");
             } catch (SQLException e) {
-                JOptionPane.showMessageDialog(
-                    this, "Error al insertar: " + e.getMessage()
-                );
+                JOptionPane.showMessageDialog(this, "Error al insertar: " + e.getMessage());
             }
         }
     }
@@ -135,11 +133,11 @@ public class pnlHorarioMant extends JPanel {
         if (opcion != JOptionPane.OK_OPTION) return;
 
         try {
-            int codHorario  = Integer.parseInt(codHorarioStr);
-            String dia      = txtDia.getText().trim();
-            Time horaInicio= Time.valueOf(txtHoraInicio.getText().trim());
-            int limitPct    = Integer.parseInt(txtLimitPct.getText().trim());
-            boolean estado  = txtEstado.getText().trim().equals("1");
+            int codHorario   = Integer.parseInt(codHorarioStr);
+            String dia       = txtDia.getText().trim();
+            Time horaInicio  = Time.valueOf(txtHoraInicio.getText().trim());
+            int limitPct     = Integer.parseInt(txtLimitPct.getText().trim());
+            boolean estado   = txtEstado.getText().trim().equals("1");
 
             CallableStatement stmt = conn.prepareCall(
                 "{CALL PA_CRUD_ModificarHorario(?, ?, ?, ?, ?)}"
@@ -160,9 +158,7 @@ public class pnlHorarioMant extends JPanel {
         } catch (IllegalArgumentException ie) {
             JOptionPane.showMessageDialog(this, "Formato de hora inválido.");
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(
-                this, "Error al actualizar: " + e.getMessage()
-            );
+            JOptionPane.showMessageDialog(this, "Error al actualizar: " + e.getMessage());
         }
     }
 
@@ -192,9 +188,7 @@ public class pnlHorarioMant extends JPanel {
             cargarDatos();
 
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(
-                this, "Error al eliminar: " + e.getMessage()
-            );
+            JOptionPane.showMessageDialog(this, "Error al eliminar: " + e.getMessage());
         }
     }
 
@@ -217,9 +211,7 @@ public class pnlHorarioMant extends JPanel {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(
-                this, "Error al cargar datos: " + e.getMessage()
-            );
+            JOptionPane.showMessageDialog(this, "Error al cargar datos: " + e.getMessage());
         }
     }
 }
