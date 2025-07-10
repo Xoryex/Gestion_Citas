@@ -55,7 +55,7 @@ public class PanelReporte extends JPanel {
             "Pacientes Frecuentes", "Horarios Más Ocupados", "Resumen Citas Estado",
             "Especialidades Más Solicitadas", "Consultorios Más Utilizados"
         });
-        cbxReportea.setPreferredSize(new Dimension(125, 23));
+        cbxReportea.setPreferredSize(new Dimension(200, 23));
 
         lblBuscarReporte = new JLabel("Buscar:");
         txtBuscarReporte = new JTextField(10);
@@ -213,7 +213,7 @@ public class PanelReporte extends JPanel {
                     case "Especialidades Más Solicitadas":
                         cargarDatosEspecialidadesMasSolicitadas(conn, filtro);
                         break;
-                    case "Reporteorios Más Utilizados":
+                    case "Consultorios Más Utilizados":
                         cargarDatosReporteoriosMasUtilizados(conn, filtro);
                         break;
                 }
@@ -310,7 +310,7 @@ public class PanelReporte extends JPanel {
 
     // 4. Reporteorios más utilizados
     private void cargarDatosReporteoriosMasUtilizados(Connection conn, String filtro) throws SQLException {
-        String sql = "{CALL PA_CRUD_ListarReporteoriosMasUtilizadosConFiltro(?)}";
+        String sql = "{CALL PA_CRUD_ListarConsultoriosMasUtilizadosConFiltro(?)}";
         try (CallableStatement cs = conn.prepareCall(sql)) {
             cs.setString(1, filtro);
             ResultSet rs = cs.executeQuery();
@@ -368,7 +368,7 @@ public class PanelReporte extends JPanel {
                 return consltResumenCitasEstado.getTabla();
             case "Especialidades Más Solicitadas":
                 return consltEspecialidadesMasSolicitadas.getTabla();
-            case "Reporteorios Más Utilizados":
+            case "Consultorios Más Utilizados":
                 return consltReporteoriosMasUtilizados.getTabla();
             default:
                 return null;
