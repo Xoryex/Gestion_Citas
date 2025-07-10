@@ -30,19 +30,16 @@ public class pnlModificarDatosCita extends JPanel {
     private JButton btnCancelar;
     private JButton btnGuardar;
     
-    private QueryCita queryCita;
-    private List<Doctor> doctores;
-    private Cita citaActual;
+    private QueryCita queryCita=new QueryCita();
+    private List<Doctor> doctores = new ArrayList<>();
+    private Cita citaActual = new Cita();
 
     public pnlModificarDatosCita() {
-        queryCita = new QueryCita();
-        doctores = new ArrayList<>();
+        
         setBackground(new Color(207, 218, 230));
         setBorder(BorderFactory.createEmptyBorder(80, 300, 80, 300));
         setLayout(new BorderLayout());
         initComponents();
-        cargarDatos();
-        configurarEventos();
     }
 
     private void initComponents() {

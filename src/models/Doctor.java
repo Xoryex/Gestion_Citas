@@ -3,6 +3,7 @@ package models;
 public class Doctor extends Persona {
     private String especialidad;
     private int codConst;
+    private int codHorario;
     
     public Doctor() {
         super();
