@@ -1,40 +1,86 @@
-create or alter procedure paAsignarEspecialidadHorario_Doctor
+CREATE OR ALTER PROCEDURE paAsignarEspecialidadHorario_Doctor
 (
-	@dni int,
-	@idespecialidad numeric (8),
-	@idhorario int
+    @DniDoc VARCHAR(20),
+    @Especialidad VARCHAR(100),
+    @HoraInicio TIME(7),
+    @HoraFin TIME(7)
 )
-as
-begin
+AS
+BEGIN
+    DECLARE @CodEspecialidad NUMERIC(8,0)
+    DECLARE @CodHorario INT
 
-	if not exists(select DniDoc from Doctor where DniDoc=@dni) begin
-		raiserror('El Doctor no existe',16,1)
-		return @@error
-	end
-	else if not exists(select CodEspecia from Especialidad where CodEspecia=@idespecialidad) begin
-		raiserror('Especialidad no existe',16,1)
-		return @@error
-	end
-	else if not exists(select CodHorario from Horario where CodHorario=@idhorario) begin
-		raiserror('horario no existe',16,1)
-		return @@error
-	end
-	else if exists(select CodEspecia from Especialidad_Doctor where CodEspecia=@idespecialidad and DniDoc=@dni) begin
-		raiserror('especialidad ya fue asignada',16,1)
-		return @@error
-	end
-	else if exists(select CodHorario from Doctor_Horario where CodHorario=@idhorario and DniDoc=@dni) begin
-		raiserror('horario ya fue asignado',16,1)
-		return @@error
-	end
-	else if (select EstadoHorario from Horario where CodHorario=@idhorario)=0 begin
-		raiserror('horario esta desactivado',16,1)
-		return @@error
-	end
-	else begin
-		insert into Doctor_Horario (DniDoc,CodHorario) values (@dni,@idhorario)
-		insert into Especialidad_Doctor (DniDoc,CodEspecia)values (@dni,@idespecialidad)
-	end
+    -- Validar existencia del doctor
+    IF NOT EXISTS (SELECT 1 FROM Doctor WHERE DniDoc = @DniDoc)
+    BEGIN
+        RAISERROR('El Doctor no existe', 16, 1)
+        RETURN
+    END
 
-end
-go
+    -- Obtener c�digo de especialidad
+    SELECT @CodEspecialidad = CodEspecia 
+    FROM Especialidad 
+    WHERE Especialidad = @Especialidad
+
+    IF @CodEspecialidad IS NULL
+    BEGIN
+        RAISERROR('Especialidad no existe', 16, 1)
+        RETURN
+    END
+
+    -- Obtener c�digo de horario por hora inicio y fin
+    SELECT @CodHorario = CodHorario 
+    FROM Horario 
+    WHERE HoraInicio = @HoraInicio AND HoraFin = @HoraFin
+
+    IF @CodHorario IS NULL
+    BEGIN
+        RAISERROR('Horario no existe', 16, 1)
+        RETURN
+    END
+
+    -- Verificar si el horario est� desactivado
+    IF EXISTS (
+        SELECT 1 FROM Horario 
+        WHERE CodHorario = @CodHorario AND EstadoHorario = 0
+    )
+    BEGIN
+        RAISERROR('El horario est� desactivado', 16, 1)
+        RETURN
+    END
+
+    -- Verificar si ya tiene esa especialidad asignada
+    IF EXISTS (
+        SELECT 1 FROM Especialidad_Doctor 
+        WHERE DniDoc = @DniDoc AND CodEspecia = @CodEspecialidad
+    )
+    BEGIN
+        RAISERROR('Especialidad ya fue asignada al doctor', 16, 1)
+        RETURN
+    END
+
+    -- Verificar si ya tiene ese horario asignado
+    IF EXISTS (
+        SELECT * FROM Doctor_Horario 
+        WHERE DniDoc = @DniDoc AND CodHorario = @CodHorario
+    )
+    BEGIN
+        RAISERROR('Horario ya fue asignado al doctor', 16, 1)
+        RETURN
+    END
+
+    -- Inserci�n en tablas de relaci�n
+    INSERT INTO Doctor_Horario (DniDoc, CodHorario)
+    VALUES (@DniDoc, @CodHorario)
+
+    INSERT INTO Especialidad_Doctor (DniDoc, CodEspecia)
+    VALUES (@DniDoc, @CodEspecialidad)
+END
+GO
+
+EXEC paAsignarEspecialidadHorario_Doctor
+    @DniDoc = '28374659',
+    @Especialidad = 'Cardiolog�a',
+    @HoraInicio = '08:00:00',
+    @HoraFin = '09:00:00';
+
