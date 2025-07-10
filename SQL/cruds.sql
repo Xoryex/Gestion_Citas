@@ -1668,11 +1668,12 @@ BEGIN
     FROM dbo.Cita c
     INNER JOIN dbo.Paciente p ON c.DniPct = p.DniPct
     INNER JOIN dbo.Horario h ON c.CodHorario = h.CodHorario
-    WHERE c.IdEstadoCita = 1  -- Solo citas pendientes/activas
+    WHERE c.IdEstadoCita = 1  --and c.FechaCita=GETDATE() -- Solo citas pendientes/activas
     ORDER BY c.FechaCita, h.HoraInicio;
     
 END
 GO
+
 
 CREATE OR ALTER PROCEDURE PA_CRUD_ListarHorarioConFiltro 
     @FiltroTexto NVARCHAR(100) = NULL
@@ -1897,7 +1898,7 @@ begin
 	group by e.CodEspecia,e.Especialidad
 end
 go
-+--------------------------------------------
+---------------------------------------------
 
 create or alter procedure PA_CRUD_FINALIZAR
 (@idcita int)
@@ -1913,8 +1914,8 @@ Update Cita
 Set IdEstadoCita=4
 Where CodCita = @idcita
 End
+go
 -----------------------
-cita
 -----------------------------------
 --Tabla CITA                
 -----------------------------------
