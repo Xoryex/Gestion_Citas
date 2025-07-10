@@ -12,75 +12,71 @@ import java.sql.*;
 import utils.Conexion;
 
 public class PanelMantenimiento extends JPanel {
-    
+
     private JComboBox<String> cmbMantenimiento;
     private JPanel pnlContenedor;
     private CardLayout cardLayout;
     private JButton btnAgregar;
     private JButton btnActualizar;
     private JButton btnEliminar;
-    private JButton btnExtraDoctor; // ✅ Botón que solo aparece en pnlDoctorMant
+    private JButton btnExtraDoctor;
 
-    // Paneles individuales
     private pnlRecepcionistaMant panelRecepcionista;
     private pnlConsultorioMant panelConsultorio;
     private pnlDoctorMant panelDoctor;
     private pnlEspecialidadMant panelEspecialidad;
     private pnlHorarioMant panelHorario;
     private pnlPacienteMant panelPaciente;
-    
+
+    private Connection conn = Conexion.getConnection();
+
     public PanelMantenimiento() {
         initComponents();
         setupEventListeners();
     }
-    
+
     private void initComponents() {
         setLayout(new BorderLayout());
         setBackground(new Color(240, 240, 240));
-        
-        // Panel superior con ComboBox y botones
+
         JPanel pnlSuperior = new JPanel(new FlowLayout(FlowLayout.LEFT));
         pnlSuperior.setBackground(new Color(240, 240, 240));
-        
+
         JLabel lblMantenimiento = new JLabel("Realizar mantenimiento a:");
         lblMantenimiento.setFont(new Font("Arial", Font.PLAIN, 12));
-        
+
         String[] opciones = {"Recepcionista", "Consultorio", "Doctor", "Especialidad", "Horario", "Paciente"};
         cmbMantenimiento = new JComboBox<>(opciones);
         cmbMantenimiento.setPreferredSize(new Dimension(150, 25));
-        
+
         btnAgregar = new JButton("Agregar");
         btnActualizar = new JButton("Actualizar");
         btnEliminar = new JButton("Eliminar");
-        
-        // ✅ Nuevo botón adicional solo para Doctor
         btnExtraDoctor = new JButton("Acción Doctor");
-        btnExtraDoctor.setVisible(false); // Oculto por defecto
+        btnExtraDoctor.setVisible(false);
 
-        // Estilo de botones
         styleButton(btnAgregar, new Color(70, 130, 180));
         styleButton(btnActualizar, new Color(70, 130, 180));
         styleButton(btnEliminar, new Color(70, 130, 180));
-        styleButton(btnExtraDoctor, new Color(34, 139, 34)); // Estilo diferente para destacar
+        styleButton(btnExtraDoctor, new Color(34, 139, 34));
 
         pnlSuperior.add(lblMantenimiento);
         pnlSuperior.add(cmbMantenimiento);
         pnlSuperior.add(btnAgregar);
         pnlSuperior.add(btnActualizar);
         pnlSuperior.add(btnEliminar);
-        pnlSuperior.add(btnExtraDoctor); // ✅ Agregar al panel superior
-        
-        // Panel contenedor con CardLayout
+        pnlSuperior.add(btnExtraDoctor);
+
         cardLayout = new CardLayout();
         pnlContenedor = new JPanel(cardLayout);
         pnlContenedor.setBackground(Color.WHITE);
-        
+
         crearPaneles();
-        
+
         add(pnlSuperior, BorderLayout.NORTH);
         add(pnlContenedor, BorderLayout.CENTER);
     }
-    
+
     private void styleButton(JButton btn, Color color) {
         btn.setBackground(color);
         btn.setForeground(Color.WHITE);
@@ -88,7 +84,7 @@ public class PanelMantenimiento extends JPanel {
         btn.setFocusPainted(false);
         btn.setFont(new Font("Arial", Font.PLAIN, 11));
     }
-    
+
     private void crearPaneles() {
         panelRecepcionista = new pnlRecepcionistaMant();
         panelConsultorio = new pnlConsultorioMant();
@@ -96,7 +92,7 @@ public class PanelMantenimiento extends JPanel {
         panelEspecialidad = new pnlEspecialidadMant();
         panelHorario = new pnlHorarioMant();
         panelPaciente = new pnlPacienteMant();
-        
+
         pnlContenedor.add(panelRecepcionista, "Recepcionista");
         pnlContenedor.add(panelConsultorio, "Consultorio");
         pnlContenedor.add(panelDoctor, "Doctor");
@@ -104,33 +100,31 @@ public class PanelMantenimiento extends JPanel {
         pnlContenedor.add(panelHorario, "Horario");
         pnlContenedor.add(panelPaciente, "Paciente");
     }
-    
+
     private void setupEventListeners() {
         cmbMantenimiento.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String seleccion = (String) cmbMantenimiento.getSelectedItem();
                 cardLayout.show(pnlContenedor, seleccion);
-
-                // ✅ Mostrar/ocultar botón extra según el panel seleccionado
                 btnExtraDoctor.setVisible("Doctor".equals(seleccion));
             }
         });
-        
+
         btnAgregar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 agregarRegistro();
             }
         });
-        
+
         btnActualizar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 actualizarRegistro();
             }
         });
-        
+
         btnEliminar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -138,7 +132,7 @@ public class PanelMantenimiento extends JPanel {
             }
         });
 
-        // ✅ Acción para el botón extra - Conecta a paAsignarEspecialidadHorario_Doctor
+        // ✅ Acción corregida para usar PA_ListarSoloEspecialidad y enviar nombre al SP
         btnExtraDoctor.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -147,8 +141,7 @@ public class PanelMantenimiento extends JPanel {
                 JTextField txtHoraInicio = new JTextField();
                 JTextField txtHoraFin = new JTextField();
 
-                // Cargar especialidades
-                try (Connection conn = Conexion.getConnection()) {
+                try {
                     CallableStatement stmt = conn.prepareCall("{CALL PA_ListarSoloEspecialidad()}");
                     ResultSet rs = stmt.executeQuery();
                     while (rs.next()) {
@@ -173,11 +166,11 @@ public class PanelMantenimiento extends JPanel {
                 panel.add(txtHoraFin);
 
                 int result = JOptionPane.showConfirmDialog(
-                    PanelMantenimiento.this,
-                    panel,
-                    "Asignar Especialidad y Horario a Doctor",
-                    JOptionPane.OK_CANCEL_OPTION,
-                    JOptionPane.PLAIN_MESSAGE
+                        PanelMantenimiento.this,
+                        panel,
+                        "Asignar Especialidad y Horario a Doctor",
+                        JOptionPane.OK_CANCEL_OPTION,
+                        JOptionPane.PLAIN_MESSAGE
                 );
 
                 if (result == JOptionPane.OK_OPTION) {
@@ -191,28 +184,15 @@ public class PanelMantenimiento extends JPanel {
                         return;
                     }
 
-                    try (Connection conn = Conexion.getConnection()) {
+                    try {
                         if (conn == null) {
                             JOptionPane.showMessageDialog(PanelMantenimiento.this, "No se pudo conectar a la base de datos.");
                             return;
                         }
 
-                        int codEspecialidad = -1;
-                        PreparedStatement ps = conn.prepareStatement("SELECT CodEspecia FROM Especialidad WHERE Especialidad = ?");
-                        ps.setString(1, especialidad);
-                        ResultSet rs = ps.executeQuery();
-                        if (rs.next()) {
-                            codEspecialidad = rs.getInt("CodEspecia");
-                        } else {
-                            JOptionPane.showMessageDialog(PanelMantenimiento.this, "Especialidad no encontrada.");
-                            return;
-                        }
-                        rs.close();
-                        ps.close();
-
                         CallableStatement stmt = conn.prepareCall("{CALL paAsignarEspecialidadHorario_Doctor(?, ?, ?, ?)}");
-                        stmt.setString(1, dni);
-                        stmt.setInt(2, codEspecialidad);
+                        stmt.setInt(1, Integer.parseInt(dni));
+                        stmt.setString(2, especialidad);
                         stmt.setString(3, horaInicio);
                         stmt.setString(4, horaFin);
                         stmt.execute();
@@ -273,7 +253,6 @@ public class PanelMantenimiento extends JPanel {
         panelPaciente.cargarDatos();
     }
 
-    // Getters
     public pnlRecepcionistaMant getPanelRecepcionista() { return panelRecepcionista; }
     public pnlConsultorioMant getPanelConsultorio() { return panelConsultorio; }
     public pnlDoctorMant getPanelDoctor() { return panelDoctor; }
@@ -285,5 +264,5 @@ public class PanelMantenimiento extends JPanel {
     public JButton getBtnAgregar() { return btnAgregar; }
     public JButton getBtnActualizar() { return btnActualizar; }
     public JButton getBtnEliminar() { return btnEliminar; }
-    public JButton getBtnExtraDoctor() { return btnExtraDoctor; } // ✅ getter opcional
+    public JButton getBtnExtraDoctor() { return btnExtraDoctor; }
 }
