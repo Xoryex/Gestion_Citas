@@ -1832,3 +1832,122 @@ BEGIN
         h.HoraInicio;
 END
 go
+
+
+CREATE or alter PROCEDURE PA_CRUD_ListarDoctoresMasCitasConFiltro
+    @pFiltro NVARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        d.NomDoc as 'Nombre Doctor',
+        COUNT(c.CodCita)     AS 'Total Citas'
+    FROM Cita AS c
+    INNER JOIN Doctor AS d
+        ON c.DniDoc = d.DniDoc
+    WHERE d.NomDoc LIKE N'%' + @pFiltro + N'%'
+    GROUP BY d.NomDoc
+    ORDER BY COUNT(c.CodCita) DESC;
+END;
+GO
+
+
+
+CREATE or alter PROCEDURE PA_CRUD_ListarPacientesFrecuentesConFiltro
+    @pFiltro NVARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        p.NomPct as 'Nombre Paciente',
+        COUNT(c.CodCita)  AS 'Total Visitas'
+    FROM Cita AS c
+    INNER JOIN Paciente AS p
+        ON c.DniPct = p.DniPct
+    WHERE p.NomPct LIKE N'%' + @pFiltro + N'%'
+    GROUP BY p.NomPct
+    ORDER BY COUNT(c.CodCita) DESC;
+END;
+GO
+
+CREATE or alter PROCEDURE PA_CRUD_ListarResumenCitasPorEstadoConFiltro
+    @pFiltro NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        e.EstadoCita      AS Estado,
+        COUNT(c.CodCita)    AS 'Total Citas'
+    FROM Cita AS c
+    INNER JOIN EstadoCita AS e
+        ON c.IdEstadoCita = e.IdEstadoCita
+    WHERE e.EstadoCita LIKE N'%' + @pFiltro + N'%'
+    GROUP BY e.EstadoCita
+    ORDER BY COUNT(c.CodCita) DESC;
+END;
+GO
+
+
+CREATE or alter PROCEDURE PA_CRUD_ListarConsultoriosMasUtilizadosConFiltro
+    @pFiltro NVARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        con.NomConst,
+        COUNT(c.CodCita)              AS 'Veces Utilizado'
+    FROM Cita AS c
+    INNER JOIN Consultorio AS con
+        ON c.CodConst = con.CodConst
+    WHERE con.NomConst LIKE N'%' + @pFiltro + N'%'
+    GROUP BY con.NomConst
+    ORDER BY COUNT(c.CodCita) DESC;
+END;
+GO
+
+
+
+CREATE or alter  PROCEDURE PA_CRUD_ListarHorariosMasOcupadosConFiltro
+    @pFiltro NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        h.EstadoHorario  AS Horario,
+        COUNT(c.CodCita)  AS 'Total Citas'
+    FROM Cita AS c
+    INNER JOIN Horario AS h
+        ON c.CodHorario = h.CodHorario
+    WHERE h.EstadoHorario LIKE N'%' + @pFiltro + N'%'
+    GROUP BY h.EstadoHorario
+    ORDER BY COUNT(c.CodCita) DESC;
+END;
+GO
+
+
+
+CREATE  or alter PROCEDURE PA_CRUD_ListarEspecialidadesMasSolicitadasConFiltro
+    @pFiltro NVARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        E.Especialidad,
+        COUNT(c.CodCita)          AS 'Total Solicitudes'
+    FROM Cita AS c
+    INNER JOIN Doctor AS d
+        ON c.DniDoc = d.DniDoc
+    INNER JOIN Especialidad_Doctor AS esp
+        ON d.DniDoc = esp.DniDoc inner join Especialidad as E 
+		ON E.CodEspecia=esp.CodEspecia 
+    WHERE E.Especialidad LIKE N'%' + @pFiltro + N'%'
+    GROUP BY E.Especialidad
+    ORDER BY COUNT(c.CodCita) DESC;
+END;
+GO
