@@ -1807,7 +1807,7 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT 
-        e.EstadoCita      AS Estado,
+        e.EstadoCita      AS 'Estado',
         COUNT(c.CodCita)    AS 'Total Citas'
     FROM Cita AS c
     INNER JOIN EstadoCita AS e
@@ -1826,7 +1826,7 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT 
-        con.NomConst,
+        con.NomConst as 'Consultorio',
         COUNT(c.CodCita)              AS 'Veces Utilizado'
     FROM Cita AS c
     INNER JOIN Consultorio AS con
@@ -1846,7 +1846,7 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT 
-        h.EstadoHorario  AS Horario,
+        h.EstadoHorario  AS 'Estado Horario',
         COUNT(c.CodCita)  AS 'Total Citas'
     FROM Cita AS c
     INNER JOIN Horario AS h
@@ -1866,7 +1866,7 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT 
-        E.Especialidad,
+        E.Especialidad as 'Especialidad',
         COUNT(c.CodCita)          AS 'Total Solicitudes'
     FROM Cita AS c
     INNER JOIN Doctor AS d
