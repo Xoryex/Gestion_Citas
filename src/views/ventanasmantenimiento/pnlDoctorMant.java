@@ -21,7 +21,7 @@ public class pnlDoctorMant extends JPanel {
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createTitledBorder("Mantenimiento de Doctores"));
 
-        String[] columnas = {"DNI", "Nombre Completo", "Especialidad", "Código de Consultorio", "Correo", "Teléfono"};
+        String[] columnas = {"DNI", "Nombre Completo", "Especialidad", "Consultorio", "Correo", "Teléfono"};
         modelDoctor = new DefaultTableModel(columnas, 0);
         tblDoctor = new JTable(modelDoctor);
 
@@ -39,22 +39,24 @@ public class pnlDoctorMant extends JPanel {
         return modelDoctor;
     }
 
-    // Agregar Doctor
     public void agregar() {
         JTextField txtDNI = new JTextField();
         JTextField txtNombre = new JTextField();
         JTextField txtApellido = new JTextField();
-        JTextField txtEspecialidad = new JTextField();
-        JTextField txtCodConsultorio = new JTextField();
+        JComboBox<String> cbEspecialidades = new JComboBox<>();
+        JComboBox<String> cbConsultorios = new JComboBox<>();
         JTextField txtCorreo = new JTextField();
         JTextField txtTelefono = new JTextField();
+
+        cargarEspecialidades(cbEspecialidades);
+        cargarConsultorios(cbConsultorios);
 
         Object[] mensaje = {
             "DNI:", txtDNI,
             "Nombre:", txtNombre,
             "Apellido:", txtApellido,
-            "Especialidad (nombre):", txtEspecialidad,
-            "Código de Consultorio:", txtCodConsultorio,
+            "Especialidad:", cbEspecialidades,
+            "Consultorio:", cbConsultorios,
             "Correo:", txtCorreo,
             "Teléfono:", txtTelefono
         };
@@ -65,20 +67,23 @@ public class pnlDoctorMant extends JPanel {
             String dni = txtDNI.getText().trim();
             String nombre = txtNombre.getText().trim();
             String apellido = txtApellido.getText().trim();
-            String especialidadNombre = txtEspecialidad.getText().trim();
-            String codConsultorio = txtCodConsultorio.getText().trim();
+            String especialidadNombre = (String) cbEspecialidades.getSelectedItem();
+            String consultorioNombre = (String) cbConsultorios.getSelectedItem();
             String correo = txtCorreo.getText().trim();
             String telefono = txtTelefono.getText().trim();
 
-            if (dni.isEmpty() || nombre.isEmpty() || apellido.isEmpty() || especialidadNombre.isEmpty()
-                    || codConsultorio.isEmpty() || correo.isEmpty() || telefono.isEmpty()) {
+            if (dni.isEmpty() || nombre.isEmpty() || apellido.isEmpty() || especialidadNombre == null
+                    || consultorioNombre == null || correo.isEmpty() || telefono.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.");
                 return;
             }
 
             try {
                 if (conn != null) {
-                    // Insertar doctor
+                    String codConsultorio = obtenerCodConsultorioPorNombre(consultorioNombre);
+                    int codEspecialidad = obtenerCodEspecialidad(especialidadNombre);
+                    if (codConsultorio == null || codEspecialidad == -1) return;
+
                     CallableStatement stmt = conn.prepareCall("{CALL PA_insert_Doctor(?, ?, ?, ?, ?, ?)}");
                     stmt.setString(1, dni);
                     stmt.setString(2, nombre);
@@ -89,11 +94,6 @@ public class pnlDoctorMant extends JPanel {
                     stmt.execute();
                     stmt.close();
 
-                    // Obtener código de especialidad
-                    int codEspecialidad = obtenerCodEspecialidad(especialidadNombre);
-                    if (codEspecialidad == -1) return;
-
-                    // Insertar en tabla intermedia
                     PreparedStatement ps = conn.prepareStatement("INSERT INTO Especialidad_Doctor (DniDoc, CodEspecia) VALUES (?, ?)");
                     ps.setString(1, dni);
                     ps.setInt(2, codEspecialidad);
@@ -112,7 +112,6 @@ public class pnlDoctorMant extends JPanel {
         }
     }
 
-    // Actualizar Doctor
     public void actualizar() {
         int filaSeleccionada = tblDoctor.getSelectedRow();
 
@@ -128,23 +127,28 @@ public class pnlDoctorMant extends JPanel {
         String apellidoActual = partesNombre.length > 1 ? partesNombre[1] : "";
 
         String especialidadActual = modelDoctor.getValueAt(filaSeleccionada, 2).toString();
-        String codConsultorioActual = modelDoctor.getValueAt(filaSeleccionada, 3).toString();
+        String consultorioActual = modelDoctor.getValueAt(filaSeleccionada, 3).toString();
         String correoActual = modelDoctor.getValueAt(filaSeleccionada, 4).toString();
         String telefonoActual = modelDoctor.getValueAt(filaSeleccionada, 5).toString();
 
         JTextField txtNombre = new JTextField(nombreActual);
         JTextField txtApellido = new JTextField(apellidoActual);
-        JTextField txtEspecialidad = new JTextField(especialidadActual);
-        JTextField txtCodConsultorio = new JTextField(codConsultorioActual);
+        JComboBox<String> cbEspecialidades = new JComboBox<>();
+        JComboBox<String> cbConsultorios = new JComboBox<>();
         JTextField txtCorreo = new JTextField(correoActual);
         JTextField txtTelefono = new JTextField(telefonoActual);
+
+        cargarEspecialidades(cbEspecialidades);
+        cargarConsultorios(cbConsultorios);
+        cbEspecialidades.setSelectedItem(especialidadActual);
+        cbConsultorios.setSelectedItem(consultorioActual);
 
         Object[] mensaje = {
             "DNI (no editable): " + dniActual,
             "Nombre:", txtNombre,
             "Apellido:", txtApellido,
-            "Especialidad (nombre):", txtEspecialidad,
-            "Código de Consultorio:", txtCodConsultorio,
+            "Especialidad:", cbEspecialidades,
+            "Consultorio:", cbConsultorios,
             "Correo:", txtCorreo,
             "Teléfono:", txtTelefono
         };
@@ -154,20 +158,21 @@ public class pnlDoctorMant extends JPanel {
         if (opcion == JOptionPane.OK_OPTION) {
             String nombre = txtNombre.getText().trim();
             String apellido = txtApellido.getText().trim();
-            String especialidadNombre = txtEspecialidad.getText().trim();
-            String codConsultorio = txtCodConsultorio.getText().trim();
+            String especialidadNombre = (String) cbEspecialidades.getSelectedItem();
+            String consultorioNombre = (String) cbConsultorios.getSelectedItem();
             String correo = txtCorreo.getText().trim();
             String telefono = txtTelefono.getText().trim();
 
-            if (nombre.isEmpty() || apellido.isEmpty() || especialidadNombre.isEmpty()
-                    || codConsultorio.isEmpty() || correo.isEmpty() || telefono.isEmpty()) {
+            if (nombre.isEmpty() || apellido.isEmpty() || especialidadNombre == null
+                    || consultorioNombre == null || correo.isEmpty() || telefono.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.");
                 return;
             }
 
             try {
+                String codConsultorio = obtenerCodConsultorioPorNombre(consultorioNombre);
                 int codEspecialidad = obtenerCodEspecialidad(especialidadNombre);
-                if (codEspecialidad == -1) return;
+                if (codConsultorio == null || codEspecialidad == -1) return;
 
                 CallableStatement stmt = conn.prepareCall("{CALL PA_actualizacion_Doctor(?, ?, ?, ?, ?, ?, ?)}");
                 stmt.setString(1, dniActual);
@@ -177,7 +182,6 @@ public class pnlDoctorMant extends JPanel {
                 stmt.setString(5, correo);
                 stmt.setString(6, telefono);
                 stmt.setInt(7, codEspecialidad);
-
                 stmt.execute();
                 stmt.close();
 
@@ -190,7 +194,6 @@ public class pnlDoctorMant extends JPanel {
         }
     }
 
-    // Eliminar Doctor
     public void eliminar() {
         int filaSeleccionada = tblDoctor.getSelectedRow();
 
@@ -223,22 +226,22 @@ public class pnlDoctorMant extends JPanel {
         }
     }
 
-    // Mostrar Doctores
     public void cargarDatos() {
         modelDoctor.setRowCount(0);
         try {
             if (conn != null) {
-                CallableStatement stmt = conn.prepareCall("{CALL PA_ListarDoctores()}");
+                CallableStatement stmt = conn.prepareCall("{CALL PA_ListarDoctorConFiltro(?)}");
+                stmt.setString(1, ""); // sin filtro
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
                     String dni = rs.getString("DNI");
                     String nombre = rs.getString("Nombre");
                     String apellido = rs.getString("Apellido");
                     String especialidad = rs.getString("Especialidad");
-                    String codConsultorio = rs.getString("CodConsultorio");
+                    String consultorio = rs.getString("Consultorio");
                     String correo = rs.getString("Correo");
                     String telefono = rs.getString("Telefono");
-                    modelDoctor.addRow(new Object[]{dni, nombre + " " + apellido, especialidad, codConsultorio, correo, telefono});
+                    modelDoctor.addRow(new Object[]{dni, nombre + " " + apellido, especialidad, consultorio, correo, telefono});
                 }
                 rs.close();
                 stmt.close();
@@ -251,23 +254,62 @@ public class pnlDoctorMant extends JPanel {
         }
     }
 
-    // Buscar código de especialidad por nombre
+    private void cargarConsultorios(JComboBox<String> combo) {
+        try {
+            CallableStatement stmt = conn.prepareCall("{CALL PA_ListarSoloConsultorio()}");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                combo.addItem(rs.getString("NomConst"));
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al cargar consultorios: " + e.getMessage());
+        }
+    }
+
+    private void cargarEspecialidades(JComboBox<String> combo) {
+        try {
+            CallableStatement stmt = conn.prepareCall("{CALL PA_ListarSoloEspecialidad()}");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                combo.addItem(rs.getString("Especialidad"));
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al cargar especialidades: " + e.getMessage());
+        }
+    }
+
+    private String obtenerCodConsultorioPorNombre(String nombreConsultorio) {
+        try (PreparedStatement ps = conn.prepareStatement("SELECT CodConst FROM Consultorio WHERE NomConst = ?")) {
+            ps.setString(1, nombreConsultorio);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("CodConst");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     private int obtenerCodEspecialidad(String nombreEspecialidad) {
         try (PreparedStatement ps = conn.prepareStatement("SELECT CodEspecia FROM Especialidad WHERE Especialidad = ?")) {
             ps.setString(1, nombreEspecialidad);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int codigo = rs.getInt("CodEspecia");
-                rs.close();
-                return codigo;
+                return rs.getInt("CodEspecia");
             } else {
                 JOptionPane.showMessageDialog(this, "Especialidad no encontrada.");
-                return -1;
             }
         } catch (SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error al buscar la especialidad: " + e.getMessage());
-            return -1;
         }
+        return -1;
     }
 }

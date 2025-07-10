@@ -5,7 +5,6 @@ import java.time.LocalTime;
 
 public class Cita {
     private int dniRecep;
-    private String codCita;
     private int codHorario;
     private int dniPct;
     private int dniDoc;
@@ -27,11 +26,10 @@ public class Cita {
 
     public Cita() {}
 
-    public Cita(int dniRecep, String codCita, int codHorario, int dniPct, int dniDoc, 
+    public Cita(int dniRecep, int codHorario, int dniPct, int dniDoc, 
                 LocalTime horaInicio, LocalTime horaFin, LocalDate fechaCita, 
                 int idEstadoCita, int idTipoAtencion) {
         this.dniRecep = dniRecep;
-        this.codCita = codCita;
         this.codHorario = codHorario;
         this.dniPct = dniPct;
         this.dniDoc = dniDoc;
@@ -45,9 +43,6 @@ public class Cita {
     // Getters y Setters
     public int getDniRecep() { return dniRecep; }
     public void setDniRecep(int dniRecep) { this.dniRecep = dniRecep; }
-
-    public String getCodCita() { return codCita; }
-    public void setCodCita(String codCita) { this.codCita = codCita; }
 
     public int getCodHorario() { return codHorario; }
     public void setCodHorario(int codHorario) { this.codHorario = codHorario; }
