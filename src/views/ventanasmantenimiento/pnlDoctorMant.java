@@ -269,6 +269,8 @@ public class pnlDoctorMant extends JPanel {
         }
     }
 
+
+    
     private void cargarEspecialidades(JComboBox<String> combo) {
         try {
             CallableStatement stmt = conn.prepareCall("{CALL PA_ListarSoloEspecialidad()}");

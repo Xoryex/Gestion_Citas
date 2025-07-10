@@ -13,7 +13,13 @@ SELECT C.NomConst
 FROM Consultorio as C
 group by C.NomConst
 go
-
+--Listar horarios de inicio y fin
+create or alter procedure PA_TablaDoctorxEspecialidadxHorario
+as
+SELECT H.HoraInicio as Inicio, H.HoraFin as Fin
+FROM Horario as H
+group by H.HoraInicio, H.HoraFin
+go
 ----------------------------------------------------------------------
 -- CRUD: TABLA CONSULTORIO
 ----------------------------------------------------------------------
@@ -434,63 +440,97 @@ CREATE OR ALTER PROCEDURE PA_CRUD_InsertarPaciente
     @NomPct         VARCHAR(80),
     @ApellPct       VARCHAR(80),
     @TlfPct         numeric (9),
-    @GeneroPct      CHAR(1), -- 'M' o 'F'
+    @GeneroPct      CHAR(1),
     @EmailPct       VARCHAR(50),
     @FechNaciPct    DATETIME,
     @DirecPct       VARCHAR(50),
     @OcupPct        VARCHAR(120),
-    @GrupSangNombre VARCHAR(5), -- Nombre del grupo sanguíneo
+    @GrupSangNombre VARCHAR(5),
     @ProcedenciaPct VARCHAR(80),
-    @EstCivilPct    INT,
+    @EstCivilPct as  int,
     @GrupEtnicoPct  VARCHAR(80),
     @CentrTrabPct   VARCHAR(80),
-    @GradInstrPct   INT,
+    @GradInstrPct int, 
     @HijosPct       INT
 )
 AS
 BEGIN
     DECLARE @GeneroBit BIT
     DECLARE @GrupSangPct INT
+    DECLARE @EstCivilPct INT
+    DECLARE @GradInstrPct INT
 
-    -- Género: 'M' o 'F'
-    IF @GeneroPct = 'M'
-        SET @GeneroBit = 1
-    ELSE IF @GeneroPct = 'F'
-        SET @GeneroBit = 0
-    ELSE
+    -- Género
+    SET @GeneroBit = CASE 
+                        WHEN @GeneroPct = 'M' THEN 1
+                        WHEN @GeneroPct = 'F' THEN 0
+                        ELSE NULL
+                     END
+
+    IF @GeneroBit IS NULL
     BEGIN
         RAISERROR('Género no válido. Use M o F.', 16, 1)
-        RETURN @@ERROR
+        RETURN
     END
 
-    -- Convertir grupo sanguíneo textual a número
+    -- Grupo sanguíneo
     SET @GrupSangPct = 
         CASE @GrupSangNombre
-            WHEN 'A+' THEN 1
-            WHEN 'A−' THEN 2
-            WHEN 'B+' THEN 3
-            WHEN 'B−' THEN 4
-            WHEN 'AB+' THEN 5
-            WHEN 'AB−' THEN 6
-            WHEN 'O+' THEN 7
-            WHEN 'O−' THEN 8
+            WHEN 'A+' THEN 1 WHEN 'A−' THEN 2
+            WHEN 'B+' THEN 3 WHEN 'B−' THEN 4
+            WHEN 'AB+' THEN 5 WHEN 'AB−' THEN 6
+            WHEN 'O+' THEN 7 WHEN 'O−' THEN 8
             ELSE NULL
         END
 
     IF @GrupSangPct IS NULL
     BEGIN
         RAISERROR('Grupo sanguíneo no válido.', 16, 1)
-        RETURN @@ERROR
+        RETURN
     END
 
-    -- Validar si el paciente ya existe
+    -- Estado Civil (nombre a número)
+    SET @EstCivilPct =
+        CASE LOWER(@EstCivilNombre)
+            WHEN 'casado'     THEN 1
+            WHEN 'soltero'    THEN 2
+            WHEN 'viudo'      THEN 3
+            WHEN 'divorciado' THEN 4
+            ELSE NULL
+        END
+
+    IF @EstCivilPct IS NULL
+    BEGIN
+        RAISERROR('Estado civil no válido.', 16, 1)
+        RETURN
+    END
+
+    -- Grado de instrucción (nombre a número)
+    SET @GradInstrPct =
+        CASE LOWER(@GradInstrNombre)
+            WHEN 'sin estudios'                 THEN 1
+            WHEN 'primaria'                    THEN 2
+            WHEN 'secundaria'                  THEN 3
+            WHEN 'tecnico sin completar'       THEN 4
+            WHEN 'tecnico completo'            THEN 5
+            WHEN 'universitario sin completar' THEN 6
+            WHEN 'universitario completo'      THEN 7
+            WHEN 'postgrado'                   THEN 8
+            ELSE NULL
+        END
+
+    IF @GradInstrPct IS NULL
+    BEGIN
+        RAISERROR('Grado de instrucción no válido.', 16, 1)
+        RETURN
+    END
+
     IF EXISTS (SELECT 1 FROM Paciente WHERE DniPct = @DniPct)
     BEGIN
         RAISERROR('Este paciente ya existe!!', 16, 1)
-        RETURN @@ERROR
+        RETURN
     END
 
-    -- Insertar paciente
     INSERT INTO dbo.Paciente (
         DniPct, NomPct, ApellPct, TlfPct, GeneroPct, EmailPct, FechNaciPct,
         DirecPct, OcupPct, GrupSangPct, ProcedenciaPct,
@@ -508,70 +548,103 @@ GO
 
 
 --Modificar
-
 CREATE OR ALTER PROCEDURE PA_CRUD_ModificarPaciente
 (
     @DniPct         int,
     @NomPct         VARCHAR(80),
     @ApellPct       VARCHAR(80),
     @TlfPct         numeric (9),
-    @GeneroPct      CHAR(1), -- 'M' o 'F'
+    @GeneroPct      CHAR(1),
     @EmailPct       VARCHAR(50),
     @FechNaciPct    DATETIME,
     @DirecPct       VARCHAR(50),
     @OcupPct        VARCHAR(120),
-    @GrupSangNombre VARCHAR(5), -- Nombre del grupo sanguíneo
+    @GrupSangNombre VARCHAR(5),
     @ProcedenciaPct VARCHAR(80),
-    @EstCivilPct    INT,
+    @EstCivilNombre VARCHAR(20), -- CAMBIO
     @GrupEtnicoPct  VARCHAR(80),
     @CentrTrabPct   VARCHAR(80),
-    @GradInstrPct   INT,
+    @GradInstrNombre VARCHAR(50), -- CAMBIO
     @HijosPct       INT
 )
 AS
 BEGIN
     DECLARE @GeneroBit BIT
     DECLARE @GrupSangPct INT
+    DECLARE @EstCivilPct INT
+    DECLARE @GradInstrPct INT
 
     -- Género
-    IF @GeneroPct = 'M'
-        SET @GeneroBit = 1
-    ELSE IF @GeneroPct = 'F'
-        SET @GeneroBit = 0
-    ELSE
+    SET @GeneroBit = CASE 
+                        WHEN @GeneroPct = 'M' THEN 1
+                        WHEN @GeneroPct = 'F' THEN 0
+                        ELSE NULL
+                     END
+
+    IF @GeneroBit IS NULL
     BEGIN
         RAISERROR('Género no válido. Use M o F.', 16, 1)
-        RETURN @@ERROR
+        RETURN
     END
 
     -- Grupo sanguíneo
     SET @GrupSangPct =
         CASE @GrupSangNombre
-            WHEN 'A+' THEN 1
-            WHEN 'A−' THEN 2
-            WHEN 'B+' THEN 3
-            WHEN 'B−' THEN 4
-            WHEN 'AB+' THEN 5
-            WHEN 'AB−' THEN 6
-            WHEN 'O+' THEN 7
-            WHEN 'O−' THEN 8
+            WHEN 'A+' THEN 1 WHEN 'A−' THEN 2
+            WHEN 'B+' THEN 3 WHEN 'B−' THEN 4
+            WHEN 'AB+' THEN 5 WHEN 'AB−' THEN 6
+            WHEN 'O+' THEN 7 WHEN 'O−' THEN 8
             ELSE NULL
         END
 
     IF @GrupSangPct IS NULL
     BEGIN
         RAISERROR('Grupo sanguíneo no válido.', 16, 1)
-        RETURN @@ERROR
+        RETURN
     END
 
-    -- Verificar existencia
+    -- Estado civil
+    SET @EstCivilPct =
+        CASE LOWER(@EstCivilNombre)
+            WHEN 'casado'     THEN 1
+            WHEN 'soltero'    THEN 2
+            WHEN 'viudo'      THEN 3
+            WHEN 'divorciado' THEN 4
+            ELSE NULL
+        END
+
+    IF @EstCivilPct IS NULL
+    BEGIN
+        RAISERROR('Estado civil no válido.', 16, 1)
+        RETURN
+    END
+
+    -- Grado de instrucción
+    SET @GradInstrPct =
+        CASE LOWER(@GradInstrNombre)
+            WHEN 'sin estudios'                 THEN 1
+            WHEN 'primaria'                    THEN 2
+            WHEN 'secundaria'                  THEN 3
+            WHEN 'tecnico sin completar'       THEN 4
+            WHEN 'tecnico completo'            THEN 5
+            WHEN 'universitario sin completar' THEN 6
+            WHEN 'universitario completo'      THEN 7
+            WHEN 'postgrado'                   THEN 8
+            ELSE NULL
+        END
+
+    IF @GradInstrPct IS NULL
+    BEGIN
+        RAISERROR('Grado de instrucción no válido.', 16, 1)
+        RETURN
+    END
+
     IF NOT EXISTS (SELECT 1 FROM Paciente WHERE DniPct = @DniPct)
     BEGIN
         RAISERROR('Este paciente no existe!!', 16, 1)
-        RETURN @@ERROR
+        RETURN
     END
 
-    -- Actualizar paciente
     UPDATE dbo.Paciente
     SET
         NomPct         = @NomPct,
@@ -592,9 +665,6 @@ BEGIN
     WHERE DniPct = @DniPct
 END
 GO
-
-
-
 
 
 
@@ -740,6 +810,8 @@ BEGIN
         p.ApellPct;
 END
 go
+
+
 
 
 

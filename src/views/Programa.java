@@ -83,7 +83,7 @@ public class Programa extends JFrame {
         //tbdpnInicio.addTab("CITAS MEDICAS", new PanelCitasMedicas());
         tbdpnInicio.addTab("MANTENIMIENTO", new PanelMantenimiento());
         tbdpnInicio.addTab("CONSULTAS", new PanelConsulta());
-        //tbdpnInicio.addTab("REPORTE", new PanelReporte());
+        tbdpnInicio.addTab("REPORTE", new PanelReporte());
         tbdpnInicio.addTab("CONFIGURACIÓN", new PanelConfiguracion());
 
         pnlRelleno.add(tbdpnInicio, BorderLayout.CENTER);
