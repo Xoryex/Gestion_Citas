@@ -2,8 +2,8 @@ package views;
 
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.event.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.*;
 import static querys.QueryUser.usuario_actual;
 import views.panelesinicio.*;
 
@@ -92,6 +92,7 @@ public class Programa extends JFrame {
         setVisible(true);
     }
     
+   
     private void oyentes(){
         tbdpnInicio.addChangeListener(new ChangeListener() {
             @Override
@@ -108,6 +109,9 @@ public class Programa extends JFrame {
                         //
                         break;
                     case "CONSULTAS":
+                        //
+                        break;
+                    case "REPORTE":
                         //
                         break;
                     case "CONFIGURACIÓN":

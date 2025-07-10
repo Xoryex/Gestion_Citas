@@ -11,7 +11,7 @@ import utils.Conexion;
 import views.herramientasconsultareporte.*;
 
 public class PanelReporte extends JPanel {
-    // Paneles específicos para cada tipo de consulta
+    // Paneles específicos para cada tipo de Reportea
     private pnlTblCita consltCita = new pnlTblCita();
     private pnlTblRecepcionista consltRecepcionista = new pnlTblRecepcionista();
     private pnlTblDoctor consltDoctor = new pnlTblDoctor();
@@ -20,110 +20,114 @@ public class PanelReporte extends JPanel {
     private pnlTblDoctoresMasCitas consltDoctoresMasCitas = new pnlTblDoctoresMasCitas();
     private pnlTblPacientesFrecuentes consltPacientesFrecuentes = new pnlTblPacientesFrecuentes();
     private pnlTblResumenCitasEstado consltResumenCitasEstado = new pnlTblResumenCitasEstado();
-    private pnlTblConsultoriosMasUtilizados consltConsultoriosMasUtilizados = new pnlTblConsultoriosMasUtilizados();
+    private pnlTblConsultoriosMasUtilizados consltReporteoriosMasUtilizados = new pnlTblConsultoriosMasUtilizados();
     private pnlTblHorariosMasOcupados consltHorariosMasOcupados = new pnlTblHorariosMasOcupados();
-    private pnlTblEspecialidadesMasSolicitadas consltEspecialidadesMasSolicitadas  = new pnlTblEspecialidadesMasSolicitadas();
+    private pnlTblEspecialidadesMasSolicitadas consltEspecialidadesMasSolicitadas = new pnlTblEspecialidadesMasSolicitadas();
     
-
 
     private Connection conn = Conexion.getConnection();
 
     // Layout para cambiar entre paneles
-    private CardLayout tablaConsult;
-    private JPanel pnlVentanasConsultas;
+    private CardLayout tablaReporte;
+    private JPanel pnlVentanasReporteas;
 
     // Cabecera y botones
-    private JPanel pnlCabeceraConsult;
-    private JPanel pnlBotonConsult;
+    private JPanel pnlCabeceraReporte;
+    private JPanel pnlBotonReporte;
 
     // Componentes de cabecera
-    private JLabel lblConsltPor;
-    private JComboBox<String> cbxConsulta;
-    private JLabel lblBuscarConsult;
-    private JTextField txtBuscarConsult;
-    private JButton btnFiltroConsulta;
-    private JButton btnLimpiarBusqueda;
+    private JLabel lblConsultPorR;
+    private JComboBox<String> cbxReportea;
+    private JLabel lblBuscarReporte;
+    private JTextField txtBuscarReporte;
+    private JButton btnFiltroReportea;
+    private JButton btnLimpiarBusquedaR;
 
     public PanelReporte() {
         setLayout(new BorderLayout());
 
         // 🔼 Cabecera
-        pnlCabeceraConsult = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        pnlCabeceraReporte = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-        lblConsltPor = new JLabel("Reporte de:");
-        cbxConsulta = new JComboBox<>(new String[] {
+        lblConsultPorR = new JLabel("Reporte de:");
+        cbxReportea = new JComboBox<>(new String[] {
             "Cita", "Recepcionista", "Doctor", "Paciente", "Horario", "Doctores Más Citas",
             "Pacientes Frecuentes", "Horarios Más Ocupados", "Resumen Citas Estado",
             "Especialidades Más Solicitadas", "Consultorios Más Utilizados"
         });
-        cbxConsulta.setPreferredSize(new Dimension(125, 23));
+        cbxReportea.setPreferredSize(new Dimension(125, 23));
 
-        lblBuscarConsult = new JLabel("Buscar:");
-        txtBuscarConsult = new JTextField(10);
-        txtBuscarConsult.setPreferredSize(new Dimension(300, 23));
+        lblBuscarReporte = new JLabel("Buscar:");
+        txtBuscarReporte = new JTextField(10);
+        txtBuscarReporte.setPreferredSize(new Dimension(300, 23));
 
-        btnFiltroConsulta = new JButton("Filtrar");
-        btnLimpiarBusqueda = new JButton("Limpiar");
+        btnFiltroReportea = new JButton("Filtrar");
+        btnLimpiarBusquedaR = new JButton("Limpiar");
 
-        pnlCabeceraConsult.add(lblConsltPor);
-        pnlCabeceraConsult.add(cbxConsulta);
-        pnlCabeceraConsult.add(lblBuscarConsult);
-        pnlCabeceraConsult.add(txtBuscarConsult);
-        pnlCabeceraConsult.add(btnFiltroConsulta);
-        pnlCabeceraConsult.add(btnLimpiarBusqueda);
+        pnlCabeceraReporte.add(lblConsultPorR);
+        pnlCabeceraReporte.add(cbxReportea);
+        pnlCabeceraReporte.add(lblBuscarReporte);
+        pnlCabeceraReporte.add(txtBuscarReporte);
+        pnlCabeceraReporte.add(btnFiltroReportea);
+        pnlCabeceraReporte.add(btnLimpiarBusquedaR);
 
         // 🔁 Panel con CardLayout
-        tablaConsult = new CardLayout();
-        pnlVentanasConsultas.add(consltCita, "Cita");
-        pnlVentanasConsultas.add(consltRecepcionista, "Recepcionista");
-        pnlVentanasConsultas.add(consltDoctor, "Doctor");
-        pnlVentanasConsultas.add(consltPaciente, "Paciente");
-        pnlVentanasConsultas.add(consltHorario, "Horario");
-        
+        tablaReporte = new CardLayout();
+        pnlVentanasReporteas = new JPanel(tablaReporte);
+        pnlVentanasReporteas.setBackground(Color.WHITE);
+
+        pnlVentanasReporteas.add(consltCita, "Cita");
+        pnlVentanasReporteas.add(consltRecepcionista, "Recepcionista");
+        pnlVentanasReporteas.add(consltDoctor, "Doctor");
+        pnlVentanasReporteas.add(consltPaciente, "Paciente");
+        pnlVentanasReporteas.add(consltHorario, "Horario");
+
         // Agregar nuevos paneles de reportes
-        pnlVentanasConsultas.add(consltDoctoresMasCitas, "Doctores Más Citas");
-        pnlVentanasConsultas.add(consltPacientesFrecuentes, "Pacientes Frecuentes");
-        pnlVentanasConsultas.add(consltHorariosMasOcupados, "Horarios Más Ocupados");
-        pnlVentanasConsultas.add(consltResumenCitasEstado, "Resumen Citas Estado");
-        pnlVentanasConsultas.add(consltEspecialidadesMasSolicitadas, "Especialidades Más Solicitadas");
-        pnlVentanasConsultas.add(consltConsultoriosMasUtilizados, "Consultorios Más Utilizados");
+        pnlVentanasReporteas.add(consltDoctoresMasCitas, "Doctores Más Citas");
+        pnlVentanasReporteas.add(consltPacientesFrecuentes, "Pacientes Frecuentes");
+        pnlVentanasReporteas.add(consltHorariosMasOcupados, "Horarios Más Ocupados");
+        pnlVentanasReporteas.add(consltResumenCitasEstado, "Resumen Citas Estado");
+        pnlVentanasReporteas.add(consltEspecialidadesMasSolicitadas, "Especialidades Más Solicitadas");
+        pnlVentanasReporteas.add(consltReporteoriosMasUtilizados, "Consultorios Más Utilizados");
+
+
 
         // 👇 Panel botones adicionales
-        pnlBotonConsult = new JPanel(new FlowLayout());
+        pnlBotonReporte = new JPanel(new FlowLayout());
         JButton btnExportar = new JButton("Exportar");
         JButton btnImprimir = new JButton("Imprimir");
 
-        pnlBotonConsult.add(btnExportar);
-        pnlBotonConsult.add(btnImprimir);
+        pnlBotonReporte.add(btnExportar);
+        pnlBotonReporte.add(btnImprimir);
 
         // ➕ Añadir todo al panel principal
-        add(pnlCabeceraConsult, BorderLayout.NORTH);
-        add(pnlBotonConsult, BorderLayout.SOUTH);
-        add(pnlVentanasConsultas, BorderLayout.CENTER);
+        add(pnlCabeceraReporte, BorderLayout.NORTH);
+        add(pnlBotonReporte, BorderLayout.SOUTH);
+        add(pnlVentanasReporteas, BorderLayout.CENTER);
 
         // 🔁 Eventos
-        cbxConsulta.addActionListener(e -> {
-            String seleccion = (String) cbxConsulta.getSelectedItem();
+        cbxReportea.addActionListener(e -> {
+            String seleccion = (String) cbxReportea.getSelectedItem();
             if (seleccion != null) {
-                tablaConsult.show(pnlVentanasConsultas, seleccion);
-                SwingUtilities.updateComponentTreeUI(pnlVentanasConsultas);
-                pnlVentanasConsultas.repaint();
+                tablaReporte.show(pnlVentanasReporteas, seleccion);
+                SwingUtilities.updateComponentTreeUI(pnlVentanasReporteas);
+                pnlVentanasReporteas.repaint();
                 limpiarBusqueda();
                 cargarDatosTabla(seleccion, "");
             }
         });
 
-        btnFiltroConsulta.addActionListener(e -> realizarBusqueda());
+        btnFiltroReportea.addActionListener(e -> realizarBusqueda());
 
-        btnLimpiarBusqueda.addActionListener(e -> {
+        btnLimpiarBusquedaR.addActionListener(e -> {
             limpiarBusqueda();
-            String seleccion = (String) cbxConsulta.getSelectedItem();
+            String seleccion = (String) cbxReportea.getSelectedItem();
             if (seleccion != null) {
                 cargarDatosTabla(seleccion, "");
             }
         });
 
-        txtBuscarConsult.addKeyListener(new KeyAdapter() {
+        txtBuscarReporte.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -135,7 +139,7 @@ public class PanelReporte extends JPanel {
         btnExportar.addActionListener(e -> {
             JTable tabla = obtenerTablaActiva();
             if (tabla != null) {
-                exportarTabla(tabla, getTipoConsultaSeleccionado());
+                exportarTabla(tabla, getTipoReporteaSeleccionado());
             } else {
                 JOptionPane.showMessageDialog(null,
                     "No hay tabla para exportar.",
@@ -162,16 +166,16 @@ public class PanelReporte extends JPanel {
         });
 
         // Mostrar por defecto
-        tablaConsult.show(pnlVentanasConsultas, "Cita");
+        tablaReporte.show(pnlVentanasReporteas, "Cita");
         cargarDatosTabla("Cita", "");
     }
 
     private void realizarBusqueda() {
-        String textoBusqueda = txtBuscarConsult.getText().trim();
-        String tipoConsulta = (String) cbxConsulta.getSelectedItem();
+        String textoBusqueda = txtBuscarReporte.getText().trim();
+        String tipoReportea = (String) cbxReportea.getSelectedItem();
 
-        if (tipoConsulta != null) {
-            cargarDatosTabla(tipoConsulta, textoBusqueda);
+        if (tipoReportea != null) {
+            cargarDatosTabla(tipoReportea, textoBusqueda);
         }
     }
 
@@ -209,8 +213,8 @@ public class PanelReporte extends JPanel {
                     case "Especialidades Más Solicitadas":
                         cargarDatosEspecialidadesMasSolicitadas(conn, filtro);
                         break;
-                    case "Consultorios Más Utilizados":
-                        cargarDatosConsultoriosMasUtilizados(conn, filtro);
+                    case "Reporteorios Más Utilizados":
+                        cargarDatosReporteoriosMasUtilizados(conn, filtro);
                         break;
                 }
             }
@@ -304,13 +308,13 @@ public class PanelReporte extends JPanel {
         }
     }
 
-    // 4. Consultorios más utilizados
-    private void cargarDatosConsultoriosMasUtilizados(Connection conn, String filtro) throws SQLException {
-        String sql = "{CALL PA_CRUD_ListarConsultoriosMasUtilizadosConFiltro(?)}";
+    // 4. Reporteorios más utilizados
+    private void cargarDatosReporteoriosMasUtilizados(Connection conn, String filtro) throws SQLException {
+        String sql = "{CALL PA_CRUD_ListarReporteoriosMasUtilizadosConFiltro(?)}";
         try (CallableStatement cs = conn.prepareCall(sql)) {
             cs.setString(1, filtro);
             ResultSet rs = cs.executeQuery();
-            consltConsultoriosMasUtilizados.cargarDatos(rs);
+            consltReporteoriosMasUtilizados.cargarDatos(rs);
             rs.close();
         }
     }
@@ -341,7 +345,7 @@ public class PanelReporte extends JPanel {
 
 
     private JTable obtenerTablaActiva() {
-        String tipo = (String) cbxConsulta.getSelectedItem();
+        String tipo = (String) cbxReportea.getSelectedItem();
 
         switch (tipo) {
              case "Cita":
@@ -364,8 +368,8 @@ public class PanelReporte extends JPanel {
                 return consltResumenCitasEstado.getTabla();
             case "Especialidades Más Solicitadas":
                 return consltEspecialidadesMasSolicitadas.getTabla();
-            case "Consultorios Más Utilizados":
-                return consltConsultoriosMasUtilizados.getTabla();
+            case "Reporteorios Más Utilizados":
+                return consltReporteoriosMasUtilizados.getTabla();
             default:
                 return null;
 
@@ -411,14 +415,14 @@ public class PanelReporte extends JPanel {
     }
 
     public String getTextoBusqueda() {
-        return txtBuscarConsult.getText().trim();
+        return txtBuscarReporte.getText().trim();
     }
 
-    public String getTipoConsultaSeleccionado() {
-        return (String) cbxConsulta.getSelectedItem();
+    public String getTipoReporteaSeleccionado() {
+        return (String) cbxReportea.getSelectedItem();
     }
 
     public void limpiarBusqueda() {
-        txtBuscarConsult.setText("");
+        txtBuscarReporte.setText("");
     }
 }
