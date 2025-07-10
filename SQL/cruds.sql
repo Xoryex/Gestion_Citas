@@ -2020,3 +2020,68 @@ BEGIN
     ORDER BY COUNT(c.CodCita) DESC;
 END;
 GO
+
+---------------------------------------------------------------------------
+create or alter procedure PA_CRUD_ListarCitasPendientesReprogramadas
+as
+begin 
+	select c.CodCita,c.DniPct,p.NomPct+' '+p.ApellPct as NombrePaciente,cs.NomConst,d.NomDoc+' '+d.ApellDoc as NombreDoctor,c.HoraInicio,c.HoraFin,cast(c.FechaCita as varchar) as FechaCita, cast(isnull(CAST(c.FechaReprogra as Varchar),'No se Reprogramo') as varchar) as FechaReprogra,ta.TipoAtencion,ec.EstadoCita,r.NomRecep+' '+r.ApellRecep as NombreRecepcionista
+	from Cita as c
+	join Paciente as p on (c.DniPct=p.DniPct)
+	join Doctor as d on (c.DniDoc=d.DniDoc)
+	join Consultorio as cs on (d.CodConst=cs.CodConst)
+	join Recepcionista as r on (c.DniRecep=r.DniRecep)
+	join TipoAtencion as ta on (c.IdTipoAtencion=ta.IdTipoAtencion)
+	join EstadoCita as ec on (c.IdEstadoCita=ec.IdEstadoCita)
+	where ec.IdEstadoCita in (1,2) 
+end
+go
+
+create or alter procedure PA_CRUD_ListarCitasReprogramadas
+as
+begin 
+	select c.CodCita,c.DniPct,p.NomPct+' '+p.ApellPct as NombrePaciente,cs.NomConst,d.NomDoc+' '+d.ApellDoc as NombreDoctor,c.HoraInicio,c.HoraFin,Cast(c.FechaCita as varchar) as FechaCita,cast(c.FechaReprogra as varchar) as FechaReprogra,ta.TipoAtencion,ec.EstadoCita,r.NomRecep+' '+r.ApellRecep as NombreRecepcionista
+	from Cita as c
+	join Paciente as p on (c.DniPct=p.DniPct)
+	join Doctor as d on (c.DniDoc=d.DniDoc)
+	join Consultorio as cs on (d.CodConst=cs.CodConst)
+	join Recepcionista as r on (c.DniRecep=r.DniRecep)
+	join TipoAtencion as ta on (c.IdTipoAtencion=ta.IdTipoAtencion)
+	join EstadoCita as ec on (c.IdEstadoCita=ec.IdEstadoCita)
+	where ec.IdEstadoCita in (2) 
+end
+go
+
+create or alter procedure PA_CRUD_ListarCitasConFiltro
+(
+	@filtro varchar
+)
+as
+begin 
+	select c.CodCita,c.DniPct,p.NomPct+' '+p.ApellPct as NombrePaciente,cs.NomConst,d.NomDoc+' '+d.ApellDoc as NombreDoctor,c.HoraInicio,c.HoraFin,Cast(c.FechaCita as varchar) as FechaCita,cast(isnull(CAST(c.FechaReprogra as Varchar),'No se Reprogramo') as varchar) as FechaReprogra,ta.TipoAtencion,ec.EstadoCita,r.NomRecep+' '+r.ApellRecep as NombreRecepcionista
+	from Cita as c
+	join Paciente as p on (c.DniPct=p.DniPct)
+	join Doctor as d on (c.DniDoc=d.DniDoc)
+	join Consultorio as cs on (d.CodConst=cs.CodConst)
+	join Recepcionista as r on (c.DniRecep=r.DniRecep)
+	join TipoAtencion as ta on (c.IdTipoAtencion=ta.IdTipoAtencion)
+	join EstadoCita as ec on (c.IdEstadoCita=ec.IdEstadoCita)
+	where ec.IdEstadoCita in (1,2) 
+	and CAST(c.CodCita as varchar)+CAST(c.DniPct as varchar)+p.NomPct+p.ApellPct+cs.NomConst+d.NomDoc+d.ApellDoc+CAST(c.HoraInicio as varchar)+CAST(c.HoraFin as varchar)+Cast(c.FechaCita as varchar)+cast(isnull(CAST(c.FechaReprogra as Varchar),'No se Reprogramo') as varchar)+ta.TipoAtencion+ec.EstadoCita+r.NomRecep+r.ApellRecep like '%'+@filtro+'%'
+		
+end
+go
+
+
+create or alter procedure PA_ListarEspecialidadesActivas
+as
+begin
+	select e.CodEspecia,e.Especialidad
+	from Especialidad as e
+	join Consultorio as cs on (e.CodEspecia=cs.CodEspecia)
+	join Doctor as d on (cs.CodConst=d.CodConst)
+	join Doctor_Horario as dh on (d.DniDoc=dh.DniDoc)
+	join Horario as h on(h.CodHorario=dh.CodHorario)
+	where h.EstadoHorario=1
+	group by e.CodEspecia,e.Especialidad
+end
