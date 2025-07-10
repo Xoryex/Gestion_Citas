@@ -99,9 +99,10 @@ public class QueryCita implements Query<Cita> {
         return filas;
     }
 
-    public String[][] seleccionarConFiltro(String filtro) {
+    public ArrayList<String[]> seleccionarConFiltro(String filtro) {
+        Conexion.closeConnection();
         String sql = "{CALL PA_CRUD_ListarCitasConFiltro(?)}";
-        List<String[]> filas = new ArrayList<>();
+        ArrayList<String[]> filas = new ArrayList<>();
         
         try (Connection con = Conexion.getConnection();
              CallableStatement stmt = con.prepareCall(sql)) {
@@ -111,15 +112,17 @@ public class QueryCita implements Query<Cita> {
             
             while (rs.next()) {
                 String[] fila = {
-                    rs.getString("IdCita"),
-                    rs.getString("DniPaciente"),
+                    rs.getString("CodCita"),
+                    rs.getString("DniPct"),
                     rs.getString("NombrePaciente"),
-                    rs.getString("Consultorio"),
+                    rs.getString("NomConst"),
                     rs.getString("NombreDoctor"),
                     rs.getTime("HoraInicio").toString(),
                     rs.getTime("HoraFin").toString(),
-                    rs.getString("Atencion"),
-                    rs.getString("Estado"),
+                    rs.getString("FechaCita"),
+                    rs.getString("FechaReprogra"),
+                    rs.getString("TipoAtencion"),
+                    rs.getString("EstadoCita"),
                     rs.getString("NombreRecepcionista")
                 };
                 filas.add(fila);
@@ -127,9 +130,11 @@ public class QueryCita implements Query<Cita> {
             
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al buscar citas: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }finally{
+            Conexion.closeConnection();
         }
         
-        return filas.toArray(new String[0][]);
+        return filas;
     }
     
     public ArrayList<Doctor> getDoctoresFiltrados(Especialidad especialidad, Date fecha) {

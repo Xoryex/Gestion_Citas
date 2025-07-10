@@ -116,6 +116,7 @@ public class PanelCitasMedicas extends JPanel {
         btnAgregarCita.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                pnlAgregarCita.cargarDatos();
                 cardLayoutDatosCita.show(pnlContenidoCentral, "Agregar");
             }
         });
@@ -127,7 +128,16 @@ public class PanelCitasMedicas extends JPanel {
             }
         });
         
-        
+        txtBuscarCita.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                TablaCitasPendientesReprogramadas.modelo.setRowCount(0);
+                ArrayList<String[]> datos = queryCita.seleccionarConFiltro(txtBuscarCita.getText());
+                for (String[] fila : datos) {
+                    TablaCitasPendientesReprogramadas.modelo.addRow(fila);
+                }
+            }
+        });
         
     }
 }
