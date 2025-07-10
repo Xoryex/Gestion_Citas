@@ -17,6 +17,14 @@ public class PanelReporte extends JPanel {
     private pnlTblDoctor consltDoctor = new pnlTblDoctor();
     private pnlTblPaciente consltPaciente = new pnlTblPaciente();
     private pnlTblHorario consltHorario = new pnlTblHorario();
+    private pnlTblDoctoresMasCitas consltDoctoresMasCitas = new pnlTblDoctoresMasCitas();
+    private pnlTblPacientesFrecuentes consltPacientesFrecuentes = new pnlTblPacientesFrecuentes();
+    private pnlTblResumenCitasEstado consltResumenCitasEstado = new pnlTblResumenCitasEstado();
+    private pnlTblConsultoriosMasUtilizados consltConsultoriosMasUtilizados = new pnlTblConsultoriosMasUtilizados();
+    private pnlTblHorariosMasOcupados consltHorariosMasOcupados = new pnlTblHorariosMasOcupados();
+    private pnlTblEspecialidadesMasSolicitadas consltEspecialidadesMasSolicitadas  = new pnlTblEspecialidadesMasSolicitadas();
+    
+
 
     private Connection conn = Conexion.getConnection();
 
@@ -44,7 +52,9 @@ public class PanelReporte extends JPanel {
 
         lblConsltPor = new JLabel("Reporte de:");
         cbxConsulta = new JComboBox<>(new String[] {
-            "Cita", "Recepcionista", "Doctor", "Paciente", "Horario"
+            "Cita", "Recepcionista", "Doctor", "Paciente", "Horario", "Doctores Más Citas",
+            "Pacientes Frecuentes", "Horarios Más Ocupados", "Resumen Citas Estado",
+            "Especialidades Más Solicitadas", "Consultorios Más Utilizados"
         });
         cbxConsulta.setPreferredSize(new Dimension(125, 23));
 
@@ -64,12 +74,19 @@ public class PanelReporte extends JPanel {
 
         // 🔁 Panel con CardLayout
         tablaConsult = new CardLayout();
-        pnlVentanasConsultas = new JPanel(tablaConsult);
         pnlVentanasConsultas.add(consltCita, "Cita");
         pnlVentanasConsultas.add(consltRecepcionista, "Recepcionista");
         pnlVentanasConsultas.add(consltDoctor, "Doctor");
         pnlVentanasConsultas.add(consltPaciente, "Paciente");
         pnlVentanasConsultas.add(consltHorario, "Horario");
+        
+        // Agregar nuevos paneles de reportes
+        pnlVentanasConsultas.add(consltDoctoresMasCitas, "Doctores Más Citas");
+        pnlVentanasConsultas.add(consltPacientesFrecuentes, "Pacientes Frecuentes");
+        pnlVentanasConsultas.add(consltHorariosMasOcupados, "Horarios Más Ocupados");
+        pnlVentanasConsultas.add(consltResumenCitasEstado, "Resumen Citas Estado");
+        pnlVentanasConsultas.add(consltEspecialidadesMasSolicitadas, "Especialidades Más Solicitadas");
+        pnlVentanasConsultas.add(consltConsultoriosMasUtilizados, "Consultorios Más Utilizados");
 
         // 👇 Panel botones adicionales
         pnlBotonConsult = new JPanel(new FlowLayout());
@@ -177,6 +194,24 @@ public class PanelReporte extends JPanel {
                     case "Horario":
                         cargarDatosHorario(conn, filtro);
                         break;
+                    case "Doctores Más Citas":
+                        cargarDatosDoctoresMasCitas(conn, filtro);
+                        break;
+                    case "Pacientes Frecuentes":
+                        cargarDatosPacientesFrecuentes(conn, filtro);
+                        break;
+                    case "Horarios Más Ocupados":
+                        cargarDatosHorariosMasOcupados(conn, filtro);
+                        break;
+                    case "Resumen Citas Estado":
+                        cargarDatosResumenCitasEstado(conn, filtro);
+                        break;
+                    case "Especialidades Más Solicitadas":
+                        cargarDatosEspecialidadesMasSolicitadas(conn, filtro);
+                        break;
+                    case "Consultorios Más Utilizados":
+                        cargarDatosConsultoriosMasUtilizados(conn, filtro);
+                        break;
                 }
             }
         } catch (SQLException e) {
@@ -236,11 +271,80 @@ public class PanelReporte extends JPanel {
         }
     }
 
+        // 1. Doctores con más citas
+    private void cargarDatosDoctoresMasCitas(Connection conn, String filtro) throws SQLException {
+        String sql = "{CALL PA_CRUD_ListarDoctoresMasCitasConFiltro(?)}";
+        try (CallableStatement cs = conn.prepareCall(sql)) {
+            cs.setString(1, filtro);
+            ResultSet rs = cs.executeQuery();
+            consltDoctoresMasCitas.cargarDatos(rs);
+            rs.close();
+        }
+    }
+
+    // 2. Pacientes frecuentes
+    private void cargarDatosPacientesFrecuentes(Connection conn, String filtro) throws SQLException {
+        String sql = "{CALL PA_CRUD_ListarPacientesFrecuentesConFiltro(?)}";
+        try (CallableStatement cs = conn.prepareCall(sql)) {
+            cs.setString(1, filtro);
+            ResultSet rs = cs.executeQuery();
+            consltPacientesFrecuentes.cargarDatos(rs);
+            rs.close();
+        }
+    }
+
+    // 3. Resumen de citas por estado
+    private void cargarDatosResumenCitasEstado(Connection conn, String filtro) throws SQLException {
+        String sql = "{CALL PA_CRUD_ListarResumenCitasPorEstadoConFiltro(?)}";
+        try (CallableStatement cs = conn.prepareCall(sql)) {
+            cs.setString(1, filtro);
+            ResultSet rs = cs.executeQuery();
+            consltResumenCitasEstado.cargarDatos(rs);
+            rs.close();
+        }
+    }
+
+    // 4. Consultorios más utilizados
+    private void cargarDatosConsultoriosMasUtilizados(Connection conn, String filtro) throws SQLException {
+        String sql = "{CALL PA_CRUD_ListarConsultoriosMasUtilizadosConFiltro(?)}";
+        try (CallableStatement cs = conn.prepareCall(sql)) {
+            cs.setString(1, filtro);
+            ResultSet rs = cs.executeQuery();
+            consltConsultoriosMasUtilizados.cargarDatos(rs);
+            rs.close();
+        }
+    }
+
+    // 5. Horarios más ocupados
+    private void cargarDatosHorariosMasOcupados(Connection conn, String filtro) throws SQLException {
+        String sql = "{CALL PA_CRUD_ListarHorariosMasOcupadosConFiltro(?)}";
+        try (CallableStatement cs = conn.prepareCall(sql)) {
+            cs.setString(1, filtro);
+            ResultSet rs = cs.executeQuery();
+            consltHorariosMasOcupados.cargarDatos(rs);
+            rs.close();
+        }
+    }
+
+    // 6. Especialidades más solicitadas
+    private void cargarDatosEspecialidadesMasSolicitadas(Connection conn, String filtro) throws SQLException {
+        String sql = "{CALL PA_CRUD_ListarEspecialidadesMasSolicitadasConFiltro(?)}";
+        try (CallableStatement cs = conn.prepareCall(sql)) {
+            cs.setString(1, filtro);
+            ResultSet rs = cs.executeQuery();
+            consltEspecialidadesMasSolicitadas.cargarDatos(rs);
+            rs.close();
+        }
+    }
+
+
+
+
     private JTable obtenerTablaActiva() {
         String tipo = (String) cbxConsulta.getSelectedItem();
 
         switch (tipo) {
-            case "Cita":
+             case "Cita":
                 return consltCita.getTabla();
             case "Recepcionista":
                 return consltRecepcionista.getTabla();
@@ -250,8 +354,21 @@ public class PanelReporte extends JPanel {
                 return consltPaciente.getTabla();
             case "Horario":
                 return consltHorario.getTabla();
+            case "Doctores Más Citas":
+                return consltDoctoresMasCitas.getTabla();
+            case "Pacientes Frecuentes":
+                return consltPacientesFrecuentes.getTabla();
+            case "Horarios Más Ocupados":
+                return consltHorariosMasOcupados.getTabla();
+            case "Resumen Citas Estado":
+                return consltResumenCitasEstado.getTabla();
+            case "Especialidades Más Solicitadas":
+                return consltEspecialidadesMasSolicitadas.getTabla();
+            case "Consultorios Más Utilizados":
+                return consltConsultoriosMasUtilizados.getTabla();
             default:
                 return null;
+
         }
     }
 
