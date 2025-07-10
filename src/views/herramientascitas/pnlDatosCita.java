@@ -2,7 +2,9 @@ package views.herramientascitas;
 
 import models.Cita;
 import models.Doctor;
+import models.Especialidad;
 import models.Paciente;
+import models.TipoAtencion;
 import querys.QueryCita;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -21,20 +23,18 @@ public class pnlDatosCita extends JPanel {
 
     private JTextField txtDNIPaciente;
     private JLabel lblMuestraNomPaciente;
-    private JComboBox<String> cbxAtencionCita;
+    private JComboBox<TipoAtencion> cbxAtencionCita;
     private JSpinner spnFechaHoraIncCIta;
-    private JComboBox<String> cbxEspecialidad;
-    private JComboBox<String> cbxDoctor;
+    private JComboBox<Especialidad> cbxEspecialidad;
+    private JComboBox<Doctor> cbxDoctor;
     private JLabel lblMuestraConsultorio;
     private JButton btnCancelar;
     private JButton btnGuardar;
     
-    private QueryCita queryCita;
-    private List<Doctor> doctores;
+    private QueryCita queryCita = new QueryCita();
+    private List<Doctor> doctores = new ArrayList<>();
 
     public pnlDatosCita() {
-        queryCita = new QueryCita();
-        doctores = new ArrayList<>();
         Componentes();
         cargarDatos();
         configurarEventos();
@@ -47,6 +47,7 @@ public class pnlDatosCita extends JPanel {
 
         JPanel pnlFormulario = new JPanel(new GridLayout(8, 2, 80, 5));
         pnlFormulario.setBackground(new Color(207, 218, 230));
+        
         pnlFormulario.setBorder(
             BorderFactory.createTitledBorder(
                 BorderFactory.createLineBorder(new Color(57, 93, 129)),
@@ -61,10 +62,10 @@ public class pnlDatosCita extends JPanel {
         // Componentes
         txtDNIPaciente = new JTextField();
         lblMuestraNomPaciente = new JLabel("-");
-        cbxAtencionCita = new JComboBox<>(new String[]{"Consulta", "Emergencia", "Control"});
+        cbxAtencionCita = new JComboBox<>();
         spnFechaHoraIncCIta = new JSpinner(new SpinnerDateModel());
-        cbxEspecialidad = new JComboBox<>(new String[]{"Pediatría", "Cardiología", "Dermatología"});
-        cbxDoctor = new JComboBox<>(new String[]{"Dr. Juan", "Dra. Ana", "Dr. Luis"});
+        cbxEspecialidad = new JComboBox<>();
+        cbxDoctor = new JComboBox<>();
         lblMuestraConsultorio = new JLabel("-");
         btnCancelar = new JButton("Cancelar");
         btnGuardar = new JButton("Guardar");
@@ -119,17 +120,17 @@ public class pnlDatosCita extends JPanel {
     
     private void cargarDatos() {
         // Cargar tipos de atención
-        List<String> tiposAtencion = queryCita.obtenerTiposAtencion();
+        ArrayList<TipoAtencion> tiposAtencion = queryCita.obtenerTiposAtencion();
         cbxAtencionCita.removeAllItems();
-        for (String tipo : tiposAtencion) {
+        for (TipoAtencion tipo : tiposAtencion) {
             cbxAtencionCita.addItem(tipo);
         }
         
         // Cargar especialidades
-        List<String> especialidades = queryCita.obtenerEspecialidades();
+        ArrayList<Especialidad> especialidades = queryCita.obtenerEspecialidades();
         cbxEspecialidad.removeAllItems();
-        for (String especialidad : especialidades) {
-            cbxEspecialidad.addItem(especialidad);
+        for (Especialidad especialidad : especialidades) {
+            cbxEspecialidad.addItem(especialidad.getNombreEspecialidad());
         }
         
         // Cargar doctores
