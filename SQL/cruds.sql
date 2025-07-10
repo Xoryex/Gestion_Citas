@@ -1855,11 +1855,12 @@ BEGIN
     FROM dbo.Cita c
     INNER JOIN dbo.Paciente p ON c.DniPct = p.DniPct
     INNER JOIN dbo.Horario h ON c.CodHorario = h.CodHorario
-    WHERE c.IdEstadoCita = 1  -- Solo citas pendientes/activas
+    WHERE c.IdEstadoCita = 1  --and c.FechaCita=GETDATE() -- Solo citas pendientes/activas
     ORDER BY c.FechaCita, h.HoraInicio;
     
 END
 GO
+
 
 CREATE OR ALTER PROCEDURE PA_CRUD_ListarHorarioConFiltro 
     @FiltroTexto NVARCHAR(100) = NULL
@@ -1966,7 +1967,7 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT 
-        con.NomConst,
+        con.NomConst as Consultorio,
         COUNT(c.CodCita)              AS 'Veces Utilizado'
     FROM Cita AS c
     INNER JOIN Consultorio AS con
