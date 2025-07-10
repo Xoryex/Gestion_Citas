@@ -39,13 +39,13 @@ public class pnlConsultorioMant extends JPanel {
         return modelConsultorio;
     }
 
-    // Método reutilizable para obtener el combo con especialidades desde BD
+    // ✅ Cambiado: ahora usa el procedimiento PA_ListarSoloEspecialidad
     private JComboBox<String> obtenerComboEspecialidades() {
         JComboBox<String> combo = new JComboBox<>();
         try {
             if (conn != null) {
-                Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT Especialidad FROM Especialidad");
+                CallableStatement stmt = conn.prepareCall("{CALL PA_ListarSoloEspecialidad()}");
+                ResultSet rs = stmt.executeQuery();
 
                 while (rs.next()) {
                     combo.addItem(rs.getString("Especialidad"));

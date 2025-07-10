@@ -1,17 +1,33 @@
-﻿
+﻿use GESTION_CITA
+--listar especialidad
+create or alter procedure PA_ListarSoloEspecialidad
+as
+SELECT Especialidad
+FROM Especialidad as E
+group by E.Especialidad
+go
+--Listar Consultorio
+create or alter procedure PA_ListarSoloConsultorio
+as 
+SELECT C.NomConst
+FROM Consultorio as C
+group by C.NomConst
+go
+
 ----------------------------------------------------------------------
 -- CRUD: TABLA CONSULTORIO
 ----------------------------------------------------------------------
 --INSERTAR
 CREATE OR ALTER PROCEDURE PA_CRUD_InsertarConsultorio
 (
-    @CodConst     AS NUMERIC(8,0), 
     @NomConst     AS VARCHAR(50),
-    @Especialidad   AS VARCHAR(100)
+    @Especialidad   AS VARCHAR(100),
+	@CodConst      NUMERIC(8,0) OUTPUT
 )
 AS
 BEGIN
     DECLARE @CodEspecia NUMERIC(8,0)
+    DECLARE @Existe INT = 1
 
     -- Verificar si la especialidad existe y obtener su código
     SELECT @CodEspecia = CodEspecia
@@ -20,16 +36,18 @@ BEGIN
 
     IF @CodEspecia IS NULL
     BEGIN
-        RAISERROR('¡Esta especialidad no existe!', 16, 1)
+        RAISERROR('ESTA ESPECIALIDAD NO SE ENCUENTRA EN EL SISTEMA', 16, 1)
         RETURN
     END
-
+	-- Generamos el codigo para consultorio
+	WHILE @Existe = 1
+	BEGIN
+		SET @CodConst = CAST(RAND()*89999999+10000000 AS numeric(8,0))
+		IF NOT EXISTS (SELECT * FROM Consultorio WHERE CodConst = @CodConst)
+            SET @Existe = 0
+	END
     -- Verificar si el consultorio ya existe
-    IF EXISTS(SELECT 1 FROM Consultorio WHERE CodConst = @CodConst)
-    BEGIN
-        RAISERROR('¡Este consultorio ya existe!', 16, 1)
-        RETURN
-    END
+
 
     -- Insertar el nuevo consultorio
     INSERT INTO dbo.Consultorio (CodConst, NomConst, CodEspecia)
@@ -114,7 +132,8 @@ BEGIN
     FROM Vw_ListarConsulta
     WHERE 
         Codigo LIKE '%' + @Filtro + '%' OR
-        NombreConsultorio LIKE '%' + @Filtro + '%'
+        NombreConsultorio LIKE '%' + @Filtro + '%'OR
+		e.Especialidad LIKE '%' + @Filtro + '%';
         
 END
 GO
@@ -134,233 +153,123 @@ GO
 CREATE OR ALTER VIEW Vw_ListarConsulta
 AS
 SELECT 
-    CodConst AS Codigo, 
-    NomConst AS NombreConsultorio
-FROM Consultorio
-GO
+    c.CodConst AS Codigo,
+    c.NomConst AS NombreConsultorio,
+    e.Especialidad
+FROM Consultorio c
+INNER JOIN Especialidad e ON c.CodEspecia = e.CodEspecia
 
 
 ----------------------------------------------------------------------
-----------------------------------------------------------------------
--- CRUD: TABLA HORARIO
-----------------------------------------------------------------------
+/*ESPECIALIDAD*/
+--------------------------------------------------------------------------
+--insertar
 
--- INSERTAR
-CREATE OR ALTER PROCEDURE PA_CRUD_InsertarHorario
+CREATE OR ALTER PROCEDURE PA_CRUD_InsertarEspecialidad
 (
-    @CodHorario     int,
-    @Dia            VARCHAR(10),
-    @HoraInicio     TIME,
-    @HoraFin        TIME,
-    @LimitPct       INT,
-    @EstadoHorario  BIT
+    @Especialidad AS VARCHAR(120),
+    @CodEspecia AS NUMERIC(8,0) OUTPUT
 )
 AS
 BEGIN
-    DECLARE @TurnoNombre VARCHAR(10)
-    DECLARE @IdTurnoHorario INT
-
-    -- Validar si el código ya existe
-    IF EXISTS(SELECT 1 FROM Horario WHERE CodHorario = @CodHorario)
+    DECLARE @Existe INT = 1
+	-- verificamos que no exista otra con el mismo nombre
+    IF EXISTS (SELECT 1 FROM Especialidad WHERE Especialidad = @Especialidad)
     BEGIN
-        RAISERROR('Código ya existe en la tabla Horario', 16, 1)
-        RETURN
+        RAISERROR('YA EXISTE ESTA ESPECIALIDAD, PRUEBA CON OTRO NOMBRE', 16, 1)
+        RETURN @@ERROR
     END
 
-    -- Validar que la hora de inicio sea menor que la hora de fin
-    IF @HoraInicio >= @HoraFin
+    -- Generar Codigo Unico
+    WHILE @Existe = 1
     BEGIN
-        RAISERROR('La hora de inicio debe ser menor que la hora de fin', 16, 1)
-        RETURN
+        SET @CodEspecia = CAST(RAND() * 89999999 + 10000000 AS INT)
+        IF NOT EXISTS (SELECT 1 FROM Especialidad WHERE CodEspecia = @CodEspecia)
+            SET @Existe = 0
     END
 
-    -- Determinar el nombre del turno automáticamente usando HoraInicio
-    SET @TurnoNombre = CASE 
-                          WHEN @HoraInicio < '12:00:00' THEN 'mañana'
-                          ELSE 'tarde'
-                       END
-
-    -- Obtener el IdTurnoHorario correspondiente
-    SELECT @IdTurnoHorario = IdTurnoHorario
-    FROM TurnoHorario
-    WHERE TurnoHorario = @TurnoNombre
-
-    IF @IdTurnoHorario IS NULL
-    BEGIN
-        RAISERROR('No se encontró el turno correspondiente en la tabla TurnoHorario', 16, 1)
-        RETURN
-    END
-
-    -- Insertar el nuevo horario
-    INSERT INTO dbo.Horario
-        (CodHorario, Dia, HoraInicio, HoraFin, LimitPct, EstadoHorario, IdTurnoHorario)
-    VALUES
-        (@CodHorario, @Dia, @HoraInicio, @HoraFin, @LimitPct, @EstadoHorario, @IdTurnoHorario)
+   
+    INSERT INTO dbo.Especialidad (CodEspecia, Especialidad)
+    VALUES (@CodEspecia, @Especialidad)
 END
 GO
 
-
-
--- MODIFICAR
-CREATE OR ALTER PROCEDURE PA_CRUD_ModificarHorario
-(
-    @CodHorario     int,
-    @HoraInicio     TIME,
-    @Dia            VARCHAR(10),
-    @LimitPct       INT,
-    @EstadoHorario  BIT
+--MODIFICAR
+CREATE OR ALTER PROCEDURE PA_CRUD_ModificarEspecialidad
+(   @CodEspecia AS INT, 
+    @Especialidad AS VARCHAR(120)
 )
 AS
 BEGIN
-    DECLARE @TurnoNombre VARCHAR(10)
-    DECLARE @IdTurnoHorario INT
 
-    -- Validar si el horario existe
-    IF NOT EXISTS (SELECT 1 FROM Horario WHERE CodHorario = @CodHorario)
+    IF NOT EXISTS (SELECT 1 FROM Especialidad WHERE CodEspecia = @CodEspecia)
     BEGIN
-        RAISERROR('Código NO existe en la tabla Horario', 16, 1)
-        RETURN
+        RAISERROR('Código NO existe en la tabla Especialidad.', 16, 1)
+        RETURN @@ERROR
     END
 
-    -- Determinar el nombre del turno usando HoraInicio
-    SET @TurnoNombre = CASE 
-                          WHEN @HoraInicio < '12:00:00' THEN 'mañana'
-                          ELSE 'tarde'
-                       END
-
-    -- Obtener el IdTurnoHorario correspondiente
-    SELECT @IdTurnoHorario = IdTurnoHorario
-    FROM TurnoHorario
-    WHERE TurnoHorario = @TurnoNombre
-
-    IF @IdTurnoHorario IS NULL
+    IF EXISTS (SELECT 1 FROM Especialidad WHERE Especialidad = @Especialidad AND CodEspecia <> @CodEspecia)
     BEGIN
-        RAISERROR('No se encontró el turno correspondiente en la tabla TurnoHorario', 16, 1)
-        RETURN
+        RAISERROR('ESTA ESPECIALIDAD YA EXISTE, INTENTA CON OTRO NOMBRE', 16, 1)
+        RETURN @@ERROR
     END
 
-    -- Actualizar el horario
-    UPDATE dbo.Horario
-    SET 
-        HoraInicio = @HoraInicio,
-        Dia = @Dia,
-        LimitPct = @LimitPct,
-        EstadoHorario = @EstadoHorario,
-        IdTurnoHorario = @IdTurnoHorario
-    WHERE CodHorario = @CodHorario
+    UPDATE dbo.Especialidad
+    SET Especialidad = @Especialidad
+    WHERE CodEspecia = @CodEspecia
 END
 GO
 
-
--- ELIMINAR
-CREATE OR ALTER PROCEDURE PA_CRUD_EliminarHorario
+--ELIMINAR
+CREATE OR ALTER PROCEDURE PA_CRUD_EliminarEspecialidad
 (
-    @CodHorario int
+    @CodEspecia INT
 )
 AS
 BEGIN
-    -- Validar si el horario existe
-    IF NOT EXISTS (SELECT 1 FROM Horario WHERE CodHorario = @CodHorario)
+    -- Verificar existencia del código
+    IF NOT EXISTS (SELECT 1 FROM Especialidad WHERE CodEspecia = @CodEspecia)
     BEGIN
-        RAISERROR('Código NO existe en la tabla Horario.', 16, 1)
-        RETURN
+        RAISERROR('El codigo no existe en la tabla Especialidad.', 16, 1);
+        RETURN @@ERROR;
     END
 
-    -- Verificar si está relacionado con algún doctor
-    IF EXISTS (SELECT 1 FROM Doctor_Horario WHERE CodHorario = @CodHorario)
+    -- Relacion con tabla Especialidad_Doctor
+    IF EXISTS (SELECT 1 FROM Especialidad_Doctor WHERE CodEspecia = @CodEspecia)
     BEGIN
-        RAISERROR('No se puede eliminar porque está relacionado con doctores.', 16, 1)
-        RETURN
+        RAISERROR('No se puede eliminar porque esta relacionado con doctores.', 16, 1);
+        RETURN @@ERROR;
     END
 
-    -- Verificar si está referenciado en citas
-    IF EXISTS (SELECT 1 FROM Cita WHERE CodHorario = @CodHorario)
-    BEGIN
-        RAISERROR('No se puede eliminar porque está referenciado en una cita.', 16, 1)
-        RETURN
-    END
-
-    -- Eliminar el horario
-    DELETE FROM Horario
-    WHERE CodHorario = @CodHorario
+    DELETE FROM Especialidad
+    WHERE CodEspecia = @CodEspecia;
 END
 GO
 
-
-
-
--- VISTA
-CREATE OR ALTER VIEW Vw_ListarHorario
-AS
-SELECT 
-    h.CodHorario       AS Codigo,
-    h.Dia,
-    h.HoraInicio,
-    h.HoraFin,
-    th.TurnoHorario    AS Turno,
-    h.LimitPct         AS Limite_Pacientes,
-    CASE h.EstadoHorario
-        WHEN 1 THEN 'Habilitado'
-        WHEN 0 THEN 'Deshabilitado'
-    END                AS Estado
-FROM Horario h
-INNER JOIN TurnoHorario th ON h.IdTurnoHorario = th.IdTurnoHorario;
-GO
-
-
-
--- LISTAR TODO
-CREATE OR ALTER PROCEDURE PA_CRUD_ListarHorario
+--LISTAR SIN FILTRO
+CREATE OR ALTER PROCEDURE PA_CRUD_ListarEspecialidad
 AS
 BEGIN
-    SELECT * FROM Vw_ListarHorario;
+SELECT * FROM Vw_ListarEspecialidad
 END
 GO
 
-
--- LISTAR CON FILTRO
-CREATE OR ALTER PROCEDURE PA_CRUD_ListarHorarioConFiltro 
-    @FiltroTexto NVARCHAR(100) = NULL
+--LISTAR CON FILTRO
+CREATE or alter PROCEDURE PA_CRUD_ListarEspecialidadConFiltro
+(@Filtro Varchar(150))
 AS
 BEGIN
-    SET NOCOUNT ON;
-    
-    SELECT 
-        h.CodHorario AS [ID Horario],
-        h.HoraInicio AS [Hora Inicio],
-        h.HoraFin AS [Hora Fin],
-        h.Dia AS [Día],
-        h.LimitPct AS [Límite de Pacientes],
-        h.EstadoHorario AS [Estado del Horario],
-        d.DniDoc AS [DNI del Doctor],
-        d.NomDoc AS [Nombre del Doctor],
-        c.NomConst AS [Consultorio]
-    FROM dbo.Horario h
-    LEFT JOIN dbo.Doctor_Horario dh ON h.CodHorario = dh.CodHorario
-    LEFT JOIN dbo.Doctor d ON dh.DniDoc = d.DniDoc
-    LEFT JOIN dbo.Consultorio c ON d.CodConst = c.CodConst
-    WHERE 
-        (@FiltroTexto IS NULL OR @FiltroTexto = '') OR
-        (
-            h.CodHorario LIKE '%' + @FiltroTexto + '%' OR
-            h.Dia LIKE '%' + @FiltroTexto + '%' OR
-            CAST(h.HoraInicio AS NVARCHAR) LIKE '%' + @FiltroTexto + '%' OR
-            CAST(h.HoraFin AS NVARCHAR) LIKE '%' + @FiltroTexto + '%' OR
-            CAST(h.LimitPct AS NVARCHAR) LIKE '%' + @FiltroTexto + '%' OR
-            h.EstadoHorario LIKE '%' + @FiltroTexto + '%' OR
-            d.DniDoc LIKE '%' + @FiltroTexto + '%' OR
-            d.NomDoc LIKE '%' + @FiltroTexto + '%' OR
-            c.NomConst LIKE '%' + @FiltroTexto + '%'
-        )
-    ORDER BY 
-        h.CodHorario, 
-        h.Dia, 
-        h.HoraInicio;
+SELECT * FROM Vw_ListarEspecialidad
+WHERE [Codigo]+[Nombre Especialidad] LIKE '%'+@Filtro+'%'
 END
-go
+GO
+--CREAR VISTA
 
-
--------------------------------------------------------------------------------------------
+CREATE or alter VIEW Vw_ListarEspecialidad
+AS
+	SELECT CodEspecia AS 'Codigo', Especialidad AS 'Nombre Especialidad'
+	FROM Especialidad
+GO
 
 ------------------------------------------------------------------------
 -- CRUD: TABLA RECEPCIONISTA
@@ -834,7 +743,231 @@ go
 
 
 
---------------------------
+
+----------------------------------------------------------------------
+-- CRUD: TABLA HORARIO
+----------------------------------------------------------------------
+
+-- INSERTAR
+CREATE OR ALTER PROCEDURE PA_CRUD_InsertarHorario
+(
+    @Dia           VARCHAR(10),
+    @HoraInicio    TIME,
+    @HoraFin       TIME,
+    @LimitPct      INT,
+    @EstadoHorario BIT,
+    @CodHorario    INT OUTPUT
+)
+AS
+BEGIN
+    DECLARE @TurnoNombre VARCHAR(10)
+    DECLARE @IdTurnoHorario INT
+    DECLARE @Existe INT = 1
+
+    -- Validar que la hora de inicio sea menor que la hora de fin
+    IF @HoraInicio >= @HoraFin
+    BEGIN
+        RAISERROR('La hora de inicio debe ser menor que la hora de fin.', 16, 1)
+        RETURN
+    END
+
+    -- Generar código único para el nuevo horario
+    WHILE @Existe = 1
+    BEGIN
+        SET @CodHorario = CAST(RAND() * 89999999 + 10000000 AS INT)
+        IF NOT EXISTS (SELECT 1 FROM Horario WHERE CodHorario = @CodHorario)
+            SET @Existe = 0
+    END
+
+    -- Determinar el nombre del turno automáticamente usando HoraInicio
+    SET @TurnoNombre = CASE 
+                          WHEN @HoraInicio < '12:00:00' THEN 'mañana'
+                          ELSE 'tarde'
+                       END
+
+    -- Obtener el IdTurnoHorario correspondiente
+    SELECT @IdTurnoHorario = IdTurnoHorario
+    FROM TurnoHorario
+    WHERE TurnoHorario = @TurnoNombre
+
+    IF @IdTurnoHorario IS NULL
+    BEGIN
+        RAISERROR('No se encontró el turno correspondiente en la tabla TurnoHorario.', 16, 1)
+        RETURN
+    END
+
+    -- Insertar el nuevo horario
+    INSERT INTO dbo.Horario
+        (CodHorario, Dia, HoraInicio, HoraFin, LimitPct, EstadoHorario, IdTurnoHorario)
+    VALUES
+        (@CodHorario, @Dia, @HoraInicio, @HoraFin, @LimitPct, @EstadoHorario, @IdTurnoHorario)
+END
+GO
+
+
+
+
+-- MODIFICAR
+CREATE OR ALTER PROCEDURE PA_CRUD_ModificarHorario
+(
+    @CodHorario     int,
+    @HoraInicio     TIME,
+    @Dia            VARCHAR(10),
+    @LimitPct       INT,
+    @EstadoHorario  BIT
+)
+AS
+BEGIN
+    DECLARE @TurnoNombre VARCHAR(10)
+    DECLARE @IdTurnoHorario INT
+
+    -- Validar si el horario existe
+    IF NOT EXISTS (SELECT 1 FROM Horario WHERE CodHorario = @CodHorario)
+    BEGIN
+        RAISERROR('Código NO existe en la tabla Horario', 16, 1)
+        RETURN
+    END
+
+    -- Determinar el nombre del turno usando HoraInicio
+    SET @TurnoNombre = CASE 
+                          WHEN @HoraInicio < '12:00:00' THEN 'mañana'
+                          ELSE 'tarde'
+                       END
+
+    -- Obtener el IdTurnoHorario correspondiente
+    SELECT @IdTurnoHorario = IdTurnoHorario
+    FROM TurnoHorario
+    WHERE TurnoHorario = @TurnoNombre
+
+    IF @IdTurnoHorario IS NULL
+    BEGIN
+        RAISERROR('No se encontró el turno correspondiente en la tabla TurnoHorario', 16, 1)
+        RETURN
+    END
+
+    -- Actualizar el horario
+    UPDATE dbo.Horario
+    SET 
+        HoraInicio = @HoraInicio,
+        Dia = @Dia,
+        LimitPct = @LimitPct,
+        EstadoHorario = @EstadoHorario,
+        IdTurnoHorario = @IdTurnoHorario
+    WHERE CodHorario = @CodHorario
+END
+GO
+
+
+-- ELIMINAR
+CREATE OR ALTER PROCEDURE PA_CRUD_EliminarHorario
+(
+    @CodHorario int
+)
+AS
+BEGIN
+    -- Validar si el horario existe
+    IF NOT EXISTS (SELECT 1 FROM Horario WHERE CodHorario = @CodHorario)
+    BEGIN
+        RAISERROR('Código NO existe en la tabla Horario.', 16, 1)
+        RETURN
+    END
+
+    -- Verificar si está relacionado con algún doctor
+    IF EXISTS (SELECT 1 FROM Doctor_Horario WHERE CodHorario = @CodHorario)
+    BEGIN
+        RAISERROR('No se puede eliminar porque está relacionado con doctores.', 16, 1)
+        RETURN
+    END
+
+    -- Verificar si está referenciado en citas
+    IF EXISTS (SELECT 1 FROM Cita WHERE CodHorario = @CodHorario)
+    BEGIN
+        RAISERROR('No se puede eliminar porque está referenciado en una cita.', 16, 1)
+        RETURN
+    END
+
+    -- Eliminar el horario
+    DELETE FROM Horario
+    WHERE CodHorario = @CodHorario
+END
+GO
+
+
+
+
+-- VISTA
+CREATE OR ALTER VIEW Vw_ListarHorario
+AS
+SELECT 
+    h.CodHorario       AS Codigo,
+    h.Dia,
+    h.HoraInicio,
+    h.HoraFin,
+    th.TurnoHorario    AS Turno,
+    h.LimitPct         AS Limite_Pacientes,
+    CASE h.EstadoHorario
+        WHEN 1 THEN 'Habilitado'
+        WHEN 0 THEN 'Deshabilitado'
+    END                AS Estado
+FROM Horario h
+INNER JOIN TurnoHorario th ON h.IdTurnoHorario = th.IdTurnoHorario;
+GO
+
+
+
+-- LISTAR TODO
+CREATE OR ALTER PROCEDURE PA_CRUD_ListarHorario
+AS
+BEGIN
+    SELECT * FROM Vw_ListarHorario;
+END
+GO
+
+
+-- LISTAR CON FILTRO
+CREATE OR ALTER PROCEDURE PA_CRUD_ListarHorarioConFiltro 
+    @FiltroTexto NVARCHAR(100) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    SELECT 
+        h.CodHorario AS [ID Horario],
+        h.HoraInicio AS [Hora Inicio],
+        h.HoraFin AS [Hora Fin],
+        h.Dia AS [Día],
+        h.LimitPct AS [Límite de Pacientes],
+        h.EstadoHorario AS [Estado del Horario],
+        d.DniDoc AS [DNI del Doctor],
+        d.NomDoc AS [Nombre del Doctor],
+        c.NomConst AS [Consultorio]
+    FROM dbo.Horario h
+    LEFT JOIN dbo.Doctor_Horario dh ON h.CodHorario = dh.CodHorario
+    LEFT JOIN dbo.Doctor d ON dh.DniDoc = d.DniDoc
+    LEFT JOIN dbo.Consultorio c ON d.CodConst = c.CodConst
+    WHERE 
+        (@FiltroTexto IS NULL OR @FiltroTexto = '') OR
+        (
+            h.CodHorario LIKE '%' + @FiltroTexto + '%' OR
+            h.Dia LIKE '%' + @FiltroTexto + '%' OR
+            CAST(h.HoraInicio AS NVARCHAR) LIKE '%' + @FiltroTexto + '%' OR
+            CAST(h.HoraFin AS NVARCHAR) LIKE '%' + @FiltroTexto + '%' OR
+            CAST(h.LimitPct AS NVARCHAR) LIKE '%' + @FiltroTexto + '%' OR
+            h.EstadoHorario LIKE '%' + @FiltroTexto + '%' OR
+            d.DniDoc LIKE '%' + @FiltroTexto + '%' OR
+            d.NomDoc LIKE '%' + @FiltroTexto + '%' OR
+            c.NomConst LIKE '%' + @FiltroTexto + '%'
+        )
+    ORDER BY 
+        h.CodHorario, 
+        h.Dia, 
+        h.HoraInicio;
+END
+go
+
+
+-------------------------------------------------------------------------------------------
+
 -----------------------------------
 --Tabla CITA                
 -----------------------------------
@@ -1278,16 +1411,17 @@ GO
 CREATE OR ALTER VIEW Vw_ListarDoctores
 AS
 SELECT
-    d.DniDoc          AS DNI,
-    d.NomDoc          AS Nombre,
-    d.ApellDoc        AS Apellido,
-    e.Especialidad    AS Especialidad,
-    d.CodConst        AS CodConsultorio,
-    d.CorreoDoctor    AS Correo,
-    d.TelfDoctor      AS Telefono
+    d.DniDoc         AS DNI,
+    d.NomDoc         AS Nombre,
+    d.ApellDoc       AS Apellido,
+    e.Especialidad   AS Especialidad,
+    c.NomConst       AS Consultorio,
+    d.CorreoDoctor   AS Correo,
+    d.TelfDoctor     AS Telefono
 FROM Doctor d
 INNER JOIN Especialidad_Doctor ed ON d.DniDoc = ed.DniDoc
-INNER JOIN Especialidad e         ON ed.CodEspecia = e.CodEspecia;
+INNER JOIN Especialidad e         ON ed.CodEspecia = e.CodEspecia
+INNER JOIN Consultorio c          ON d.CodConst = c.CodConst;
 GO
 
 -- Listar sin filtro
@@ -1299,55 +1433,22 @@ END
 GO
 
 -- Listar con filtro
-CREATE OR ALTER PROCEDURE PA_CRUD_ListarDoctorConFiltro 
-    @FiltroTexto NVARCHAR(100) = NULL
+CREATE OR ALTER PROCEDURE PA_ListarDoctorConFiltro
+    @Filtro VARCHAR(100)
 AS
 BEGIN
-    SET NOCOUNT ON;
-    
-    SELECT 
-        d.DniDoc AS [DNI],
-        d.NomDoc AS [Nombre],
-        e.Especialidad AS [Especialidad],
-        -- Asumiendo que hay un campo de estado en Doctor, si no, puedes ajustarlo
-        CASE 
-            WHEN d.DniDoc IS NOT NULL THEN 'Activo'
-            ELSE 'Inactivo'
-        END AS [Estado],
-        -- Conteo de citas pendientes
-        (SELECT COUNT(*) 
-         FROM dbo.Cita c 
-         WHERE c.DniDoc = d.DniDoc 
-         AND c.IdEstadoCita = (SELECT IdEstadoCita FROM dbo.EstadoCita WHERE EstadoCita = 'Pendiente')
-        ) AS [Citas Pendientes],
-        -- Conteo de citas atendidas
-        (SELECT COUNT(*) 
-         FROM dbo.Cita c 
-         WHERE c.DniDoc = d.DniDoc 
-         AND c.IdEstadoCita = (SELECT IdEstadoCita FROM dbo.EstadoCita WHERE EstadoCita = 'Atendida')
-        ) AS [Citas Atendidas],
-        c.NomConst AS [Consultorio],
-        d.CorreoDoctor AS [Correo],
-        d.TelfDoctor AS [Teléfono]
-    FROM dbo.Doctor d
-    LEFT JOIN dbo.Consultorio c ON d.CodConst = c.CodConst
-    LEFT JOIN dbo.Especialidad e ON c.CodEspecia = e.CodEspecia
+    SELECT *
+    FROM Vw_ListarDoctores
     WHERE 
-        (@FiltroTexto IS NULL OR @FiltroTexto = '') OR
-        (
-            d.DniDoc LIKE '%' + @FiltroTexto + '%' OR
-            d.NomDoc LIKE '%' + @FiltroTexto + '%' OR
-            d.ApellDoc LIKE '%' + @FiltroTexto + '%' OR
-            d.CorreoDoctor LIKE '%' + @FiltroTexto + '%' OR
-            d.TelfDoctor LIKE '%' + @FiltroTexto + '%' OR
-            e.Especialidad LIKE '%' + @FiltroTexto + '%' OR
-            c.NomConst LIKE '%' + @FiltroTexto + '%'
-        )
-    ORDER BY 
-        d.NomDoc, 
-        d.ApellDoc;
-END
-go
+        DNI          LIKE '%' + @Filtro + '%' OR
+        Nombre       LIKE '%' + @Filtro + '%' OR
+        Apellido     LIKE '%' + @Filtro + '%' OR
+        Especialidad LIKE '%' + @Filtro + '%' OR
+        Consultorio  LIKE '%' + @Filtro + '%' OR
+        Correo       LIKE '%' + @Filtro + '%' OR
+        Telefono     LIKE '%' + @Filtro + '%';
+END;
+GO
 
 
 
