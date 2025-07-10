@@ -1,44 +1,29 @@
 package models;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.sql.Time;
+import java.sql.Date;
 
 public class Cita {
+    private int idCita;
     private int dniRecep;
     private int codHorario;
     private int dniPct;
     private int dniDoc;
-    private LocalTime horaInicio;
-    private LocalTime horaFin;
-    private LocalDate fechaCita;
+    private Time horaInicio;
+    private Time horaFin;
+    private Date fechaCita;
     private int idEstadoCita;
     private int idTipoAtencion;
-    private LocalDate fechaReprogra;
-    private LocalDate fechaAnulacion;
-    
-    // Campos adicionales para mostrar en la tabla
-    private String nombrePaciente;
-    private String nombreDoctor;
-    private String nombreRecepcionista;
-    private String consultorio;
-    private String estadoCita;
-    private String tipoAtencion;
+    private Date fechaReprogra;
+    private Date fechaAnulacion;
 
     public Cita() {}
 
-    public Cita(int dniRecep, int codHorario, int dniPct, int dniDoc, 
-                LocalTime horaInicio, LocalTime horaFin, LocalDate fechaCita, 
-                int idEstadoCita, int idTipoAtencion) {
-        this.dniRecep = dniRecep;
-        this.codHorario = codHorario;
-        this.dniPct = dniPct;
-        this.dniDoc = dniDoc;
-        this.horaInicio = horaInicio;
-        this.horaFin = horaFin;
-        this.fechaCita = fechaCita;
-        this.idEstadoCita = idEstadoCita;
-        this.idTipoAtencion = idTipoAtencion;
+    public Cita(int dniRecep, int codHorario, int dniPct, int dniDoc, Time horaInicio, Time horaFin, Date fechaCita, int idEstadoCita, int idTipoAtencion, Date fechaReprogra, Date fechaAnulacion) {
+        
     }
+
+
 
     // Getters y Setters
     public int getDniRecep() { return dniRecep; }
@@ -53,42 +38,29 @@ public class Cita {
     public int getDniDoc() { return dniDoc; }
     public void setDniDoc(int dniDoc) { this.dniDoc = dniDoc; }
 
-    public LocalTime getHoraInicio() { return horaInicio; }
-    public void setHoraInicio(LocalTime horaInicio) { this.horaInicio = horaInicio; }
+    public Time getHoraInicio() { return horaInicio; }
+    public void setHoraInicio(Time horaInicio) { this.horaInicio = horaInicio; }
 
-    public LocalTime getHoraFin() { return horaFin; }
-    public void setHoraFin(LocalTime horaFin) { this.horaFin = horaFin; }
+    public Time getHoraFin() { return horaFin; }
+    public void setHoraFin(Time horaFin) { this.horaFin = horaFin; }
 
-    public LocalDate getFechaCita() { return fechaCita; }
-    public void setFechaCita(LocalDate fechaCita) { this.fechaCita = fechaCita; }
-
-    public int getIdEstadoCita() { return idEstadoCita; }
-    public void setIdEstadoCita(int idEstadoCita) { this.idEstadoCita = idEstadoCita; }
+    public Date getFechaCita() { return fechaCita; }
+    public void setFechaCita(Date fechaCita) { this.fechaCita = fechaCita; }
 
     public int getIdTipoAtencion() { return idTipoAtencion; }
     public void setIdTipoAtencion(int idTipoAtencion) { this.idTipoAtencion = idTipoAtencion; }
 
-    public LocalDate getFechaReprogra() { return fechaReprogra; }
-    public void setFechaReprogra(LocalDate fechaReprogra) { this.fechaReprogra = fechaReprogra; }
+    public Date getFechaReprogra() { return fechaReprogra; }
+    public void setFechaReprogra(Date fechaReprogra) { this.fechaReprogra = fechaReprogra; }
 
-    public LocalDate getFechaAnulacion() { return fechaAnulacion; }
-    public void setFechaAnulacion(LocalDate fechaAnulacion) { this.fechaAnulacion = fechaAnulacion; }
+    public Date getFechaAnulacion() { return fechaAnulacion; }
 
-    public String getNombrePaciente() { return nombrePaciente; }
-    public void setNombrePaciente(String nombrePaciente) { this.nombrePaciente = nombrePaciente; }
+    public void setFechaAnulacion(Date fechaAnulacion) { this.fechaAnulacion = fechaAnulacion; }
 
-    public String getNombreDoctor() { return nombreDoctor; }
-    public void setNombreDoctor(String nombreDoctor) { this.nombreDoctor = nombreDoctor; }
+    public int getIdCita() { return idCita; }
+    public void setIdCita(int idCita) { this.idCita = idCita; }
 
-    public String getNombreRecepcionista() { return nombreRecepcionista; }
-    public void setNombreRecepcionista(String nombreRecepcionista) { this.nombreRecepcionista = nombreRecepcionista; }
+    public int getIdEstadoCita() { return idEstadoCita; }
+    public void setIdEstadoCita(int idEstadoCita) { this.idEstadoCita = idEstadoCita; }
 
-    public String getConsultorio() { return consultorio; }
-    public void setConsultorio(String consultorio) { this.consultorio = consultorio; }
-
-    public String getEstadoCita() { return estadoCita; }
-    public void setEstadoCita(String estadoCita) { this.estadoCita = estadoCita; }
-
-    public String getTipoAtencion() { return tipoAtencion; }
-    public void setTipoAtencion(String tipoAtencion) { this.tipoAtencion = tipoAtencion; }
 }

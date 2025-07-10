@@ -1,43 +1,35 @@
 package views.herramientascitas;
 
-import models.Cita;
-import models.Doctor;
-import models.Especialidad;
-import models.Paciente;
-import models.TipoAtencion;
+import models.*;
 import querys.QueryCita;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.awt.event.*;
+import java.util.*;
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
+import javax.swing.border.*;
+import javax.swing.event.*;
 
 public class pnlDatosCita extends JPanel {
 
     private JTextField txtDNIPaciente;
     private JLabel lblMuestraNomPaciente;
-    private JComboBox<TipoAtencion> cbxAtencionCita;
+    private JComboBox<String> cbxAtencionCita;
     private JSpinner spnFechaHoraIncCIta;
-    private JComboBox<Especialidad> cbxEspecialidad;
-    private JComboBox<Doctor> cbxDoctor;
+    private JComboBox<String> cbxEspecialidad;
+    private JComboBox<String> cbxDoctor;
     private JLabel lblMuestraConsultorio;
-    private JButton btnCancelar;
     private JButton btnGuardar;
     
     private QueryCita queryCita = new QueryCita();
-    private List<Doctor> doctores = new ArrayList<>();
+    private ArrayList<Doctor> doctores ;
+    private ArrayList<Especialidad> especialidades ;
+    private Paciente paciente;
+    private ArrayList<TipoAtencion> atenciones;
+
 
     public pnlDatosCita() {
         Componentes();
-        cargarDatos();
-        configurarEventos();
+        oyentes();
     }
 
     private void Componentes() {
@@ -63,11 +55,13 @@ public class pnlDatosCita extends JPanel {
         txtDNIPaciente = new JTextField();
         lblMuestraNomPaciente = new JLabel("-");
         cbxAtencionCita = new JComboBox<>();
-        spnFechaHoraIncCIta = new JSpinner(new SpinnerDateModel());
+        spnFechaHoraIncCIta = new JSpinner(new SpinnerDateModel(new Date(), new Date(), null, Calendar.DAY_OF_MONTH));
+        spnFechaHoraIncCIta.setEditor(new JSpinner.DateEditor(spnFechaHoraIncCIta, "dd/MM/yyyy HH:mm"));
+        ((SpinnerDateModel)spnFechaHoraIncCIta.getModel()).setCalendarField(Calendar.MINUTE);
+
         cbxEspecialidad = new JComboBox<>();
         cbxDoctor = new JComboBox<>();
         lblMuestraConsultorio = new JLabel("-");
-        btnCancelar = new JButton("Cancelar");
         btnGuardar = new JButton("Guardar");
 
         // Estilo
@@ -79,14 +73,11 @@ public class pnlDatosCita extends JPanel {
         cbxEspecialidad.setFont(fuente);
         cbxDoctor.setFont(fuente);
         lblMuestraConsultorio.setFont(fuente);
-        btnCancelar.setFont(fuente);
         btnGuardar.setFont(fuente);
 
         lblMuestraNomPaciente.setHorizontalAlignment(SwingConstants.CENTER);
         lblMuestraConsultorio.setHorizontalAlignment(SwingConstants.CENTER);
 
-        btnCancelar.setBackground(new Color(57, 93, 129));
-        btnCancelar.setForeground(Color.WHITE);
         btnGuardar.setBackground(new Color(57, 93, 129));
         btnGuardar.setForeground(Color.WHITE);
 
@@ -112,212 +103,96 @@ public class pnlDatosCita extends JPanel {
         pnlFormulario.add(new JLabel("Consultorio:", JLabel.RIGHT));
         pnlFormulario.add(lblMuestraConsultorio);
 
-        pnlFormulario.add(btnCancelar);
         pnlFormulario.add(btnGuardar);
 
         add(pnlFormulario, BorderLayout.CENTER);
     }
     
-    private void cargarDatos() {
-        // Cargar tipos de atención
-        ArrayList<TipoAtencion> tiposAtencion = queryCita.obtenerTiposAtencion();
-        cbxAtencionCita.removeAllItems();
-        for (TipoAtencion tipo : tiposAtencion) {
-            cbxAtencionCita.addItem(tipo);
-        }
-        
-        // Cargar especialidades
-        ArrayList<Especialidad> especialidades = queryCita.obtenerEspecialidades();
-        cbxEspecialidad.removeAllItems();
-        for (Especialidad especialidad : especialidades) {
-            cbxEspecialidad.addItem(especialidad.getNombreEspecialidad());
-        }
-        
-        // Cargar doctores
-        doctores = queryCita.obtenerDoctores();
-        cbxDoctor.removeAllItems();
-        for (Doctor doctor : doctores) {
-            cbxDoctor.addItem(doctor.getNombre() + " " + doctor.getApellido());
-        }
-    }
-    
-    private void configurarEventos() {
-        // Evento para buscar paciente cuando se pierde el foco del DNI
-        txtDNIPaciente.addFocusListener(new FocusAdapter() {
+
+    private void oyentes(){
+        cbxEspecialidad.addActionListener(new ActionListener() {
             @Override
-            public void focusLost(FocusEvent e) {
-                buscarPaciente();
+            public void actionPerformed(ActionEvent e) {
+                cargarDoctores();
             }
         });
-        
-        // Evento para cambiar doctor cuando se selecciona especialidad
-        cbxEspecialidad.addActionListener(e -> filtrarDoctoresPorEspecialidad());
-        
-        // Evento para mostrar consultorio cuando se selecciona doctor
-        cbxDoctor.addActionListener(e -> mostrarConsultorio());
-        
-        // Evento del botón guardar
+        spnFechaHoraIncCIta.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                cargarDoctores();
+            }
+        });
+        txtDNIPaciente.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent evt) {
+                if (!Character.isDigit(evt.getKeyChar()) || txtDNIPaciente.getText().length() >= 8) {
+                    evt.consume();
+                }
+            }
+            public void keyReleased(KeyEvent evt) {
+                if(txtDNIPaciente.getText().length() == 8){
+                    paciente = queryCita.getPaciente(Integer.parseInt(txtDNIPaciente.getText()));
+                    if(paciente != null){
+                        lblMuestraNomPaciente.setText(paciente.getNombre() + " " + paciente.getApellido());
+                    }else if (txtDNIPaciente.getText().length() < 8){
+                        lblMuestraNomPaciente.setText("Dni incompleto");
+                    }else{
+                        lblMuestraNomPaciente.setText("Paciente no encontrado");
+                    }
+                }
+            }
+        });
+
         btnGuardar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                guardarCita();
-            }
-        });
-        
-        // Evento del botón cancelar
-        btnCancelar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                limpiarFormulario();
+                
+                queryCita.Insetar(
+                
             }
         });
     }
-    
-    private void buscarPaciente() {
-        String dniText = txtDNIPaciente.getText().trim();
-        if (!dniText.isEmpty()) {
-            try {
-                int dni = Integer.parseInt(dniText);
-                Paciente paciente = queryCita.buscarPacientePorDni(dni);
-                if (paciente != null) {
-                    lblMuestraNomPaciente.setText(paciente.getNombre() + " " + paciente.getApellido());
-                } else {
-                    lblMuestraNomPaciente.setText("Paciente no encontrado");
-                    JOptionPane.showMessageDialog(this, "Paciente no encontrado", "Aviso", JOptionPane.WARNING_MESSAGE);
-                }
-            } catch (NumberFormatException ex) {
-                lblMuestraNomPaciente.setText("-");
-                JOptionPane.showMessageDialog(this, "DNI debe ser un número válido", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            lblMuestraNomPaciente.setText("-");
-        }
-    }
-    
-    private void filtrarDoctoresPorEspecialidad() {
-        String especialidadSeleccionada = (String) cbxEspecialidad.getSelectedItem();
-        if (especialidadSeleccionada != null) {
-            cbxDoctor.removeAllItems();
-            for (Doctor doctor : doctores) {
-                if (doctor.getEspecialidad().equals(especialidadSeleccionada)) {
-                    cbxDoctor.addItem(doctor.getNombre() + " " + doctor.getApellido());
-                }
-            }
-        }
-    }
-    
-    private void mostrarConsultorio() {
-        int selectedIndex = cbxDoctor.getSelectedIndex();
-        if (selectedIndex >= 0) {
-            String especialidadSeleccionada = (String) cbxEspecialidad.getSelectedItem();
-            List<Doctor> doctoresFiltrados = new ArrayList<>();
-            
-            for (Doctor doctor : doctores) {
-                if (doctor.getEspecialidad().equals(especialidadSeleccionada)) {
-                    doctoresFiltrados.add(doctor);
-                }
-            }
-            
-            if (selectedIndex < doctoresFiltrados.size()) {
-                Doctor doctorSeleccionado = doctoresFiltrados.get(selectedIndex);
-                String consultorio = queryCita.obtenerConsultorioPorDoctor(doctorSeleccionado.getDni());
-                lblMuestraConsultorio.setText(consultorio);
-            }
-        }
-    }
-    
-    private void guardarCita() {
-        try {
-            // Validar campos
-            if (txtDNIPaciente.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Debe ingresar el DNI del paciente", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            
-            if (lblMuestraNomPaciente.getText().equals("Paciente no encontrado") || lblMuestraNomPaciente.getText().equals("-")) {
-                JOptionPane.showMessageDialog(this, "Debe seleccionar un paciente válido", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            
-            // Obtener datos del formulario
-            int dniPaciente = Integer.parseInt(txtDNIPaciente.getText().trim());
-            
-            // Obtener doctor seleccionado
-            int selectedIndex = cbxDoctor.getSelectedIndex();
-            String especialidadSeleccionada = (String) cbxEspecialidad.getSelectedItem();
-            List<Doctor> doctoresFiltrados = new ArrayList<>();
-            
-            for (Doctor doctor : doctores) {
-                if (doctor.getEspecialidad().equals(especialidadSeleccionada)) {
-                    doctoresFiltrados.add(doctor);
-                }
-            }
-            
-            if (selectedIndex < 0 || selectedIndex >= doctoresFiltrados.size()) {
-                JOptionPane.showMessageDialog(this, "Debe seleccionar un doctor", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            
-            Doctor doctorSeleccionado = doctoresFiltrados.get(selectedIndex);
-            
-            // Crear objeto Cita
-            Cita cita = new Cita();
-            cita.setDniRecep(1); // Por ahora DNI fijo del recepcionista
-            cita.setCodCita(queryCita.generarCodigoCita()); // Generar código único
-            cita.setCodHorario(1); // Por ahora horario fijo
-            cita.setDniPct(dniPaciente);
-            cita.setDniDoc(doctorSeleccionado.getDni());
-            
-            // Obtener fecha y hora del spinner
-            Date fechaHora = (Date) spnFechaHoraIncCIta.getValue();
-            LocalDate fecha = LocalDate.now(); // Por simplicidad, usar fecha actual
-            
-            // Convertir Date a LocalTime de forma segura
-            @SuppressWarnings("deprecation")
-            LocalTime horaInicio = LocalTime.of(fechaHora.getHours(), fechaHora.getMinutes());
-            LocalTime horaFin = horaInicio.plusHours(1); // 1 hora de duración
-            
-            cita.setFechaCita(fecha);
-            cita.setHoraInicio(horaInicio);
-            cita.setHoraFin(horaFin);
-            cita.setIdEstadoCita(1); // Estado activo
-            
-            // Obtener ID del tipo de atención seleccionado
-            String tipoAtencionSeleccionado = (String) cbxAtencionCita.getSelectedItem();
-            int idTipoAtencion = queryCita.obtenerIdTipoAtencionPorNombre(tipoAtencionSeleccionado);
-            cita.setIdTipoAtencion(idTipoAtencion);
-            
-            // Guardar en la base de datos
-            queryCita.Insetar(cita);
-            
-            // Limpiar formulario después de guardar
-            limpiarFormulario();
-            
-            // Notificar al panel padre para actualizar la tabla
-            Container parent = getParent();
-            while (parent != null && !(parent instanceof JPanel && parent.getClass().getSimpleName().equals("PanelCitasMedicas"))) {
-                parent = parent.getParent();
-            }
-            if (parent != null) {
-                // Si encontramos el panel padre, podríamos llamar a un método para actualizar
-                // Por ahora, solo mostramos mensaje de éxito
-            }
-            
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "DNI debe ser un número válido", "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error al guardar la cita: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-    
-    private void limpiarFormulario() {
+
+
+
+
+    public void cargarDatos(){
         txtDNIPaciente.setText("");
         lblMuestraNomPaciente.setText("-");
         cbxAtencionCita.setSelectedIndex(0);
         spnFechaHoraIncCIta.setValue(new Date());
-        cbxEspecialidad.setSelectedIndex(0);
-        lblMuestraConsultorio.setText("-");
-        cargarDatos(); // Recargar datos
+        cbxEspecialidad.removeAllItems();
+        cbxDoctor.removeAllItems();
+
+        atenciones = queryCita.getTiposAtencion();
+        for(TipoAtencion atencion : atenciones){
+            cbxAtencionCita.addItem(atencion.getNombreTipoAtencion());
+        }
+
+        especialidades = queryCita.getEspecialidadesActivas();
+        for(Especialidad especialidad : especialidades){
+            cbxEspecialidad.addItem(especialidad.getNombreEspecialidad());
+        }
+        
     }
+
+    private void cargarDoctores(){
+        cbxDoctor.removeAllItems();
+        
+        for(Especialidad especialidad : especialidades){
+            if(especialidad.getNombreEspecialidad().equals(cbxEspecialidad.getSelectedItem())){
+                doctores = queryCita.getDoctoresFiltrados(especialidad,new java.sql.Date(((java.util.Date)spnFechaHoraIncCIta.getValue()).getTime()));
+                break;
+            }
+        }
+
+        for(Doctor doctor : doctores){
+            cbxDoctor.addItem(doctor.getNombre());
+        }
+
+}
+
+// Método auxiliar para obtener la fecha del spinner
+
+    
 }
 

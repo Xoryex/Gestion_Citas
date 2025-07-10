@@ -1,6 +1,7 @@
 package views;
 
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.*;
@@ -11,6 +12,10 @@ public class Programa extends JFrame {
     private JLabel lblNomRecepc;
     private JLabel lblFuncion;
     private JLabel lblNombre;
+
+    private PanelCitasMedicas panelCitasMedicas = new PanelCitasMedicas();
+    private PanelConfiguracion panelconfiguracion=new PanelConfiguracion();
+
     private JTabbedPane tbdpnInicio;
 
     public Programa() {
@@ -49,7 +54,16 @@ public class Programa extends JFrame {
         btnCerrar.setPreferredSize(new Dimension(90, 30));
 
         // Acción para cerrar el programa
-        btnCerrar.addActionListener(e -> System.exit(0));
+        btnCerrar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int opcion = JOptionPane.showConfirmDialog(null, "¿Estás seguro de querer cerrar el programa?", "Confirmación", JOptionPane.YES_NO_OPTION);
+                if (opcion == JOptionPane.YES_OPTION) {
+                    new Init();
+                    dispose();
+                }
+            }
+        });
 
         // Panel interno para agrupar los labels de la izquierda
         JPanel panelIzquierdo = new JPanel();
@@ -76,13 +90,15 @@ public class Programa extends JFrame {
 
         // TABBED PANE
         tbdpnInicio = new JTabbedPane();
+
         tbdpnInicio.addTab("INICIO", new PanelInicio());
-        // tbdpnInicio.addTab("CITAS MEDICAS", new PanelCitasMedicas());
+        tbdpnInicio.addTab("CITAS MEDICAS", panelCitasMedicas);
         tbdpnInicio.addTab("MANTENIMIENTO", new PanelMantenimiento());
         tbdpnInicio.addTab("CONSULTAS", new PanelConsulta());
-        tbdpnInicio.addTab("REPORTE", new PanelReporte());
+        //tbdpnInicio.addTab("REPORTE", new PanelReporte());
         tbdpnInicio.addTab("CONFIGURACIÓN", new PanelConfiguracion());
 
+        oyentes();
         pnlRelleno.add(tbdpnInicio, BorderLayout.CENTER);
         add(pnlRelleno, BorderLayout.CENTER);
 
@@ -90,6 +106,9 @@ public class Programa extends JFrame {
     }
     
     private void oyentes(){
+
+
+        //evento para cambiar el panel
         tbdpnInicio.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -99,7 +118,7 @@ public class Programa extends JFrame {
                         //
                         break;
                     case "CITAS MEDICAS":
-                        //
+                        panelCitasMedicas.btnVerTablaCita.doClick();
                         break;
                     case "MANTENIMIENTO":
                         //
